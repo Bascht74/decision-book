@@ -21,6 +21,7 @@ Version: see `VERSION` (0.2.0) and `CHANGELOG.md`.
 | `CLAUDE.md` | for Claude working on this repository: build, checks, release, commit rules |
 | `tools/bootstrap.sh` | the first thing a new session runs: suite, forbidden-strings check, next steps (no network) |
 | `SETUP.md` | publish the template as a new book, seed the settings, point Claude at the skill |
+| `LICENSE` | MIT |
 
     suite/run_all.sh                       # all scenarios on the template + the forbidden-strings check
     python3 suite/breaks/counterproof.py   # every check goes red on its break
@@ -87,4 +88,4 @@ names nobody.
 
 ## Open
 
-* **License:** none yet. Choose one before the repository is made public.
+* **License:** MIT, see `LICENSE`.
