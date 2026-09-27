@@ -1,0 +1,9 @@
+{"expect":{
+  "tables":1, "head":["Karte","Schätzung","auf Karte","in Strängen gefunden","fehlt / zu viel","Urteil"], "rows":3,
+  "row1":["E-901 Beispiel eins","12 Mio.","763 839","2,71 Mio. (Plan, A1–A4)","es fehlen 8 Stränge","zu niedrig, Faktor 3,5"],
+  "boldInTable":["zu niedrig","zu niedrig","geschätzt"], "rightAligned":"right", "heading":["Die Stichprobe/4"],
+  "italic":["eine obere Grenze"], "code":["price.py"], "bullets":["erster Punkt","zweiter Punkt https://example.org/a"], "numbered":["eins","zwei"],
+  "linkInList":["https://example.org/a"], "noSeparatorText":true, "closedHead":"Kopf der ersten fett und · Zelle",
+  "sectionTable":["1","2"], "sectionBold":["fett"],
+  "talkCells":["x","y","1","2"], "talkHeading":"Kurz", "talkCenter":"center"
+}}

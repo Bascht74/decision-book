@@ -1,0 +1,1 @@
+{"_note":"v98 (E-537): a move rewrites only the cards whose rank must change -- here one","expect":{"before":["R-10","R-11","R-12"], "writes":["entscheidungen/R-11"], "after":["R-10","R-12","R-11"], "upOnTopDisabled":true}}

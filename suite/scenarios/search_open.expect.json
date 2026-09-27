@@ -1,0 +1,5 @@
+{"expect":{
+  "hiddenBefore":true, "hits":["E-802"], "shown":true, "open":true, "boardCards":1, "head":{"re":"Karte E-802 · Offen"},
+  "tabsHidden":true, "stillShownAfterSnapshot":true, "backTo":{"re":"^Für Dich"},
+  "archiveCardShown":true, "head2":{"re":"Karte E-801 · Erledigt"}, "backTo2":{"re":"^Für Dich"}
+}}

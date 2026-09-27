@@ -1,0 +1,4 @@
+{"expect":{"atStart":["▾ 3.0.0b28 / true / 2 / 2 / true / Summe|0 %|0,1 Mio|50 Tsd.|−50 Tsd.|","▾ 3.0.0b29 / true / 1 / 1 / true / Summe|0 %|30 Tsd.|40 Tsd.|+10 Tsd.|"],
+ "shut":["▸ 3.0.0b28 / false / 0 / 0 / false / Summe|0 %|0,1 Mio|50 Tsd.|−50 Tsd.|","▾ 3.0.0b29 / true / 1 / 1 / true / Summe|0 %|30 Tsd.|40 Tsd.|+10 Tsd.|"],
+ "stored":"[\"3.0.0b28\"]","focus":"rr:3.0.0b28","afterSnapshot":"▸ 3.0.0b28 / false / 0 / 0 / false / Summe|0 %|0,1 Mio|50 Tsd.|−50 Tsd.|",
+ "reopened":"▾ 3.0.0b28 / true / 2 / 2 / true / Summe|0 %|0,1 Mio|50 Tsd.|−50 Tsd.|","storedAfter":"[]"}}

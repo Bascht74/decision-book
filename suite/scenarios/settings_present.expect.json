@@ -1,0 +1,5 @@
+{"expect":{
+  "filter":["alle","Eignerin","Claude"], "metaOfCardWithoutVon":"von Eignerin", "answerLabelNamesTheOwner":true,
+  "ready":{"re":"^Release 3\\.0\\.0b40Schritt 1/2 – Eins"}, "cachedSettings":"Eignerin",
+  "links":["https://example.org/sitzung","https://github.com/beispiel/buch/actions"], "filterAfterChange":"Eigner Zwei"
+}}

@@ -1,0 +1,4 @@
+{"expect":{"inReleases":"3.0.0b28 under Summe",
+ "runNames":["GitHub-Prüflauf tests.yml auf dem Zweig runde-b28 – läuft · seit 27.09.2026, 12:00 Live","GitHub-Prüflauf Lauf mit falscher Adresse – wartet"],
+ "links":["Live https://example.org/actions/runs/1"],"stepText":{"re":"Schritt 9/10 – GitHub-Prüflauf"},"stepLive":"Live https://example.org/actions/runs/1",
+ "badge":{"re":"^AufträgeAufträge$"},"runsInAuftraege":false,"afterDone":"false,false"}}

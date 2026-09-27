@@ -1,0 +1,1 @@
+{"_note": "v96 (E-541): the counts are a table, a row per target, a column per stage; '·' means none", "expect": {"rows": {"len": 3}, "rows.0": "|Vorrat|Offen|Entsch.|Umsetz.|Prüfen", "rows.1": "b28 ◂|·|1|·|1|·", "rows.2": "b29|1|1|·|·|·", "step": {"re": "^Release 3\\.0\\.0b28Schritt 1/10"}, "step1": {"re": "wartet auf Dich1 Karte unter „Offen“$"}, "writes": 0}}

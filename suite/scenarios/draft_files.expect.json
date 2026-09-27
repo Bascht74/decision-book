@@ -1,0 +1,6 @@
+{"expect":{
+  "picker":true, "zipDrop":true, "zipNote":"ZIP geht nicht: nur Bilder, PDF, Video, Text/CSV/JSON/Markdown", "zipChips":0,
+  "chips":"bericht.pdf,daten.csv", "sizes":"10 B,7 B", "mixedNote":{"re":"DOCX geht nicht"}, "uploadTypes":"application/pdf,text/csv",
+  "afterX":"bericht.pdf", "enabled":true, "stored":"application/pdf|bericht.pdf|number|true",
+  "sentLink":{"re":"^/_blob/[0-9a-f]{32}$"}, "sentName":"bericht.pdf", "draftEmpty":0
+}}

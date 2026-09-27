@@ -1,0 +1,24 @@
+scenario(async out=>{
+  await until(()=>document.querySelector('#board .rtab'));await sleep(100);
+  const g=()=>document.querySelector('#board .relgrp[data-rel="3.0.0b28"]');
+  const grp=()=>$$('tbody tr.sgrp',g()).map(tr=>[...tr.children].slice(0,6).map(c=>c.textContent.trim()).join('|'));
+  const nrs=()=>$$('tbody tr[data-nr]',g()).map(tr=>tr.dataset.nr).join(',');
+  const gr=b=>g().querySelector('tr.sgrp[data-stand="'+b+'"]');
+  out.groups=grp();
+  out.shutAtOpen=$$('tbody tr.sgrp[aria-expanded="false"]',g()).map(t=>t.dataset.stand).join(',');
+  out.rows=nrs();
+  out.sum=$$('tfoot td',g()).map(t=>t.textContent).join('|');
+  gr('erledigt').click();await sleep(60);out.erledigtOpened=nrs();
+  out.storedToggle=sessionStorage.getItem('eb-rgrp');
+  gr('offen').click();await sleep(60);out.offenShut=nrs();out.offenArrow=gr('offen').textContent.trim()[0];
+  const k=gr('offen');k.focus();press(k,'Enter');await sleep(60);out.byKey=nrs();
+  out.focusStays=document.activeElement&&document.activeElement.dataset?document.activeElement.dataset.stand||document.activeElement.tagName:'';
+  const btn=l=>$$('thead button',g()).find(b=>b.textContent.startsWith(l));
+  btn('Nr.').click();await sleep(60);out.sortedDown=nrs();
+  btn('verbraucht').click();await sleep(60);out.byUsed=nrs();
+  btn('Nr.').click();await sleep(60);
+  const op=document.getElementById('rf-stand-op');op.value='!=';op.dispatchEvent(new Event('change'));await sleep(40);
+  const s=document.getElementById('rf-stand');s.value='offen';s.dispatchEvent(new Event('change'));await sleep(60);
+  out.filteredGroups=$$('tbody tr.sgrp',g()).map(t=>t.dataset.stand).join(',');
+  out.filteredSum=$$('tfoot td',g()).map(t=>t.textContent).join('|');
+});

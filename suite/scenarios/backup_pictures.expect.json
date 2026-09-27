@@ -1,0 +1,1 @@
+{"run":{"budget":30000},"expect": {"bilder": ["aaa"], "aaa": {"type": "image/png", "data": "AQID+g=="}, "archiv": ["karten-3.0.0b26"], "fetched": ["aaa", "bbb"], "note": "gesichert · 1 Bild ohne Datei", "back": {"re": "^Eingelesen: \\d+ Dokumente\\. 1 Bild ohne Datei – nicht eingelesen\\.$"}, "p1Moved": true, "upload": ["image/png 4"]}}

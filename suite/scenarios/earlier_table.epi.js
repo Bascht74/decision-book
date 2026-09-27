@@ -1,0 +1,25 @@
+scenario(async out=>{
+  const t=await until(()=>document.querySelector('#fruehere .donebtn'));t.click();await sleep(80);
+  const rows=()=>$$('#fruehere tbody tr[data-k]');
+  const col=i=>rows().map(r=>r.children[i].textContent);
+  out.heads=$$('#fruehere .atab thead tr:first-child th').map(h=>h.textContent.replace(/[↓↑]/g,'').trim());
+  out.order=rows().map(r=>r.dataset.k).join(',');
+  out.arts=col(1).join(',');out.first=col(2)[3];out.titled=col(2)[2];out.karten=col(3).join(',');
+  out.cnt=document.querySelector('#fruehere .cnt').textContent;
+  const btn=l=>$$('#fruehere .atab thead button').find(b=>b.textContent.startsWith(l));
+  btn('Datum').click();await sleep(80);out.reversed=rows().map(r=>r.dataset.k).join(',');
+  btn('Anfang').click();await sleep(80);out.byText=col(2).map(x=>x[0]).join('');
+  btn('Datum').click();await sleep(80);
+  const s=document.getElementById('gf-art');s.value='Gespräch';s.dispatchEvent(new Event('change'));await sleep(80);
+  out.onlyTalks=col(1).join(',');out.cntFiltered=document.querySelector('#fruehere .cnt').textContent;
+  const op=document.getElementById('gf-art-op');op.value='!=';op.dispatchEvent(new Event('change'));await sleep(80);
+  out.notTalks=col(1).join(',');
+  const s2=document.getElementById('gf-art');s2.value='';s2.dispatchEvent(new Event('change'));await sleep(80);
+  const r=rows().find(r=>r.dataset.k==='g:g1');r.click();await sleep(80);
+  const full=document.querySelector('#fruehere tr.gfull');
+  out.openedText=full?full.textContent.replace(/\s+/g,' '):'';out.openedPics=full?full.querySelectorAll('img').length:0;
+  out.openedAfter=full&&full.previousElementSibling?full.previousElementSibling.dataset.k:'';
+  document.querySelector('#fruehere tr.gon').click();await sleep(80);out.closed=$$('#fruehere tr.gfull').length;
+  const kb=rows().find(r=>r.dataset.k==='a:a2').querySelector('td:last-child button');kb.click();await sleep(120);
+  out.cardView=!!document.querySelector('#board details[data-nr="E-001"]');out.cardOpenedNotRow=$$('#fruehere tr.gfull').length;
+});

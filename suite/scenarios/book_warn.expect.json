@@ -1,0 +1,2 @@
+{"run":{"budget":20000},
+ "expect":{"statsWarn":{"re":"^Buch fast voll: 412\\d von 5000$"}, "count":{"re":"mindestens 412\\d von 5000"}, "warn":{"re":"bald voll"}}}

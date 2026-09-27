@@ -1,0 +1,4 @@
+{"expect":{
+  "fieldEmptyAtOnce":"", "fieldAfterFailure":"Wichtige Frage", "note":"Nicht gesendet – bitte noch einmal.",
+  "draft":"\"Wichtige Frage\"", "sendEnabledAgain":true, "messagesInDb":1
+}}

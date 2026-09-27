@@ -1,0 +1,2 @@
+{"expect":{"viewButton":{"re":"^BUTTON views Bei Claude"}, "filterButton":"BUTTON filter Claude", "laneHead":{"re":"^DIV offen:3\\.0\\.0b28 "},
+  "cardHeadStays":{"re":"^SUMMARY E-730 "}, "cardHeadMoved":{"re":"^SUMMARY E-730 "}}}

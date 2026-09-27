@@ -1,0 +1,6 @@
+{"expect":{
+  "sendEnabledWithText":true, "fieldEmptyAtOnce":"", "disabledDuringSend":true, "stillDisabledMidway":true,
+  "sends":1, "dbWrites":1, "sendText":{"has":"\"threadId\":\"t0\""},
+  "messages":2, "last":"Eigner: Meine Frage", "lastLive":true, "wartet":"Claude",
+  "draftText":"", "fieldAfter":"", "bubbles":{"has":"DuMeine Frage"}
+}}

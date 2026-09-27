@@ -1,0 +1,9 @@
+{"expect":{
+  "heads":["Datum/Zeit","Art","Anfang des Texts","Karte"],
+  "order":"g:g2,a:a2,g:g1,a:a1", "arts":"Gespräch,Auftrag,Gespräch,Auftrag",
+  "first":"Alpha Auftrag alt", "titled":"Titel des Gesprächs", "karten":"E-002,E-001,,",
+  "cnt":"4 Einträge", "reversed":"a:a1,g:g1,a:a2,g:g2", "byText":"ZTBA",
+  "onlyTalks":"Gespräch,Gespräch", "cntFiltered":"2 von 4 Einträgen (gefiltert)", "notTalks":"Auftrag,Auftrag",
+  "openedText":{"re":"Erste Zeile eins.*Antwort von Claude"}, "openedPics":{"min":1}, "openedAfter":"g:g1", "closed":0,
+  "cardView":true, "cardOpenedNotRow":0
+}}

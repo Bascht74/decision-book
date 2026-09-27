@@ -1,0 +1,2 @@
+{"run":{"flags":["--force-dark-mode"]},
+ "expect":{"pct.E-801":"0 % fertig","pct.E-805":"– % fertig","pct.E-806":"60 % fertig","pct.E-808":"100 % fertig","orders":{"a1":"0 % fertig","a2":"20 % fertig","a3":"– % fertig"},"minContrast":{"min":4.5}}}

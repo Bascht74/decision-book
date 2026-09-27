@@ -1,0 +1,5 @@
+{"_note":"counts are cumulative numbers of live sends after each step",
+ "expect":{
+  "bodyCmdEnter":0, "searchCmdEnter":0, "emptyTopFieldCmdEnter":0, "plainEnterInField":0,
+  "talkFieldCmdEnter":1, "bodyCtrlEnter":1, "cardFieldCtrlEnter":2, "last":{"has":"[K:E-711] Text an der Karte"}
+}}

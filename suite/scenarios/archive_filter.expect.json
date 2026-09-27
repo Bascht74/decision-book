@@ -1,0 +1,1 @@
+{"expect":{"total":{"min":40},"filterCells":[0,0,2,2,0,0],"searchStays":true,"zielChoices":{"has":"3.0.0b27"},"zielOnly":true,"cnt":{"re":"^\\d+ von \\d+ Karten \\(gefiltert\\)$"},"zielNot":true,"both":true,"focusKept":"af-von","cleared":{"min":40}}}

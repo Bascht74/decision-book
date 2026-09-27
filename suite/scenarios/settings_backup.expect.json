@@ -1,0 +1,1 @@
+{"expect":{"logHasSettings":false,"dialog":"Einstellungen","focused":"sicherung-zyklus","noLog":true,"btnShown":true,"defaultCycle":"release","fileName":true,"collections":["archiv","auftraege","auftragsbilder","entscheidungen","gespraech","meta","statistik"],"cards":{"min":20},"talk":true,"writes":1,"stored":"15min"}}

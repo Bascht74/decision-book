@@ -1,0 +1,8 @@
+{"expect":{
+ "arts":{"E-201":"hinweis","E-202":"aufgabe","E-203":"auftrag","E-204":"aufgabe","E-205":"entscheidung","E-206":"entscheidung","E-207":"entscheidung","E-208":"aufgabe","E-209":"entscheidung","E-210":"auftrag","E-211":"hinweis","E-212":"aufgabe"},
+ "labels":{"E-201":"Hinweis","E-202":"Aufgabe","E-203":"Auftrag","E-204":"Aufgabe","E-205":"","E-206":"","E-207":"","E-208":"Aufgabe","E-209":"","E-210":"Auftrag","E-211":"Hinweis","E-212":"Aufgabe"},
+ "artOptions":["entscheidung=Art Entscheidung","aufgabe=Art Aufgabe","hinweis=Art Hinweis","auftrag=Art Auftrag"],
+ "typSelects":0,
+ "write":"update entscheidungen/E-205 {\"art\":\"auftrag\"}","after":"auftrag|Thema","labelAfter":"Auftrag",
+ "cols":{"E-220":"Hinweise & Aufgaben","E-221":"Hinweise & Aufgaben","E-222":"Offen"},
+ "buttons":{"E-220":"Senden,Erledigt","E-221":"Senden,Gelesen","E-222":"Senden"}}}

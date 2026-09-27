@@ -1,0 +1,32 @@
+scenario(async out=>{
+  await until(()=>document.querySelector('#views button'));await sleep(300);
+  const vb=l=>findBtn('#views button',new RegExp('^'+l));
+  out.getsAtStart=ARCH.gets;out.subsAtStart=ARCH.subs;
+  out.tabs=$$('#views button .lng').map(x=>x.textContent).join(',');
+  await goView('Archiv');await until(()=>document.querySelector('#board .abgrp'));await sleep(50);
+  out.getsOnOpen=ARCH.gets;
+  out.groups=$$('#board .abgrp').map(s=>s.dataset.rel+':'+s.querySelector('.relbtn').getAttribute('aria-expanded')+':'+s.querySelector('.relhead .cnt').textContent.trim()).join('|');
+  out.shutShowsNoTable=$$('#board .abgrp table').length;
+  document.getElementById('ab:3.0.0b27').click();await sleep(60);
+  const g=()=>document.querySelector('#board .abgrp[data-rel="3.0.0b27"]');
+  const hd=t=>t?$$('thead tr:first-child th',t).map(x=>x.textContent.replace(/[↓↑]/g,'').trim()).join(','):'';
+  out.heads=hd(g().querySelector('.abtab'));
+  out.rows=$$('.abtab tbody tr[data-nr]',g()).map(t=>t.dataset.nr).sort().join(',');
+  out.subgroups=$$('.absub',g()).map(b=>b.dataset.kind+':'+b.querySelector('.relbtn').getAttribute('aria-expanded')+':'+b.querySelector('.cnt').textContent.trim()).join('|');
+  g().querySelector('tr[data-nr="E-010"]').click();await sleep(60);
+  const d=g().querySelector('details[data-nr="E-010"]');
+  out.cardOpen=!!(d&&d.open&&/Text 10/.test(d.textContent));
+  out.readOnly=d?{textareas:$$('textarea',d).length,selects:$$('select',d).length,answer:$$('.answer',d).length}:null;
+  out.restoreBtn=!!findBtn('#board .abrow button',/^Zurückholen$/);
+  document.getElementById('ab:3.0.0b27|auftraege').click();await sleep(60);
+  const ar=g().querySelector('.absub[data-kind="auftraege"] tbody tr[data-ab]');out.orderRow=ar?[...ar.children].map(c=>c.textContent).join('|'):null;
+  if(ar){ar.click();await sleep(60)}const af=g().querySelector('.absub[data-kind="auftraege"] tr.gfull');out.orderText=!!af&&af.textContent.includes('Ein alter Auftrag an Claude');
+  document.getElementById('ab:3.0.0b27|gespraeche').click();await sleep(60);
+  const gr=g().querySelector('.absub[data-kind="gespraeche"] tbody tr[data-ab]');if(gr){gr.click();await sleep(60)}
+  const gf=g().querySelector('.absub[data-kind="gespraeche"] tr.gfull');out.talkText=!!gf&&gf.textContent.includes('Frage an Claude')&&gf.textContent.includes('Die Antwort');out.talkInputs=gf?gf.querySelectorAll('textarea,input').length:-1;
+  out.storedOpen=JSON.parse(sessionStorage.getItem('eb-abrel')||'[]').sort().join(',');
+  await goView('Erledigt');await sleep(50);out.erledigtHeads=hd(document.querySelector('#board .atab'));
+  await goView('Archiv');await sleep(80);out.getsAfterReopen=ARCH.gets;out.subsEnd=ARCH.subs;
+  out.stillOpen=document.getElementById('ab:3.0.0b27').getAttribute('aria-expanded');
+  out.dialogs=DIALOGS.join(',');
+});

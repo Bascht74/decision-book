@@ -1,0 +1,6 @@
+{"expect":{
+  "before.Aufträge gelesen":"27.09.2026, 10:15", "before.Deine Karten bearbeitet":"27.09.2026, 10:45", "before.Claude zuletzt":"27.09.2026, 10:45",
+  "afterTalkAnswer.Aufträge gelesen":"27.09.2026, 11:30", "afterTalkAnswer.Deine Karten bearbeitet":"27.09.2026, 10:45", "afterTalkAnswer.Claude zuletzt":"27.09.2026, 11:30",
+  "afterCardAnswer.Deine Karten bearbeitet":"27.09.2026, 11:40", "afterCardAnswer.Claude zuletzt":"27.09.2026, 11:40",
+  "afterMeta.Claude zuletzt":"27.09.2026, 11:50", "afterMeta.Aufträge gelesen":"27.09.2026, 11:30"
+}}

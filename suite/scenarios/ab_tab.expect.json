@@ -1,0 +1,7 @@
+{"expect":{"getsAtStart":0,"subsAtStart":0,"tabs":{"has":"Erledigt,Archiv,Statistik"},"getsOnOpen":1,
+ "groups":"3.0.0b27:false:(3)|3.0.0b26:false:(1)","shutShowsNoTable":0,
+ "heads":"Nr.,Überschrift,Ziel,von,Geändert,Tokens","erledigtHeads":"Nr.,Überschrift,Ziel,von,Geändert,Tokens",
+ "rows":"E-010,E-011,E-012","subgroups":"auftraege:false:(1)|gespraeche:false:(1)",
+ "cardOpen":true,"readOnly":{"eq":{"textareas":0,"selects":0,"answer":0}},"restoreBtn":true,
+ "orderRow":"2026-09-20 11:00|Ein alter Auftrag an Claude|E-010","orderText":true,"talkText":true,"talkInputs":0,
+ "storedOpen":"3.0.0b27,3.0.0b27|auftraege,3.0.0b27|gespraeche","getsAfterReopen":1,"subsEnd":0,"stillOpen":"true","dialogs":""}}

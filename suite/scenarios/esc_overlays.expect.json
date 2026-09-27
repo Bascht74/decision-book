@@ -1,0 +1,4 @@
+{"expect":{
+  "bigOpen":true, "bigAfterEsc":false, "fieldKeptFocus":true, "secondEscLeavesField":true, "bigAfterEscOnPage":false,
+  "logOpen":true, "logEntries":{"min":1}, "logAfterEsc":false, "logOpensByKey":true, "logClosedByBackdrop":true
+}}

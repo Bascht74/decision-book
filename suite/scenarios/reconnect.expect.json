@@ -1,0 +1,3 @@
+{"run":{"budget":20000},
+ "expect":{"before":{"re":"^live"}, "afterFail":"Verbindung unterbrochen – verbinde neu …", "afterRetry":{"re":"^live"}, "gespraechListeners":1,
+  "newTalkShown":true, "afterRevoked":"Verbindung verloren – Seite neu laden", "statistikListeners":0}}

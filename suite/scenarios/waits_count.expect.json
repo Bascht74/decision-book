@@ -1,0 +1,8 @@
+{"expect":{
+  "text":"● 4 Karten · 1 Antwort warten auf Dich · 2 für b28", "hidden":false, "title":"(5) Entscheidungsbuch",
+  "parts":["wk:4 Karten","wa:1 Antwort"], "viewAfterAnswers":{"re":"^Aufträge"}, "viewAfterCards":{"re":"^Für Dich"}, "viewAfterClick":{"re":"^Für Dich"},
+  "textAfterRead":"● 4 Karten warten auf Dich · 2 für b28", "titleAfterRead":"(4) Entscheidungsbuch",
+  "textAfterCardDone":"● 3 Karten warten auf Dich · 1 für b28",
+  "textOneEach":"● 1 Karte · 1 Antwort warten auf Dich · 1 für b28", "titleOneEach":"(2) Entscheidungsbuch",
+  "textAnswerOnly":"● 1 Antwort wartet auf Dich · 0 für b28", "partsAnswerOnly":["wa"]
+}}

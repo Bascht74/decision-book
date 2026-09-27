@@ -1,0 +1,3 @@
+{"run":{"budget":30000},
+ "expect":{"pasteThumbs":1, "pasteEnabled":true, "arbeitSent":1, "arbeitBilder":1,
+  "dropAccepted":true, "dropThumbs":1, "dropEnabled":true, "pruefenBilder":1, "pruefenBlatt":"entschieden", "removedDisabled":true}}

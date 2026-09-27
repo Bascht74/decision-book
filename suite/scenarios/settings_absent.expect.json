@@ -1,0 +1,4 @@
+{"expect":{
+  "filter":["alle","Eigner","Claude"], "metaOfCardWithoutVon":"von Eigner", "answerLabelNamesOnlyTheRole":true,
+  "ready":{"re":"^Release 3\\.0\\.0b28Schritt 1/10"}, "links":[], "anyExternalLinkOnPage":0
+}}

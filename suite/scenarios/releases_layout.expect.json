@@ -1,0 +1,2 @@
+{"expect":{"tableWidthShare":{"min":98},"titleShare":{"min":50},"titleMono":false,"titleFontIsBody":true,"titleAlign":"left",
+ "numbersAlign":"right,right,right,right","titleLines":1,"countsTable":{"eq":{"mono":true,"maxWidth":"520px"}}}}

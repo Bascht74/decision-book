@@ -1,0 +1,4 @@
+{"_note":"render bounds are about ten times what the lazy page needed on 27.9.2026",
+ "run":{"budget":20000},
+ "expect":{"cards":{"min":300}, "closedWithBody":0, "nodesPerClosedCard":{"max":40}, "clickBuilds":true, "scriptOpenBuilds":true, "closesAgain":true,
+  "claudeRenderMs":{"max":300}, "archiveRenderMs":{"max":300}, "rows":{"min":300}, "archiveSearchRenderMs":{"max":300}, "hits":{"min":50}, "foundOpenWithBody":true}}

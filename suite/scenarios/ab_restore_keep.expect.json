@@ -1,0 +1,1 @@
+{"expect":{"askText":"E-011 kommt zurück ins Buch, unter „Erledigt“ (3.0.0b27), und steht dann nicht mehr im Archiv.","ziel":"3.0.0b27","hasVorher":false,"msg":{"re":"^Zurückgeholt: E-011 steht wieder im Buch, unter „Erledigt“ \\(3\\.0\\.0b27\\)\\."}}}

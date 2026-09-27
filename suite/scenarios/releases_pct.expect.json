@@ -1,0 +1,5 @@
+{"expect":{"heads":["Nr.","Überschrift","Stand","fertig","Tokens geschätzt","verbraucht","Differenz",""],"idx":3,
+ "cells":{"E-101":"40 %","E-102":"80 %","E-103":"–","E-104":"10 %","E-105":"100 %","E-201":"30 %","E-202":"0 %","E-203":"–"},
+ "groups":{"offen":"10 %","arbeit":"50 %","pruefen":"100 %"},"groups29":{"offen":"0 %","arbeit":"30 %"},
+ "sum28":"59 %","sum29":"15 %","align":"right","colClass":"c-pc w","fitsHundred":true,
+ "sorted":"E-104,E-102,E-101,E-103,E-105","widthKept":true,"writes":0}}

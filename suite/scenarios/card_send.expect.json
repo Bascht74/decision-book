@@ -1,0 +1,5 @@
+{"expect":{
+  "buttonEnabled":true, "sends":["[K:E-701] Bitte so umsetzen"], "writes":1, "reReadBeforeWrite":true,
+  "kommentare":["Claude: Erste Nachricht von Claude","Claude: Zwischenfrage von Claude","Eigner: Bitte so umsetzen"],
+  "lastLive":true, "wartet":"Claude", "blatt":"arbeit", "threadSaved":true, "fieldAfter":"", "draftText":"", "otherCardUntouched":true
+}}

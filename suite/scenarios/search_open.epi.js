@@ -1,0 +1,20 @@
+scenario(async out=>{
+  await until(()=>document.querySelector('#board details[data-nr="E-803"]'));
+  findBtn('#filter button',/^Claude$/).click();await sleep(50);
+  out.hiddenBefore=!document.querySelector('#board details[data-nr="E-802"]');
+  const gs=document.getElementById('gsuche');typeIn(gs,'802');await sleep(50);
+  out.hits=$$('#gtreffer li').map(l=>l.querySelector('b')&&l.querySelector('b').textContent);
+  findBtn('#gtreffer .kbtn',/Öffnen/).click();await sleep(100);
+  const d=document.querySelector('#board details[data-nr="E-802"]');
+  out.shown=!!d;out.open=!!(d&&d.open);out.boardCards=$$('#board details[data-nr]').length;
+  out.head=(document.querySelector('.found-head')||{}).textContent;
+  out.tabsHidden=document.getElementById('tabs').hidden;
+  __DB.external('entscheidungen/E-802',{geaendert:'2026-09-27T09:00:00.000Z'});await sleep(100);
+  out.stillShownAfterSnapshot=!!document.querySelector('#board details[data-nr="E-802"]');
+  document.activeElement&&document.activeElement.blur();press(document.body,'Escape');await sleep(100);
+  out.backTo=(document.querySelector('#views [aria-selected="true"]')||{}).textContent;
+  typeIn(gs,'seepferdchen');await sleep(50);findBtn('#gtreffer .kbtn',/Öffnen/).click();await sleep(100);
+  out.archiveCardShown=!!document.querySelector('#board details[data-nr="E-801"]');out.head2=(document.querySelector('.found-head')||{}).textContent;
+  findBtn('.found-head button',/Zurück/).click();await sleep(100);
+  out.backTo2=(document.querySelector('#views [aria-selected="true"]')||{}).textContent;
+});

@@ -1,0 +1,1 @@
+{"run":{"budget":20000}, "expect":{"msUntilLive":{"max":2000}, "cardsShown":{"min":1}}}

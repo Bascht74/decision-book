@@ -1,0 +1,4 @@
+{"expect":{"doneRows":["E-301"],"toggle":"▸ Verworfen (2)|false","rowsShut":0,"viewCount":"1",
+ "toggleOpen":"▾ Verworfen (2)|true","rowsOpen":["E-303","E-302"],"stored":"1","cardStand":"verworfen|Verworfen",
+ "groups":["offen|true|▾ Offen (1)|0 %","erledigt|false|▸ Erledigt (1)|100 %","verworfen|false|▸ Verworfen (2)|–"],
+ "move":"true|verworfen","standFilter":["Stand: alle","Offen","Erledigt","Verworfen"]}}

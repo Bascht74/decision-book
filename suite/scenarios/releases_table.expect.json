@@ -1,0 +1,7 @@
+{"expect":{"firstView":"Releases","groups":"3.0.0b28,3.0.0b29,3.0.0b30,später,Buch",
+ "heads":["Nr.","Überschrift","Stand","fertig","Tokens geschätzt","verbraucht","Differenz",""],
+ "order":"E-001,E-004,E-002,E-009,E-003","stand":"Offen,Entschieden,in Arbeit,Prüfen,Erledigt",
+ "pct":"0 %|0 %|–|100 %|100 %","prog":"0,1 Mio|50 Tsd.|0,2 Mio|10 Tsd.|1 Mio","ist":"0,1 Mio|–|0,2 Mio|10 Tsd.|1,5 Mio",
+ "diffs":"+20 Tsd.|–|−50 Tsd.|±0|+0,5 Mio","sum":"Summe|87 %|1,4 Mio|1,8 Mio|+0,5 Mio|",
+ "emptyNext":true,"reversed":"E-001,E-004,E-002,E-009,E-003","onlyOffen":"E-001,E-005","sumFiltered":"Summe|0 %|0,1 Mio|0,1 Mio|+20 Tsd.|",
+ "expandedBelow":true,"answerField":true,"stillHere":true,"arrow":"▾","closed":0}}

@@ -1,0 +1,4 @@
+{"run":{"budget":15000},
+ "expect":{"ran":"0.0.1,0.0.2","barFail":{"len":1},"barFail.0":{"re":"^fail: Aktualisierung angehalten bei 0\\.0\\.2: Test-Fehler zwei\\. Der Datenstand bleibt vor 0\\.1\\.0"},
+  "migriert":["0.0.1"],"version":"none","card":"none","busy":true,"ruleHeld":"pruefen","ruleAfter":"arbeit",
+  "ranAgain":"0.0.2","migriertAfter":["0.0.1","0.0.2","0.1.0"],"versionAfter":true,"cardAfter":"2026-01-10T10:00:00.000Z","busyAfter":false}}

@@ -1,0 +1,2 @@
+{"expect":{"viewButtonN":3, "badgeN":3, "boardCards":3, "same":true, "badge":{"re":"^● 3 Karten warten auf Dich · 2 für b28$"},
+  "readyLine":{"re":"Schritt 1/10 – Entscheidungen.*wartet auf Dich"}, "step1":{"re":"1 Karte unter „Offen“"}, "tableOffenCur":"1"}}

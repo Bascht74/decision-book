@@ -1,0 +1,24 @@
+scenario(async out=>{
+  const d=await until(()=>{const d=document.querySelector('details[data-nr="E-701"]');if(d)d.open=true;return d&&d.querySelector('.ktalk')&&d});
+  const bt=d.querySelector('.ktalk .donebtn');if(bt.getAttribute('aria-expanded')!=='true')bt.click();await sleep(50);
+  const steps=[...d.querySelectorAll('.ktalk .step')],last=steps[steps.length-1].querySelector('.full');
+  const t=last.querySelector('.mdtw table');
+  out.tables=last.querySelectorAll('table').length;
+  out.head=t?[...t.querySelectorAll('thead th')].map(x=>x.textContent):null;
+  out.rows=t?t.querySelectorAll('tbody tr').length:0;
+  out.row1=t?[...t.querySelectorAll('tbody tr')[0].children].map(x=>x.textContent):null;
+  out.boldInTable=t?[...t.querySelectorAll('strong')].map(x=>x.textContent):null;
+  out.rightAligned=t&&t.querySelector("tbody td:nth-child(3)")?t.querySelector('tbody td:nth-child(3)').style.textAlign:null;
+  out.heading=[...last.querySelectorAll('.mdh')].map(h=>h.textContent+'/'+h.getAttribute('aria-level'));
+  out.italic=[...last.querySelectorAll('em')].map(x=>x.textContent);out.code=[...last.querySelectorAll('code')].map(x=>x.textContent);
+  out.bullets=[...last.querySelectorAll('ul.mdl li')].map(x=>x.textContent);out.numbered=[...last.querySelectorAll('ol.mdl li')].map(x=>x.textContent);
+  out.linkInList=[...last.querySelectorAll('ul.mdl a')].map(a=>a.getAttribute('href'));
+  out.noSeparatorText=!/\|---/.test(last.textContent)&&!/##/.test(last.textContent)&&!/\*\*/.test(last.textContent);
+  out.closedHead=steps[0].querySelector('.who').textContent.replace(/^.*?\d\d:\d\d\s+/,'');
+  const sec=d.querySelector('.body .md');out.sectionTable=sec?[...sec.querySelectorAll('td')].map(x=>x.textContent):null;
+  out.sectionBold=sec?[...sec.querySelectorAll('strong')].map(x=>x.textContent):null;
+  await goView('Aufträge');await sleep(50);
+  const g=document.querySelector('[data-g="g1"] .bub');out.talkCells=g?[...g.querySelectorAll('th,td')].map(x=>x.textContent):null;
+  out.talkHeading=g&&g.querySelector('.mdh')?g.querySelector('.mdh').textContent:null;
+  const th=g&&g.querySelector('th');out.talkCenter=th?th.style.textAlign:null;
+});

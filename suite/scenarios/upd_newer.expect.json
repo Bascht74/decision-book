@@ -1,0 +1,1 @@
+{"expect":{"writes":0,"bar":{"len":1},"bar.0":{"re":"^warn: Das Buch hat Datenstand 99\\.0\\.0, diese Seite ist \\d+\\.\\d+\\.\\d+ und damit älter"},"version":"99.0.0"}}

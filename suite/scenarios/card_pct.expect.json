@@ -1,0 +1,4 @@
+{"expect":{"pct":{"E-801":"0 % fertig","E-802":"100 % fertig","E-803":"35 % fertig","E-810":"90 % fertig","E-804":"0 % fertig","E-805":"– % fertig",
+  "E-806":"60 % fertig","E-807":"0 % fertig","E-809":"100 % fertig","E-808":"100 % fertig"},
+  "rightGap":[0,0,0,0,0,0,0,0,0,0],"sameLineWide":[true,true,true,true,true],"allAtBottom":true,
+  "orders":{"a1":"0 % fertig","a2":"20 % fertig","a3":"– % fertig"},"orderRightGap":{"max":1},"minContrast":{"min":4.5},"writes":0}}

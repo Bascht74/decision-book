@@ -1,0 +1,22 @@
+scenario(async out=>{
+  const drop=(t,fs)=>{const dt=new DataTransfer();for(const f of fs)dt.items.add(f);t.dispatchEvent(new DragEvent('dragover',{dataTransfer:dt,bubbles:true,cancelable:true}));
+    const d=new DragEvent('drop',{dataTransfer:dt,bubbles:true,cancelable:true});t.dispatchEvent(d);return d.defaultPrevented};
+  const ta=await until(()=>document.getElementById('g-g1'));const wrap=ta.closest('[data-g]'),box=wrap.querySelector('.thumbs');
+  const note=()=>wrap.querySelector('.row .saved').textContent;
+  out.picker=!!box.querySelector('.fpick')&&/Datei anhängen/.test(box.querySelector('.fpick').textContent);
+  out.zipDrop=drop(ta,[new File(['PK'],'paket.zip',{type:'application/zip'})]);await sleep(100);
+  out.zipNote=note();out.zipChips=box.querySelectorAll('.tw').length;
+  drop(ta,[new File(['%PDF-1.4 x'],'bericht.pdf',{type:'application/pdf'}),new File(['a,b\n1,2'],'daten.csv',{type:'application/vnd.ms-excel'}),new File(['x'],'brief.docx',{type:''})]);
+  await until(()=>box.querySelectorAll('.tw .fchip').length>=2,3000);
+  out.chips=[...box.querySelectorAll('.tw .fchip .fn')].map(n=>n.textContent).join(',');
+  out.sizes=[...box.querySelectorAll('.tw .fchip .fs')].map(n=>n.textContent).join(',');
+  out.mixedNote=note();out.uploadTypes=(window.UPLOADS||[]).map(u=>u.type).join(',');
+  const x=box.querySelectorAll('.tw .tx')[1];x.click();await sleep(100);out.afterX=[...box.querySelectorAll('.tw .fchip .fn')].map(n=>n.textContent).join(',');
+  const send=findBtn('[data-g="g1"] .row .act',/^Senden/);out.enabled=!!send&&!send.disabled;send.click();
+  await until(()=>(__DB.store.get('gespraech/g1').nachrichten||[]).length>1,3000);await sleep(200);
+  const ids=__DB.store.get('gespraech/g1').nachrichten.slice(-1)[0].bilder||[];const doc=__DB.store.get('auftragsbilder/'+ids[0])||{};
+  out.stored=[doc.type,doc.name,typeof doc.size,!!doc.asset_id].join('|');
+  const w2=document.querySelector('[data-g="g1"]');const a=w2&&[...w2.querySelectorAll('.bub a.fchip')].pop();
+  out.sentLink=a?a.getAttribute('href'):'';out.sentName=a?a.querySelector('.fn').textContent:'';
+  await sleep(1500);out.draftEmpty=document.querySelector('[data-g="g1"]').querySelectorAll('.thumbs .tw').length;out.draftStore=localStorage.getItem('eb-draft:i:gi:g1');
+});

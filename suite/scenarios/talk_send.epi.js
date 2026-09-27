@@ -1,0 +1,20 @@
+scenario(async out=>{
+  const ta=await until(()=>document.getElementById('g-g1'));
+  typeIn(ta,'Meine Frage');
+  const send=findBtn('[data-g="g1"] .row .act',/^Senden/);
+  out.sendEnabledWithText=!send.disabled;
+  send.click();
+  out.fieldEmptyAtOnce=ta.value;
+  out.disabledDuringSend=send.disabled;
+  send.click();send.click();
+  await sleep(100);out.stillDisabledMidway=send.disabled;
+  await until(()=>CALLS.some(c=>c.startsWith('update gespraech/g1')));await sleep(400);
+  const g=__DB.store.get('gespraech/g1'),last=g.nachrichten.slice(-1)[0];
+  out.sends=CALLS.filter(c=>c.startsWith('SEND')).length;
+  out.sendText=(CALLS.find(c=>c.startsWith('SEND'))||'');
+  out.dbWrites=CALLS.filter(c=>/ gespraech\/g1/.test(c)).length;
+  out.messages=g.nachrichten.length;out.last=last.von+': '+last.text;out.lastLive=last.live;out.wartet=g.wartet;
+  out.draftText=JSON.parse(localStorage.getItem('eb-draft:t:g:g1')||'""');
+  out.fieldAfter=document.getElementById('g-g1').value;
+  out.bubbles=$$('[data-g="g1"] .bub').map(b=>b.textContent.replace(/\d{4}-\d\d-\d\d \d\d:\d\d/,'').trim());
+});

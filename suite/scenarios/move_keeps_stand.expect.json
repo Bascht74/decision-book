@@ -1,0 +1,3 @@
+{"expect":{"moveWrite":"update entscheidungen/E-101 {\"ziel\":\"3.0.0b29\"}","moved":"3.0.0b29|entschieden|entschieden","movedGroup":"3.0.0b29|entschieden",
+ "pruefenSelect":"true|wird schon bearbeitet","cardZiel":"true|wird schon bearbeitet","offenZiel":"false","fuerDichZiel":"true",
+ "writes":1,"pruefenDoc":"3.0.0b28|pruefen|umgesetzt"}}

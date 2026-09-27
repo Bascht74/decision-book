@@ -1,0 +1,6 @@
+{"expect":{
+  "heads":{"g1":"▾Bilder im Protokoll · Antwort da","g2":"▸Tasten bitte prüfen · wartet auf Claude","g3":"▾E-010 – Karte zehn"},
+  "g2FoldedFromStore":0, "g2HasField":false, "g1Bubbles":2,
+  "g1AfterFold":0, "g1Field":false, "stored":["g1","g2"], "g1Toggle":"false", "g1StillFoldedAfterSnapshot":0,
+  "g2AfterUnfold":{"min":1}, "stored2":["g1"]
+}}

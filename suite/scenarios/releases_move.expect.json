@@ -1,0 +1,5 @@
+{"expect":{"arbeitDisabled":true,"arbeitTitle":"wird schon bearbeitet","pruefenDisabled":true,"pruefenTitle":"wird schon bearbeitet","doneTitle":"schon erledigt","offenEnabled":true,
+ "oldButtons":0,"choices":"3.0.0b28 (hier),3.0.0b29,3.0.0b30,3.0.0b31,später","hereSelected":"3.0.0b28 (hier)","hereDisabled":true,
+ "buchChoices":"Buch (hier),3.0.0b28,3.0.0b29,3.0.0b30,3.0.0b31,später","writes":1,
+ "write":"update entscheidungen/E-001 {\"ziel\":\"3.0.0b31\"}","stored":"3.0.0b31","expandedByChange":0,"nowIn":"3.0.0b31","oldRow":0,
+ "choicesAfter":"3.0.0b28,3.0.0b29,3.0.0b30,3.0.0b31,3.0.0b32,später"}}

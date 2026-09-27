@@ -1,0 +1,4 @@
+{"expect":{"claude":"3.0.0b28,3.0.0b29,später,Buch,3.0.0b26,Ziel offen","claudeOnly":"3.0.0b28,3.0.0b29,später,Buch,Ziel offen",
+ "folded":"3.0.0b28,3.0.0b29 (zu),später,Buch,3.0.0b26,Ziel offen",
+ "zielNew":"3.0.0b28,3.0.0b29,3.0.0b30,3.0.0b31,3.0.0b32,später,Buch,Ziel offen",
+ "zielOld":"3.0.0b28,3.0.0b29,3.0.0b30,3.0.0b31,3.0.0b32,später,Buch,3.0.0b26,Ziel offen","dich":"3.0.0b30","releases":"0 false"}}

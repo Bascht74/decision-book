@@ -1,0 +1,2 @@
+{"expect":{"writes":0,"bar":{"len":1},"bar.0":{"re":"^warn: Dieses Buch hat Datenstand vor 0\\.1\\.0, die Seite ist \\d+\\.\\d+\\.\\d+\\. Es wird aktualisiert, sobald jemand mit Schreibrechten es öffnet"},
+ "buch":false,"card":"none","shown":true,"barAfterHeader":true}}

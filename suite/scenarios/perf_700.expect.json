@@ -1,0 +1,4 @@
+{"_note":"bounds are about ten times what v91 needed here on 27.9.2026 (first paint 85 ms, view 65 ms, archive keystroke 129 ms, search 2 ms)",
+ "run":{"budget":20000},
+ "expect":{"cardsInStore":700, "liveAtStart":true, "clockRuns":true, "firstPaintMs":{"max":2000}, "worstViewMs":{"max":800},
+  "archiveCards":{"min":400}, "archiveKeystrokeMs":{"max":1500}, "searchKeystrokeMs":{"max":400}}}

@@ -1,0 +1,8 @@
+{"expect":{"fields":["Stand","Ziel-Release","wartet auf","von","Art"],
+ "standOptions":["vorrat=Stand Vorrat","offen=Stand Offen","entschieden=Stand Entschieden","arbeit=Stand in Arbeit","pruefen=Stand Prüfen","erledigt=Stand Erledigt","verworfen=Stand Verworfen"],
+ "standValue":"offen","statusSelects":0,"chip":"Offen","oldDeferred":"Offen|offen|später","statusWordShown":false,
+ "toEntschieden":"update entscheidungen/E-101 {\"blatt\":\"entschieden\"}","movedTo":"entschieden|Entschieden",
+ "toPruefen":"update entscheidungen/E-103 {\"blatt\":\"pruefen\",\"token_fehlt\":true}","pulledBack":"2|arbeit",
+ "toErledigt":"update entscheidungen/E-104 {\"blatt\":\"erledigt\",\"erledigt_am\":\"…\"}",
+ "toVerworfen":"update entscheidungen/E-105 {\"blatt\":\"verworfen\"}","gone":true,
+ "docs":"E-101:entschieden|offen,E-103:arbeit|offen,E-104:erledigt|offen,E-105:verworfen|offen","writes":5}}

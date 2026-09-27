@@ -1,0 +1,1 @@
+{"run":{"flags":["--force-dark-mode"]}, "expect":{"buttons":{"min":3}, "minContrast":{"min":4.5}}}

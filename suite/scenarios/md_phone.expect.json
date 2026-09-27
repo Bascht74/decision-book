@@ -1,0 +1,2 @@
+{"run":{"width":390,"height":844,"wrap":true},
+ "expect":{"cardBoxes":2, "scrollsInside":[true,true], "insideScreen":[true,true], "talkScrollsInside":true, "overflowing":[]}}

@@ -1,0 +1,4 @@
+{"expect":{"countBefore":"4","writesAfterFirst":0,"askText":{"re":"^E-011 kommt zurück ins Buch, unter „Erledigt“, Ziel wird 3\\.0\\.0b28 \\(vorher 3\\.0\\.0b27\\), und steht dann nicht mehr im Archiv"},"ziel":"3.0.0b28","zielVorher":"3.0.0b27","askBtns":"Ja, zurückholen,Abbrechen",
+ "calls":["set entscheidungen/E-011","update archiv/karten-3.0.0b27","update statistik/3.0.0b27"],"sameFields":true,"hasId":false,
+ "archLeft":"E-010,E-012","statArchiv.erledigt":1,"statArchiv.verworfen":1,"msg":{"re":"^Zurückgeholt: E-011 steht wieder im Buch, unter „Erledigt“ \\(3\\.0\\.0b28, vorher 3\\.0\\.0b27\\)"},
+ "rowGone":true,"countAfter":"4","clash":"Karte E-010 steht schon im Buch – nichts geändert.","clashWrites":[],"dialogs":"","opened":true}}

@@ -1,0 +1,3 @@
+{"expect":{"first":{"eq":{"writes":4,"stamps":0,"order":"R-01 R-02 R-03 R-05 R-04 R-06"}},
+  "second":{"eq":{"writes":1,"stamps":0,"order":"R-01 R-03 R-02 R-05 R-04 R-06"}},
+  "third.stamps":0, "third.writes":{"max":8}, "third.order":"R-18 R-20 R-19 R-21 R-22", "tailUnranked":15, "geaendertMoved":0, "onlyRang":true}}

@@ -1,0 +1,1 @@
+{"expect":{"future":{"len":1},"future.0":{"re":"^Frist: (\\d\\d\\.\\d\\d\\. )?\\d\\d:\\d\\d – sonst: Option 1$"},"hasLocalHm":true,"past":["Frist abgelaufen – ich nehme: Option 2"],"none":[],"writes":0}}

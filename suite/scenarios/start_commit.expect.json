@@ -1,0 +1,2 @@
+{"expect":{"withText":"Release 3.0.0b28 starten","info":"Stand abc1234def56 · Lauf grün ↗","link":"https://example.org/lauf/1","standWrite":true,"orderWrite":true,"sent":true,
+  "missingText":"Release 3.0.0b28 starten – Stand fehlt","writesAfterFirstClick":0,"secondText":{"re":"ohne Stand\\?$"},"missingWrite":true}}

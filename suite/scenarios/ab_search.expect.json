@@ -1,0 +1,2 @@
+{"expect":{"getsBefore":0,"hits":"E-011:Archiv","numHits":{"has":"E-010:Archiv"},"wordHits":{"re":"^(?=.*E-101:Buch)(?=.*E-012:Archiv)(?=.*E-010:Archiv)"},
+ "getsSearch":1,"openView":"Archiv","openRow":"true","groupOpen":"true","cardShown":true,"getsEnd":1}}

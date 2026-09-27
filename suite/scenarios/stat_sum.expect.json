@@ -1,0 +1,7 @@
+{"expect":{"heads":"Release,veröffentlicht,Commits,geänderte Zeilen,Codezeilen,Tokens gesamt,davon auf Karten,davon von Claude geschrieben,Meiner Empfehlung gefolgt,Zeit seit dem vorigen Release",
+ "sum":"Gesamt (3 Releases)||16|1.500|50.000|30 Mio.|4,5 Mio.|3 Mio.|2 von 3 (67 %)|3,5 Tage",
+ "b27":"3.0.0b27|–|10|1.000|50.000|20 Mio.|4 Mio.|2 Mio.|1 von 2 (50 %)|(24 Std)",
+ "count":"3 Releases","hintTokens":true,"hintCards":true,"hintWritten":true,"hintRec":true,"hintSum":true,
+ "sortedFirst":"Gesamt (3 Releases)||16|1.500|50.000|30 Mio.|4,5 Mio.|3 Mio.|2 von 3 (67 %)|3,5 Tage","sortedSecond":{"re":"^3\\.0\\.0b25\\|"},
+ "filtered":"Gesamt (1 Release)||5|500|48.000|10 Mio.|500 Tsd.|1 Mio.|1 von 1 (100 %)|2 Tage",
+ "none":"Gesamt (0 Releases)||–|–|–|–|–|–|–|–","noneRows":1}}
