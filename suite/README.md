@@ -10,10 +10,10 @@ Runs before every publish of the decision book page. Only a green run is publish
     ./run_all.sh path/to/page.html
     ONLY='talk|card' ./run_all.sh     # a subset (regex over scenario names)
     SHOW=1 ./run_all.sh          # also print every scenario's full output (stderr)
-    JOBS=12 ./run_all.sh         # more Chromes at once (default 6)
+    JOBS=12 ./run_all.sh         # more Chromes in the pool (default 6)
 
 It prints one line per scenario, `ok NAME`, `skip NAME: why` or `FAIL NAME: field why: expected …, got …`, then a
-summary with the run time and the page version, and it exits 1 on any FAIL. The whole suite takes under a minute.
+summary with the run time and the page version, and it exits 1 on any FAIL. The whole suite takes about 15 seconds.
 The built pages and Chrome's DOM dumps stay in `out/` until the next run.
 
 Needs: Google Chrome in /Applications, python3. No network: every host name is made unresolvable
@@ -24,8 +24,13 @@ Needs: Google Chrome in /Applications, python3. No network: every host name is m
 * `lib/build.py` copies the page and puts three scripts right after `<body>`: `lib/stub.js` (the stand-in for
   `window.claude.use`), `lib/common.js` (error capture and helpers) and the scenario's `NAME.pre.js` (the data).
   `NAME.epi.js` goes right before `</body>`.
-* `lib/run_one.sh` starts headless Chrome with its own profile and `--virtual-time-budget` (timers run as fast as
-  the machine allows), waits for the DOM dump and stops Chrome (on this Mac it lingers after dumping).
+* `run_all.sh` starts `lib/pool.py serve`: JOBS headless Chromes (DevTools over `--remote-debugging-pipe`, no library),
+  started once per run and closed however the run ends. No window ever opens. With `CHROME_POOL` set to the socket of
+  a running pool, `run_all.sh` uses that one and starts no Chrome (`breaks/counterproof.py` does this).
+* `lib/run_one.sh` builds the page and asks the pool (`lib/pool.py dump`) to run it: a fresh browser context per
+  scenario (its own localStorage and IndexedDB, thrown away afterwards), the window size, a virtual time budget that
+  starts at the load event (timers run as fast as the machine allows), then the DOM as `--dump-dom` would write it.
+  Of the Chrome flags only `--force-dark-mode` is known (it becomes `prefers-color-scheme: dark`).
 * The scenario calls `probe(out)` once (through `scenario(async out=>{…})`). `lib/check.py` reads that output and
   compares it with `NAME.expect.json`.
 * Every script error and unhandled rejection anywhere on the page fails the scenario, whatever else it says.
@@ -52,7 +57,7 @@ Three files in `scenarios/`:
   * An output `{"_skip": "why"}` prints `skip` and does not fail (used by `dark_mode` when Chrome cannot emulate).
 
 Then add its break to `breaks/counterproof.py` (it refuses to run while a scenario has none) and run
-`python3 breaks/counterproof.py [PAGE]` (default: the template, about two minutes): every scenario must be ok on the
+`python3 breaks/counterproof.py [PAGE]` (default: the template, under a minute, on one pool of JOBS Chromes): every scenario must be ok on the
 page, and for each break it runs the scenario on a scratch copy of the page with one small change, expects FAIL naming
 the field, writes `COUNTERPROOF.md` and deletes the copies. A break whose text is not in the page exactly once counts as
 not proven -- rewrite it for the new text. Every check a scenario makes should have a break of its own.
@@ -68,8 +73,8 @@ A new migration brings a scenario that starts from the data before it (seeded in
 
 ## Timing
 
-Under `--virtual-time-budget` the clocks (`Date.now`, `performance.now`) stand still inside every task after the page
-has finished parsing; they only run while the page is being parsed. `perf_700` therefore measures synchronously in its
+The virtual time budget starts at the page's load event. From then on the clocks (`Date.now`, `performance.now`)
+stand still inside every task; they only run while the page is being parsed and loaded. `perf_700` therefore measures synchronously in its
 epilogue with `__SYNC = true`. Do not measure time in an `async` scenario.
 
 ## What the stand-in does not model

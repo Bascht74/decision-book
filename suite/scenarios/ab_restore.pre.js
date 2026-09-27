@@ -1,6 +1,6 @@
 // "Zurückholen" on an archived card: the first tap asks in the page (no browser dialog), the second writes the
 // card back as its own doc (all fields, without "id"), takes it out of the archive doc and lowers the summary in
-// "statistik"; the page says so; the count of "Erledigt" does not change. A card number already in the book is refused.
+// "statistik"; the page says so; the count of "Erledigt" (cards in the book only) goes up by one. A card number already in the book is refused.
 localStorage.setItem("eb-view","ablage");
 // synthetic fixture (roles "Eigner" and "Claude" only): two live cards of b28, the archive of b26 and b27 as Claude packs it
 // (format at the top of the page's script), and the statistik docs with their "archiv" summaries.

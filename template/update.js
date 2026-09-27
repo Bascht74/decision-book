@@ -45,9 +45,10 @@ const MIGRATIONS=[
 ];
 const UPD={busy:true,book:null,done:[]};
 function errWord(e){return String(e&&(e.message||e.code)||e||"Fehler").slice(0,160)}
-// "1.2.3" -> [1,2,3]; anything else (no meta/buch, an old "v113") counts as 0.0.0
-function verParts(v){const m=/^(\d+)\.(\d+)\.(\d+)$/.exec(String(v||"").trim());return m?[+m[1],+m[2],+m[3]]:[0,0,0]}
-function verCmp(a,b){const x=verParts(a),y=verParts(b);for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]<y[i]?-1:1;return 0}
+// "1.2.3" -> [1,2,3]; anything else (no meta/buch, an old "v113") counts as 0.0.0. Named "upd…" because the page has its
+// own verCmp for release names (3.0.0b28, 1.0.0-beta), and of two function declarations with one name the later wins.
+function updVerParts(v){const m=/^(\d+)\.(\d+)\.(\d+)$/.exec(String(v||"").trim());return m?[+m[1],+m[2],+m[3]]:[0,0,0]}
+function updVerCmp(a,b){const x=updVerParts(a),y=updVerParts(b);for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]<y[i]?-1:1;return 0}
 function updBar(text,kind){let b=document.getElementById("book-update");
   if(!document.getElementById("book-update-css")){const s=document.createElement("style");s.id="book-update-css";
     s.textContent=".updbar{margin:0 0 12px;padding:8px 12px;border:1px solid var(--line);border-left-width:4px;border-radius:8px;background:var(--sheet);font-size:14px;overflow-wrap:anywhere}"+
@@ -62,10 +63,10 @@ async function bookUpdate(db){
   try{const s=await db.doc("meta/buch").get();cur=s&&s.exists?(s.data()||{}):{}}
   catch(e){updBar("Der Datenstand des Buchs (meta/buch) ist nicht lesbar – keine Aktualisierung: "+errWord(e),"warn");return}
   const have=cur.version?String(cur.version):"";UPD.book=have||null;
-  const shown=have||"vor 0.1.0",c=verCmp(have,PAGE_VERSION);
+  const shown=have||"vor 0.1.0",c=updVerCmp(have,PAGE_VERSION);
   if(c===0){UPD.busy=false;if(typeof runRules==="function")setTimeout(runRules,0);return}
   if(c>0){updBar("Das Buch hat Datenstand "+have+", diese Seite ist "+PAGE_VERSION+" und damit älter. Bitte die neue Seite veröffentlichen.","warn");return}
-  const todo=MIGRATIONS.filter(m=>verCmp(m.to,have)>0&&verCmp(m.to,PAGE_VERSION)<=0).sort((a,b)=>verCmp(a.to,b.to));
+  const todo=MIGRATIONS.filter(m=>updVerCmp(m.to,have)>0&&updVerCmp(m.to,PAGE_VERSION)<=0).sort((a,b)=>updVerCmp(a.to,b.to));
   if(!can){updBar("Dieses Buch hat Datenstand "+shown+", die Seite ist "+PAGE_VERSION+". Es wird aktualisiert, sobald jemand mit Schreibrechten es öffnet; bis dahin kann einiges fehlen.","warn");return}
   const done=Array.isArray(cur.migriert)?cur.migriert.slice():[];
   const write=async extra=>{const d=Object.assign({},cur,{migriert:done.slice()},extra||{});await db.doc("meta/buch").set(d);cur=d};

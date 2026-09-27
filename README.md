@@ -6,7 +6,7 @@ together: cards with decisions, tasks and notes (each with Stand, Ziel, wartet a
 steps with a start button, per-release statistics, an archive, backup and restore. The data lives in
 the artifact's shared database; the page itself holds nothing of a project. The page is in German.
 
-Version: see `VERSION` (0.1.0) and `CHANGELOG.md`.
+Version: see `VERSION` (0.2.0) and `CHANGELOG.md`.
 
 ## What is in here
 
@@ -17,7 +17,9 @@ Version: see `VERSION` (0.1.0) and `CHANGELOG.md`.
 | `template/build_template.py` | builds `book.html`: sets `PAGE_VERSION` from `VERSION`, puts the update block in, neutralises project texts, runs the forbidden-strings check |
 | `tools/update_book.py` | checks the checkout and prints how Claude moves an existing book to this version |
 | `suite/` | the page's tests: headless Chrome, a stand-in for the artifact runtime, one scenario per behaviour, a counter-proof for each check, and `forbidden.py` |
-| `skill/` | the Claude Code skill for working with a book (`SKILL.md`) and its data model (`reference.md`) |
+| `.claude/skills/book/` | the Claude Code skill for working with a book (`SKILL.md`) and its data model (`reference.md`) |
+| `CLAUDE.md` | for Claude working on this repository: build, checks, release, commit rules |
+| `tools/bootstrap.sh` | the first thing a new session runs: suite, forbidden-strings check, next steps (no network) |
 | `SETUP.md` | publish the template as a new book, seed the settings, point Claude at the skill |
 
     suite/run_all.sh                       # all scenarios on the template + the forbidden-strings check
@@ -40,7 +42,8 @@ data is older, it brings the data up to date itself (see below).
 1. Edit `template/book.html` (the update block only in `template/update.js`), bump `VERSION`, write the
    `BUCH_LOG` entry and the `CHANGELOG.md` section.
 2. `python3 template/build_template.py template/book.html` -- sets the version, puts the update block in,
-   checks for forbidden strings. (Given a live page from before 0.1.0 it makes the template from it.)
+   checks for forbidden strings. (Given a live page that still counts v1, v2 … it makes the template from it;
+   the change log then holds one neutral entry -- put the real `BUCH_LOG` entries back and build once more.)
 3. `suite/run_all.sh` green; a new behaviour brings its scenario, and each check its break in
    `suite/breaks/counterproof.py`; `python3 suite/breaks/counterproof.py` proves them all.
 4. Commit. Moving a book to it: `python3 tools/update_book.py` prints the steps.

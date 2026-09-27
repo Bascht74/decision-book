@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """counterproof.py [PAGE] -- for every scenario, each of its breaks: one small change in a scratch copy of the page
 (default: the template, ../template/book.html), the scenario run alone, and it must print FAIL naming the field the
-break is about. Every scenario must also be ok on the unbroken page first. Runs JOBS (default 6) at a time.
+break is about. Every scenario must also be ok on the unbroken page first. Runs JOBS (default 6) at a time, all on one
+Chrome pool (lib/pool.py, JOBS headless Chromes) started here and closed at the end, whatever happens.
 Writes COUNTERPROOF.md next to run_all.sh and deletes every scratch copy afterwards. Never touches the page itself.
 A break whose text is not found exactly once in the page (the page moved on) counts as NOT PROVEN: rewrite it."""
-import os, re, subprocess, sys
+import os, re, shutil, subprocess, sys, tempfile, time
 from concurrent.futures import ThreadPoolExecutor
 here = os.path.dirname(os.path.abspath(__file__)); suite = os.path.dirname(here)
 src_p = sys.argv[1] if len(sys.argv) > 1 else os.path.join(suite, '..', 'template', 'book.html')
@@ -17,10 +18,10 @@ def once(page, old, new):
     return page.replace(old, new)
 # scenario, what the break does, old text, new text, field expected in the FAIL line
 B = [
- ('ab_counts', 'the count of "Erledigt" leaves the archive out', '.length+archCount("erledigt");', '.length;', 'erledigtBefore'),
+ ('ab_counts', 'the count of "Erledigt" adds the archive again', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length+archCount("erledigt");', 'erledigtBefore'),
  ('ab_counts', 'before loading, the summaries in "statistik" are not read', 'function statArch(k){let n=0;', 'function statArch(k){return 0;let n=0;', 'archivBefore'),
- ('ab_counts', 'after loading, the rejected archived cards count as done', 'return arch?archOnly().filter(r=>r.blatt===b&&visible(r)).length:statArch(b)', 'return arch?archOnly().filter(visible).length:statArch(b)', 'erledigtAfter'),
- ('ab_counts', 'the line under "Erledigt" does not name the archived cards', '+(inArch?" · dazu "+inArch+" im Archiv":"")', '', 'erlLine'),
+ ('ab_counts', 'once the archive is loaded, "Erledigt" counts its cards too', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length+(arch?archOnly().length:0);', 'erledigtAfter'),
+ ('ab_counts', 'the line under "Erledigt" names the archived cards again', 'const inArch=0,archLine', 'const inArch=archCount("erledigt"),archLine', 'erlLine'),
  ('ab_counts', '"Tokens (Karten)" counts the cards in the book only', 'function tokensOf(v){let sum=0;for(const r of allCards()){', 'function tokensOf(v){let sum=0;for(const r of rows){', 'tokensB27'),
  ('ab_counts', '"Empfehlung getroffen" counts the cards in the book only', 'function recHit(v){let n=0,m=0;for(const r of allCards()){', 'function recHit(v){let n=0,m=0;for(const r of rows){', 'recB27'),
  ('ab_counts', '"Statistik" does not load the archive', '  loadArchive();if(archLoading)w.append(', '  if(archLoading)w.append(', 'getsStat'),
@@ -52,6 +53,7 @@ B = [
  ('ab_restore', 'a card brought back keeps its old release as target', '{const nz=restoreZiel(body.ziel);if(nz.vorher!=null){body.ziel_vorher=nz.vorher;body.ziel=nz.ziel}}', '', 'ziel'),
  ('ab_restore', 'the old target is not kept in ziel_vorher', 'body.ziel_vorher=nz.vorher;body.ziel=nz.ziel', 'body.ziel=nz.ziel', 'zielVorher'),
  ('ab_restore', 'the question does not name the new target', '(nz.vorher!=null?", Ziel wird "+nz.ziel+" (vorher "+(nz.vorher||"offen")+")":" ("+(r.ziel||"Ziel offen")+")")', '" ("+(r.ziel||"Ziel offen")+")"', 'askText'),
+ ('ab_restore', '"Erledigt" counts the loaded archive too', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length+(arch?archOnly().filter(r=>r.blatt==="erledigt").length:0);', 'countBefore'),
  ('ab_restore_keep', 'without a current release the target is emptied', 'return cur&&cur!==o?{ziel:cur,vorher:o}', 'return cur!==o?{ziel:cur,vorher:o}', 'ziel'),
  ('ab_restore_keep', 'ziel_vorher is written when nothing changes', '{const nz=restoreZiel(body.ziel);if(nz.vorher!=null){body.ziel_vorher=nz.vorher;body.ziel=nz.ziel}}', '{const nz=restoreZiel(body.ziel);body.ziel_vorher=nz.vorher!=null?nz.vorher:body.ziel;body.ziel=nz.ziel}', 'hasVorher'),
  ('ab_restore_ro', '"Zurückholen" is offered without write access', 'if(db&&canWrite){const sure=abSure.has(r.nr);', 'if(db){const sure=abSure.has(r.nr);', 'restoreBtns'),
@@ -62,7 +64,7 @@ B = [
  ('ab_search', '"Öffnen" on an archived hit stays in the view it was in', 'view="ablage";focusNr=nr;foundNr=null;', 'focusNr=nr;foundNr=null;', 'openView'),
  ('ab_search', 'the release of the found card stays shut', 'abFlip(r._rel,true);abOpen.add(nr);render(true);', 'abOpen.add(nr);render(true);', 'groupOpen'),
  ('ab_stat_cols', 'there is no tab "Karten und Tokens"', '["karten","Karten und Tokens"],', '', 'subTab'),
- ('ab_stat_cols', 'an Art the page does not know gets no column', '...ARTS.map(a=>a[0]),...stat.flatMap(r=>Object.keys(byArt(r)))', '...ARTS.map(a=>a[0])', 'heads'),
+ ('ab_stat_cols', 'an Art the page does not know gets no column', '...ARTS.map(a=>a[0]),...KL.flatMap(r=>Object.keys(byArt(r)))', '...ARTS.map(a=>a[0])', 'heads'),
  ('ab_stat_cols', 'a missing value reads 0 instead of "–"', 'return v==null?"–":(fmt||fmtN)(v)},r=>num(f(r))];', 'return (fmt||fmtN)(v==null?0:v)},r=>num(f(r))];', 'rowB26'),
  ('ab_stat_cols', 'the difference has no sign', 'K("Differenz",r=>r.tokens_diff,sg)', 'K("Differenz",r=>r.tokens_diff,tk)', 'rowB27'),
  ('ab_stat_cols', 'a value that is no number is shown as it comes', 'const num=x=>x==null||x===""||typeof x==="boolean"||!isFinite(Number(x))?null:Number(x)', 'const num=x=>x==null||x===""?null:Number(x)', 'rowB25'),
@@ -239,7 +241,7 @@ B = [
  ('rr_overview', 'a Hinweis counts in the overview', 'rows.filter(r=>!isTopArt(r)&&cols.some(', 'rows.filter(r=>cols.some(', 'rowsShown'),
  ('rr_pct', 'one card without an estimate makes the sum a plain average again', 'wOf=x=>x[1]!=null&&x[1]>0?x[1]:fill;', 'wOf=x=>kn.length===k.length?x[1]:1;', 'sumB28'),
  ('rr_pct', '99.6 % rounds to "100 %"', 'return Math.min(v<100?99:100,Math.max(v>0?1:0,Math.round(v)))+" %"}', 'return Math.round(v)+" %"}', 'sumB29'),
- ('rr_pct', 'the column heads are as before E-605 (they break inside a word: "verbrauch / t")', '.atab.rtab th button{overflow-wrap:normal;word-break:normal;hyphens:manual;padding:6px 3px;font-size:12.5px}', '', 'brokenWords'),
+ ('rr_pct', 'the column heads are as they were before (they break inside a word: "verbrauch / t")', '.atab.rtab th button{overflow-wrap:normal;word-break:normal;hyphens:manual;padding:6px 3px;font-size:12.5px}', '', 'brokenWords'),
  ('rr_pct', 'the column heads are wider than their columns', 'hyphens:manual;padding:6px 3px;font-size:12.5px}', 'hyphens:manual;padding:6px 3px;font-size:16px}', 'overflowHeads'),
  ('rr_phone', 'the runs box is 450 px wide', '.relruns{margin:6px 0 0;', '.relruns{margin:6px 0 0;min-width:450px;', 'overflowing'),
  ('rr_phone', 'a long run name does not wrap', 'display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere}', 'display:flex;flex-direction:column;gap:2px}', 'overflowing'),
@@ -290,11 +292,15 @@ B = [
  ('upd_current', 'a current book is migrated anyway', 'if(c===0){UPD.busy=false;', 'if(c===0&&false){UPD.busy=false;', 'writes'),
  ('upd_current', "the owner's rules never start on a current book", 'if(c===0){UPD.busy=false;', 'if(c===0){', 'rule'),
  ('upd_fail_stops', 'a failed migration does not stop the run', 'beim nächsten Öffnen wird es noch einmal versucht.","fail");return}}', 'beim nächsten Öffnen wird es noch einmal versucht.","fail")}}', 'card'),
- ('upd_fail_stops', 'the migrations run in list order, not by version', '.sort((a,b)=>verCmp(a.to,b.to))', '', 'ran'),
+ ('upd_fail_stops', 'the migrations run in list order, not by version', '.sort((a,b)=>updVerCmp(a.to,b.to))', '', 'ran'),
  ('upd_fail_stops', 'a recorded migration runs again', '    if(done.includes(m.to))continue;\n', '', 'ranAgain'),
  ('upd_fail_stops', 'the version moves with every migration that ran', 'UPD.done.push({to:m.to,r:r==null?"":String(r)});await write()', 'UPD.done.push({to:m.to,r:r==null?"":String(r)});await write({version:m.to})', 'version'),
  ('upd_fail_stops', 'the failure does not name the migration', '"Aktualisierung angehalten bei "+m.to+": "', '"Aktualisierung angehalten: "', 'barFail'),
  ('upd_fail_stops', "the owner's rules write while the update is not done", 'async function runRules(){if(UPD.busy||', 'async function runRules(){if(', 'ruleHeld'),
+ ('upd_version_only', 'the recorded migrations are forgotten', 'const done=Array.isArray(cur.migriert)?cur.migriert.slice():[];', 'const done=[];', 'migriert'),
+ ('upd_version_only', 'the version stays when there is nothing to migrate', 'try{await write({version:PAGE_VERSION,', 'try{await write({', 'version'),
+ ('upd_version_only', 'the page does not say that the book was brought up to date', 'updBar("Buch aktualisiert: Datenstand "', 'void("Buch aktualisiert: Datenstand "', 'bar'),
+ ('upd_version_only', "the owner's rules stay off after the update", 'UPD.busy=false;UPD.book=PAGE_VERSION;', 'UPD.book=PAGE_VERSION;', 'rule'),
  ('upd_migrate_old', 'the old stamp is not copied to eigner_am', 'db.doc("entscheidungen/"+c.id).update({eigner_am:take(c.d)})', 'Promise.resolve()', 'e1'),
  ('upd_migrate_old', 'a newer eigner_am is written over', 'return o&&(!n||String(o)>String(n))?o:null', 'return o?o:null', 'e2'),
  ('upd_migrate_old', 'the migration is not idempotent (an equal stamp is written again)', 'String(o)>String(n))?o:null', 'String(o)>=String(n))?o:null', 'writesAgain'),
@@ -325,7 +331,42 @@ B = [
  ('waits_agree', 'the badge also counts "wartet: Dich" cards that "Für Dich" does not show', 'const mineRows=forYou().all,cards=mineRows.length;', 'const mineRows=[...forYou().all,...rows.filter(r=>r.wartet==="Dich"&&r.blatt!=="erledigt"&&!forYou().all.includes(r))],cards=mineRows.length;', 'badgeN'),
  ('waits_count', 'read talks count as waiting too', 'const talks=gsp.filter(g=>g.status!=="gelesen"&&', 'const talks=gsp.filter(g=>', 'text'),
  ('waits_count', 'one card or answer reads in the plural', 'text:k+" "+(k===1?one:many)', 'text:k+" "+many', 'textOneEach'),
- ('waits_count', 'the answers part leads to "Für Dich" instead of "Aufträge"', '"Antworten","sitzung","wa"', '"Antworten","dich","wa"', 'viewAfterAnswers')
+ ('waits_count', 'the answers part leads to "Für Dich" instead of "Aufträge"', '"Antworten","sitzung","wa"', '"Antworten","dich","wa"', 'viewAfterAnswers'),
+ # "Archiv packen" in the settings
+ ('pack_list', 'a release with an open card is offered for packing', 'if(!relOrd(z)||i>last||!relClosed(z))return;', 'if(!relOrd(z)||i>last)return;', 'lines'),
+ ('pack_list', 'a release with nothing to pack is listed', 'if(x.packed||!(x.k.length+x.a.length+x.g.length))continue;', 'if(x.packed)continue;', 'lines'),
+ ('pack_list', 'a packed release is listed', 'if(x.packed||!(x.k.length+x.a.length+x.g.length))continue;', 'if(!(x.k.length+x.a.length+x.g.length))continue;', 'lines'),
+ ('pack_list', 'a packed release is offered again', 'packed:!!(s.archiv&&typeof s.archiv==="object")', 'packed:false', 'lines'),
+ ('pack_list', 'the section does not say that "Buch", "später" and no target are never packed', ' Karten mit Ziel „Buch“, „später“ oder ohne Ziel werden nie gepackt.', '', 'hint'),
+ ('pack_list', 'orders not taken and talks not read are packed too', 'a=ia.filter(x=>x.status!=="neu"&&x.status!=="in_bearbeitung"),g=ig.filter(x=>x.status==="gelesen")', 'a=ia,g=ig', 'lines'),
+ ('pack_happy', '"Packen" writes at the first tap, without the question', 'b.onclick=()=>{for(const q of list.querySelectorAll("#pack-frage"))q.remove();', 'b.onclick=()=>{packRun(x.z,say);return;for(const q of list.querySelectorAll("#pack-frage"))q.remove();', 'writesAfterFirst'),
+ ('pack_happy', 'the archive docs are not read back', 'for(const d of docs){said("prüft das Archiv', 'for(const d of []){said("prüft das Archiv', 'calls'),
+ ('pack_happy', 'statistik is written after the deletes', 'await db.doc("statistik/"+(sd?sd.id:z)).update(packSums(ek,ea,eg,docs));', 'setTimeout(()=>db.doc("statistik/"+(sd?sd.id:z)).update(packSums(ek,ea,eg,docs)),500);', 'calls'),
+ ('pack_happy', 'statistik is written over instead of updated (its other fields are lost)', '.update(packSums(ek,ea,eg,docs))', '.set(packSums(ek,ea,eg,docs))', 'stat.ordnung'),
+ ('pack_happy', 'an order in the archive has no "release"', 'ea=p.a.map(x=>Object.assign({},x,{release:z}))', 'ea=p.a', 'aSame'),
+ ('pack_happy', 'the token difference counts cards with only one of the two numbers', 'if(p!=null&&i!=null){diff+=i-p;has.d++}', '{diff+=(i||0)-(p||0);has.d++}', 'stat.tokens_diff'),
+ ('pack_happy', '"Ja, packen" asks with a browser dialog', 'yes.onclick=()=>{ask.remove();', 'yes.onclick=()=>{if(!confirm("Packen?"))return;ask.remove();', 'dialogs'),
+ ('pack_happy', 'the deletes show no progress', 'said("löscht die Originale … "+(n+1)+" von "+del.length);', '', 'progress'),
+ ('pack_readback', 'the read-back compares only the number of entries', 'if(!bad)for(let i=0;i<got.length;i++)if(canon(got[i])!==canon(want[i]))', 'if(false)for(let i=0;i<got.length;i++)if(canon(got[i])!==canon(want[i]))', 'deletes'),
+ ('pack_delete_fail', 'a failed delete does not stop the others', 'catch(x){return said("Gestoppt beim Löschen von "', 'catch(x){said("Gestoppt beim Löschen von "', 'deletes'),
+ ('pack_changed', 'an original changed since packing is deleted all the same', 'if(live&&canon(without(live,key))!==canon(without(e,"id")))return', 'if(false)return', 'note'),
+ ('pack_split', 'the cards are not split at 200 KB', 'if(cur.length&&size+l>PACK_MAX)flush();', '', 'docs'),
+ ('pack_ro', 'the section is shown without write access', 'function packSection(box){if(!db||!canWrite)return;', 'function packSection(box){if(!db)return;', 'section'),
+ ('pack_phone', 'the list is 480 px wide', '.packlist{list-style:none;', '.packlist{min-width:480px;list-style:none;', 'overflowing'),
+ # the one order of releases, and "Karten und Tokens" counted live
+ ('stat_order', 'the releases are sorted by "ordnung" again', 'stat=sortStat(s.docs.map(d=>Object.assign({id:d.id},d.data())));', 'stat=s.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(a.ordnung??0)-(b.ordnung??0));', 'order'),
+ ('stat_order', '"-beta" is not read as a version', '(?:(-?beta|b)(\\d*))?$/i', '(?:(b)(\\d*))?$/i', 'order'),
+ ('stat_order', 'a release without "veroeffentlicht" goes to the top', 'v=-Infinity;for(const p of pub)', 'v=Infinity;for(const p of [])', 'order'),
+ ('stat_order', 'the newest Codezeilen are taken by "ordnung"', 'const newest=sortStat([...rs]).reverse().find(', 'const newest=[...rs].sort((a,b)=>(b.ordnung??0)-(a.ordnung??0)).find(', 'codeSum'),
+ ('stat_order', 'the span of a release starts at the first release, not the previous one', 'for(let j=i-1;j>=0;j--){const t=relPub(stat[j]);', 'for(let j=0;j<i;j++){const t=relPub(stat[j]);', 'pack'),
+ ('stat_live', 'a release not packed is not counted from the cards', 'if(!live.length)return r;const L=', 'if(true)return r;const L=', '3_0_0b28'),
+ ('stat_live', 'live rows are not marked', 'r._live?{class:"livesum",title:"aus den Karten im Buch gezählt"}:{}', '{}', '3_0_0b28'),
+ ('stat_live', 'a packed release ignores the cards in the book again', '  return Object.assign({},r,{karten:N(r.karten)+L.karten,', '  return r;return Object.assign({},r,{karten:N(r.karten)+L.karten,', '3_0_0b26'),
+ ('stat_live', 'the explanation still says "–" before packing', 'Ein gepacktes Release zeigt die Summen vom Packen ins Archiv; alle anderen werden aus den Karten im Buch gezählt (kursiv). Ein Release ohne Karten zeigt „–“.', 'Vor dem Packen steht hier „–“.', 'hint'),
+ ('stat_live', 'live rows are not italic', '.livesum td{font-style:italic}', '', 'italic'),
+ # the "Ziel" dropdown and the target "Buch"
+ ('ziel_buch', '"Buch" is offered although no card carries it', 'if(rows.some(r=>r.ziel==="Buch"))set.add("Buch");', 'set.add("Buch");', 'without'),
+ ('ziel_buch', '"Buch" is never offered', 'if(rows.some(r=>r.ziel==="Buch"))set.add("Buch");', '', 'with'),
 ]
 def run(page_text, tag, name):
     p = os.path.join(here, tag + '.html'); open(p, 'w', encoding='utf-8').write(page_text)
@@ -341,9 +382,24 @@ def one(i):
     try: after = run(once(base, old, new), 'brk_%03d' % i, name)
     except Stale as e: after = 'STALE ' + str(e)
     return after
-with ThreadPoolExecutor(int(os.environ.get('JOBS', '6'))) as ex:
-    before = dict(zip(names, ex.map(lambda n: run(base, 'pre_' + n, n), names)))
-    afters = list(ex.map(one, range(len(B))))
+# one Chrome pool (lib/pool.py) for every run_all.sh call below: JOBS Chromes for the whole counter-proof, not one per call
+jobs = int(os.environ.get('JOBS', '6'))
+pdir = tempfile.mkdtemp(prefix='eb_pool_')
+os.environ['CHROME_POOL'] = sock = os.path.join(pdir, 'pool.sock')
+pool = subprocess.Popen([sys.executable, os.path.join(suite, 'lib', 'pool.py'), 'serve', sock, str(jobs)])
+try:
+    for _ in range(300):
+        if os.path.exists(sock) or pool.poll() is not None: break
+        time.sleep(0.1)
+    if not os.path.exists(sock): sys.exit('no Chrome pool (lib/pool.py) came up')
+    with ThreadPoolExecutor(jobs) as ex:
+        before = dict(zip(names, ex.map(lambda n: run(base, 'pre_' + n, n), names)))
+        afters = list(ex.map(one, range(len(B))))
+finally:
+    pool.terminate()
+    try: pool.wait(30)
+    except subprocess.TimeoutExpired: pool.kill(); pool.wait()
+    shutil.rmtree(pdir, ignore_errors=True)
 rows = []; bad = 0
 for (name, what, old, new, field), after in zip(B, afters):
     good = before[name].startswith('ok ') and after.startswith('FAIL ') and field in after

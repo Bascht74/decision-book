@@ -1,0 +1,1 @@
+{"expect": {"note": {"re": "^Gepackt: 3\\.0\\.0b27 – 3 Karten, 1 Aufträge, 1 Gespräche in 4 Archiv-Dokumenten"}, "docs": "archiv/karten-3.0.0b27,archiv/karten-3.0.0b27-2", "maxKB": {"max": 200}, "ids": "E-010,E-011,E-012", "readBack": 2, "statDocs": ["karten-3.0.0b27", "karten-3.0.0b27-2", "auftraege-3.0.0b27", "gespraeche-3.0.0b27"]}}

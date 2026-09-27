@@ -1,5 +1,5 @@
 ---
-name: decision-book
+name: book
 description: Working with the owner through the decision book (Entscheidungsbuch), a claude.ai artifact with cards, orders, live talks and a shared database. Read before the first read or write to the book in a session, before answering a live comment prefixed [G:], [K:], [A:] or [R:], on every 15-minute wake-up, before starting or finishing any work on a card, before a release step, and before publishing a new version of the page or updating a book to one.
 ---
 

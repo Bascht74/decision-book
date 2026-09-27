@@ -1,0 +1,1 @@
+{"expect": {"note": {"re": "^Gestoppt beim Löschen von entscheidungen/E-011: .*Das Archiv ist geschrieben und geprüft; gelöscht: 1 von 5 Originalen, der Rest steht noch im Buch\\.$"}, "deletes": ["delete entscheidungen/E-010", "delete entscheidungen/E-011 FAILED"], "left": "E-011,E-012", "statArchiv": true}}

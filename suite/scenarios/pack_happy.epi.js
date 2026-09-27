@@ -1,0 +1,36 @@
+scenario(async out=>{
+  const cnt=l=>findBtn('#views button',new RegExp('^'+l)).querySelector('.n').textContent;
+  await openSettings();await until(()=>document.getElementById('pack:3.0.0b27'));
+  out.erledigtBefore=cnt('Erledigt');
+  const w0=CALLS.length;document.getElementById('pack:3.0.0b27').click();await sleep(200);
+  out.ask=(document.querySelector('#pack-frage .impq')||{}).textContent;out.writesAfterFirst=calls(w0).filter(c=>!/^get /.test(c)).length;
+  const notes=[];const ob=new MutationObserver(()=>{const t=packNote();if(t&&notes[notes.length-1]!==t)notes.push(t)});ob.observe(document.getElementById('pack-stand'),{childList:true,characterData:true,subtree:true});
+  {const y=document.getElementById('pack-ja');if(y)y.click()}await until(()=>/^(Gepackt|Gestoppt|Nicht)/.test(packNote()),8000);await sleep(200);
+  out.note=packNote();out.progress=notes.some(t=>/^löscht die Originale … 1 von 5/.test(t))&&notes.some(t=>/^prüft das Archiv/.test(t));
+  out.calls=calls(w0).filter(c=>!/^get (entscheidungen|auftraege|gespraech|statistik|meta)/.test(c));
+  const st=__DB.store,norm=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
+  const K=st.get('archiv/karten-3.0.0b27'),A=st.get('archiv/auftraege-3.0.0b27'),G=st.get('archiv/gespraeche-3.0.0b27');
+  out.kIds=K&&K.eintraege.map(e=>e.id).join(',');out.kHead=K&&[K.art,K.release,/^\d{4}-\d\d-\d\dT/.test(K.gepackt)].join('|');
+  out.kSame=!!K&&K.eintraege.every(e=>{const o=Object.assign({},e);delete o.id;return norm(o)===norm(ORIG['entscheidungen/'+e.id])});
+  out.aSame=!!A&&A.eintraege.length===1&&norm(A.eintraege[0])===norm(Object.assign({id:'a1',release:'3.0.0b27'},ORIG['auftraege/a1']));
+  out.gSame=!!G&&G.eintraege.length===1&&norm(G.eintraege[0])===norm(Object.assign({id:'g1'},ORIG['gespraech/g1']));
+  out.stat=st.get('statistik/3.0.0b27');
+  out.left=[...st.keys()].filter(k=>/^(entscheidungen|auftraege|gespraech)\//.test(k)).sort().join(',');
+  out.listAfter=packLines();out.dialogs=DIALOGS.join(',');
+  press(document.body,'Escape');await sleep(100);
+  out.erledigtAfter=cnt('Erledigt');
+  await goView('Archiv');await until(()=>document.getElementById('ab:3.0.0b27'),3000);
+  document.getElementById('ab:3.0.0b27').click();await sleep(80);
+  out.archRows=$$('#board .abgrp[data-rel="3.0.0b27"] .abtab tr[data-nr]').map(t=>t.dataset.nr).sort().join(',');
+  out.erledigtInArchiv=cnt('Erledigt');
+  const gs=document.getElementById('gsuche');typeIn(gs,'zauberwort');await until(()=>$$('#gtreffer li.garch').length,3000);
+  out.search=$$('#gtreffer li').filter(li=>li.querySelector('b')).map(li=>li.querySelector('b').textContent+':'+(li.querySelector('.archmark')?'Archiv':'Buch')).join(',');
+  typeIn(gs,'');await sleep(50);
+  document.querySelector('#board .abtab tr[data-nr="E-011"]').click();await sleep(60);
+  findBtn('#board .abrow button',/^Zurückholen$/).click();await sleep(80);
+  {const yes=findBtn('#board .abrow button',/^Ja, zurückholen$/);if(yes)yes.click()}
+  await until(()=>document.getElementById('ab-msg'),3000);await sleep(200);
+  out.back=!!st.get('entscheidungen/E-011');out.backMsg=(document.getElementById('ab-msg')||{}).textContent||null;
+  out.archLeft=(st.get('archiv/karten-3.0.0b27')||{eintraege:[]}).eintraege.map(e=>e.id).join(',');
+  out.erledigtEnd=cnt('Erledigt');
+});

@@ -40,7 +40,7 @@ h1{font-size:22px;font-weight:600;margin:0}
 .vlog .box{background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:10px;max-width:760px;width:100%;max-height:calc(100vh - 80px);overflow:auto;padding:16px 20px}
 .vlog .top{display:flex;justify-content:space-between;align-items:center;gap:8px;position:sticky;top:-16px;background:var(--sheet);padding:4px 0 8px}
 .vlog h2{font-size:17px;margin:0}.vlog button{font:13px var(--font);background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 10px;cursor:pointer}
-.imp{margin-top:14px}.imp h4{font:600 14px var(--font);margin:0 0 4px}.imp .row{margin:6px 0}.impask{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0}.impq{font-weight:600;margin:0 0 4px}.impres{font-size:13px;overflow-wrap:anywhere}#import-stand{overflow-wrap:anywhere}
+.imp{margin-top:14px}.imp h4{font:600 14px var(--font);margin:0 0 4px}.imp .row{margin:6px 0}.impask{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0}.impq{font-weight:600;margin:0 0 4px}.impres{font-size:13px;overflow-wrap:anywhere}#import-stand{overflow-wrap:anywhere}.livesum td{font-style:italic}.packlist{list-style:none;padding:0;margin:6px 0}.packlist li{margin:4px 0;overflow-wrap:anywhere}.packlist li>button{margin-left:4px}#pack-stand{overflow-wrap:anywhere}
 .vlog h3{font:600 14px var(--font);margin:14px 0 4px}.vlog h3 span{font-weight:400;color:var(--muted);margin-left:6px}.vlog ul{margin:0;padding-left:20px}.vlog li{margin:2px 0;font-size:13.5px}
 
 .livebox{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:0}.lrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.lrow .waitbadge{margin-right:0}
@@ -271,7 +271,7 @@ details.hl{outline:2px solid var(--accent);outline-offset:2px}
 
 <script>
 // Version of this page (x.y.z), shown small next to the title: the repository's VERSION, set by template/build_template.py.
-const PAGE_VERSION="0.1.0";
+const PAGE_VERSION="0.2.0";
 /* == book-update: begin == made from template/update.js by template/build_template.py -- edit it there, then rebuild */
 // THE BOOK'S DATA VERSION. PAGE_VERSION is this page's version (x.y.z, the repository's file VERSION). The data in the
 // db carries its own: meta/buch {version:"x.y.z", migriert:["0.1.0", …], aktualisiert:"<ISO>"}. A book without
@@ -319,9 +319,10 @@ const MIGRATIONS=[
 ];
 const UPD={busy:true,book:null,done:[]};
 function errWord(e){return String(e&&(e.message||e.code)||e||"Fehler").slice(0,160)}
-// "1.2.3" -> [1,2,3]; anything else (no meta/buch, an old "v113") counts as 0.0.0
-function verParts(v){const m=/^(\d+)\.(\d+)\.(\d+)$/.exec(String(v||"").trim());return m?[+m[1],+m[2],+m[3]]:[0,0,0]}
-function verCmp(a,b){const x=verParts(a),y=verParts(b);for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]<y[i]?-1:1;return 0}
+// "1.2.3" -> [1,2,3]; anything else (no meta/buch, an old "v113") counts as 0.0.0. Named "upd…" because the page has its
+// own verCmp for release names (3.0.0b28, 1.0.0-beta), and of two function declarations with one name the later wins.
+function updVerParts(v){const m=/^(\d+)\.(\d+)\.(\d+)$/.exec(String(v||"").trim());return m?[+m[1],+m[2],+m[3]]:[0,0,0]}
+function updVerCmp(a,b){const x=updVerParts(a),y=updVerParts(b);for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]<y[i]?-1:1;return 0}
 function updBar(text,kind){let b=document.getElementById("book-update");
   if(!document.getElementById("book-update-css")){const s=document.createElement("style");s.id="book-update-css";
     s.textContent=".updbar{margin:0 0 12px;padding:8px 12px;border:1px solid var(--line);border-left-width:4px;border-radius:8px;background:var(--sheet);font-size:14px;overflow-wrap:anywhere}"+
@@ -336,10 +337,10 @@ async function bookUpdate(db){
   try{const s=await db.doc("meta/buch").get();cur=s&&s.exists?(s.data()||{}):{}}
   catch(e){updBar("Der Datenstand des Buchs (meta/buch) ist nicht lesbar – keine Aktualisierung: "+errWord(e),"warn");return}
   const have=cur.version?String(cur.version):"";UPD.book=have||null;
-  const shown=have||"vor 0.1.0",c=verCmp(have,PAGE_VERSION);
+  const shown=have||"vor 0.1.0",c=updVerCmp(have,PAGE_VERSION);
   if(c===0){UPD.busy=false;if(typeof runRules==="function")setTimeout(runRules,0);return}
   if(c>0){updBar("Das Buch hat Datenstand "+have+", diese Seite ist "+PAGE_VERSION+" und damit älter. Bitte die neue Seite veröffentlichen.","warn");return}
-  const todo=MIGRATIONS.filter(m=>verCmp(m.to,have)>0&&verCmp(m.to,PAGE_VERSION)<=0).sort((a,b)=>verCmp(a.to,b.to));
+  const todo=MIGRATIONS.filter(m=>updVerCmp(m.to,have)>0&&updVerCmp(m.to,PAGE_VERSION)<=0).sort((a,b)=>updVerCmp(a.to,b.to));
   if(!can){updBar("Dieses Buch hat Datenstand "+shown+", die Seite ist "+PAGE_VERSION+". Es wird aktualisiert, sobald jemand mit Schreibrechten es öffnet; bis dahin kann einiges fehlen.","warn");return}
   const done=Array.isArray(cur.migriert)?cur.migriert.slice():[];
   const write=async extra=>{const d=Object.assign({},cur,{migriert:done.slice()},extra||{});await db.doc("meta/buch").set(d);cur=d};
@@ -362,7 +363,7 @@ let SET={};try{SET=JSON.parse(localStorage.getItem("eb-set")||"{}")||{}}catch(e)
 function S(k,d){return SET&&SET[k]!=null&&SET[k]!==""?SET[k]:d}
 let OWNER=S("eigner","Eigner");
 // THE ARCHIVE -- finished work is not deleted but packed into collection "archiv", so the book stays below its
-// 5000 documents. Claude packs with a script; this page never packs, it only shows, finds, counts and brings back.
+// 5000 documents. The page packs (Einstellungen > "Archiv", write access only; see packRun), shows, finds, counts and brings back.
 // A release is packed once it is closed: its statistik doc has "veroeffentlicht" and none of its cards is open
 // (every card with ziel = that release is "erledigt" or "verworfen"). Per closed release up to three kinds of doc:
 //   archiv/karten-<release>      its cards (ziel = release, Stand erledigt or verworfen)     e.g. archiv/karten-3.0.0b27
@@ -373,6 +374,7 @@ let OWNER=S("eigner","Eigner");
 //   eintraege:[{id:"E-12", …every field of the original doc, exactly as it stood…}, …]}
 // An order also gets release:"<release>" in its entry. The originals are deleted only after the archive doc is written
 // and read back complete. "id" is the original doc id (a card's number); no other field is added or renamed.
+// Orders not yet taken ("neu", "in_bearbeitung") and talks not yet read ("gelesen" missing) are left in the book.
 // Counting without loading: the packing also writes into the release's statistik doc (statistik/<release>)
 //   archiv:{erledigt:n, verworfen:n, auftraege:n, gespraeche:n, docs:["karten-3.0.0b27", …]}
 // (what that release's archive docs hold), and the release sums shown under Statistik > "Karten und Tokens":
@@ -411,6 +413,7 @@ function newestMine(r){let z="",b=-Infinity;const f=(x,mine)=>{const t=x&&mine?t
 function ownerActed(r){return maxTs([r.eigner_am,r.gesichtet,r.zurueck,r.gelesen,...(Array.isArray(r.kommentare)?r.kommentare:[]).filter(k=>k&&k.von!=="Claude").map(k=>k.zeit)])}
 let lanesZu=new Set();try{lanesZu=new Set(JSON.parse(localStorage.getItem("eb-lanes")||"[]"))}catch(e){}
 let importing=false;// true while a backup is being read in (the rules then write nothing)
+let packing=null;// the release being packed into "archiv" (the rules then write nothing either)
 let hiddenZ=new Set(),assets=null,auftraege=[],rows=[],meta={aktuell:S("release","")},tab="offen",who="alle",db=null,canWrite=true,openIds=new Set(),openState=new Map(),pending=false,dragNr=null;
 try{for(const [k,v] of JSON.parse(localStorage.getItem("eb-open")||"[]"))openState.set(k,!!v)}catch(e){}
 try{const t=localStorage.getItem("eb-tab");if(t&&COLS.some(c=>c.key===t))tab=t}catch(e){}
@@ -669,7 +672,7 @@ function ruleTab(){const ref=db.doc("meta/regeln");if(typeof ref.acquire!=="func
   if(!ruleWait)ruleWait=new Promise(ok=>ok(ref.acquire({holder:TAB,ttlMs:30000}))).then(l=>{const x=Date.parse((l&&l.expiresAt)||""),until=isFinite(x)?x:Date.now()+30000;
       if(l&&l.acquired){ruleMine=until;return true}ruleBusy=until;return false},()=>false).finally(()=>{ruleWait=null});
   return ruleWait}
-async function runRules(){if(UPD.busy||!db||!isOwnerView||!canWrite||importing||!ruleWork())return;if(!await ruleTab())return;enforceTokens();enforceAnswers()}
+async function runRules(){if(UPD.busy||!db||!isOwnerView||!canWrite||importing||packing||!ruleWork())return;if(!await ruleTab())return;enforceTokens();enforceAnswers()}
 async function pullBack(nr){
   const ref=db.doc("entscheidungen/"+nr);
   try{
@@ -703,7 +706,19 @@ let depRows=null,depMap=new Map();
 function blocks(nr){if(depRows!==rows){depRows=rows;depMap=new Map();for(const r of rows)for(const n of nrList(r.haengt_an))if(n!==r.nr){if(!depMap.has(n))depMap.set(n,[]);depMap.get(n).push(r.nr)}}return depMap.get(nr)||[]}
 // a card I mark with "rueckblick_faellig" (a release) asks "Hat es gewirkt?" under Hinweise once that release is
 // current or past, until the owner has answered ("rueckblick")
-function relOrd(z){const m=/^(\d+)\.(\d+)\.(\d+)(?:b(\d+))?$/.exec(String(z||"").trim());return m?[m[1],m[2],m[3],m[4]==null?"9999":m[4]].map(x=>x.padStart(4,"0")).join("."):null}
+// THE ONE ORDER OF RELEASES. A version "X.Y.Z" with an optional beta ("-beta", "-beta2", "b28") as a key:
+// 1.0.0-beta < 2.10.0-beta < 3.0.0b9 < 3.0.0b10 < 3.0.0b28 < 3.0.0 (a beta before its final); null when it is no version
+function verKey(v){const m=/^(\d+)\.(\d+)\.(\d+)(?:(-?beta|b)(\d*))?$/i.exec(String(v==null?"":v).trim());return m?[+m[1],+m[2],+m[3],m[4]==null?1:0,m[5]?+m[5]:0]:null}
+function verCmp(a,b){const x=verKey(a),y=verKey(b);if(!x||!y)return x?-1:y?1:String(a||"").localeCompare(String(b||""),"de",{numeric:true});
+  for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]-y[i];return 0}
+function relOrd(z){const k=verKey(z);return k?k.map((x,i)=>String(x).padStart(i===3?1:4,"0")).join("."):null}
+const relPub=s=>s&&s.veroeffentlicht?ts(s.veroeffentlicht):NaN,relName=s=>String(s&&(s.version||s.id)||"");
+// the statistik docs oldest first: by "veroeffentlicht"; one without it stands right after the newest published release
+// whose version is not higher than its own (before all when there is none); then by version; "ordnung" only as the last
+// tiebreak. Everything that asks "which release comes first" (the tables, "the previous release", packing) uses this.
+function sortStat(list){const pub=list.filter(s=>isFinite(relPub(s)));
+  const t=new Map(list.map(s=>{let v=relPub(s);if(!isFinite(v)){v=-Infinity;for(const p of pub)if(verCmp(relName(p),relName(s))<=0&&relPub(p)>v)v=relPub(p)}return [s,v]}));
+  return list.sort((a,b)=>(t.get(a)<t.get(b)?-1:t.get(a)>t.get(b)?1:0)||verCmp(relName(a),relName(b))||((a.ordnung??0)-(b.ordnung??0))||String(a.id).localeCompare(String(b.id)))}
 function rueckDue(r){const f=String(r.rueckblick_faellig||"").trim();if(!f||(r.rueckblick&&r.rueckblick.antwort)||isTopArt(r))return false;const z=relZ();if(f===z)return true;const a=relOrd(f),b=relOrd(z);return !!(a&&b&&b>=a)}
 function colRows(k){return k==="hinweise"?rows.filter(r=>isTopArt(r)||rueckDue(r)):rows.filter(r=>r.blatt===k&&visible(r)&&!isTopArt(r))}
 const STEPS_DEFAULT=["Entscheidungen – keine Karte des Release mehr unter „Offen“","Umsetzung – alle Karten des Release gebaut und zusammengeführt","Übersetzungen","Zählstände","Volle Suite hier","Changelog & Handbuch","Bilder","Deine Prüfung – „Prüfen“ ist leer","GitHub-Prüflauf – alle Prüfungen grün","Veröffentlichung – Version erscheint"];
@@ -740,7 +755,7 @@ function zielOptions(cur){
   for(const r of rows){const z=String(r.ziel||"").trim(),k=relNum(z);if(z&&r.blatt!=="erledigt"&&r.blatt!=="verworfen"&&(z==="später"||z==="Buch"||k&&(!ck||k>=ck)))set.add(z)}
   const a=relZ();if(a)set.add(a);
   const m=/^(.*b)(\d+)$/.exec(a);if(m)for(let i=1;i<=4;i++)set.add(m[1]+(Number(m[2])+i));
-  set.add("Buch");set.add("später");set.add("");if(cur)set.add(cur);
+  if(rows.some(r=>r.ziel==="Buch"))set.add("Buch");set.add("später");set.add("");if(cur)set.add(cur);
   return [...set].sort(byZiel);
 }
 try{hiddenZ=new Set(JSON.parse(localStorage.getItem("eb-hidden")||"[]"))}catch(e){}
@@ -1264,7 +1279,7 @@ function auftragItem(a){
   return li;
 }
 function renderViews(){const v=$("#views");v.textContent="";
-  for(const [k,l,keys] of VIEWS){const n=k==="releases"?relGroups().reduce((a,g)=>a+g.rows.length,0):k==="dich"?forYou().all.length:keys?keys.reduce((a,k)=>a+colRows(k).length,0):k==="statistik"?stat.length:k==="sitzung"?"":k==="ablage"?(arch?archOnly().filter(visible).length:statArch("erledigt")+statArch("verworfen")):rows.filter(r=>visible(r)&&r.blatt==="erledigt").length+archCount("erledigt");
+  for(const [k,l,keys] of VIEWS){const n=k==="releases"?relGroups().reduce((a,g)=>a+g.rows.length,0):k==="dich"?forYou().all.length:keys?keys.reduce((a,k)=>a+colRows(k).length,0):k==="statistik"?stat.length:k==="sitzung"?"":k==="ablage"?(arch?archOnly().filter(visible).length:statArch("erledigt")+statArch("verworfen")):rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;
     // every open talk counts -- still waiting for me or answered and not yet read -- plus old orders not yet taken
     const unread=k==="sitzung"?gsp.filter(g=>g.status!=="gelesen").length+auftraege.filter(aOpen).length:0;
     const SH={releases:"Rel.",dich:"Dich",sitzung:"Aufträge",claude:"Claude",archiv:"Erledigt",ablage:"Archiv",statistik:"Zahlen"};
@@ -1311,7 +1326,7 @@ function renderArchive(board){
   const done=rows.filter(r=>r.blatt==="erledigt"&&visible(r)),AF={ziel:r=>String(r.ziel||""),von:r=>String(r.von||"")};
   const pass=r=>["ziel","von"].every(k=>{const f=aFilt[k];if(!f.val)return true;const hit=AF[k](r)===f.val;return f.op==="="?hit:!hit});
   const mine=found.filter(pass).sort(cmp);
-  const inArch=archCount("erledigt"),archLine=()=>inArch?el("div",{class:"cnt",id:"er-arch"},"dazu "+inArch+" im Archiv"):null;
+  const inArch=0,archLine=()=>inArch?el("div",{class:"cnt",id:"er-arch"},"dazu "+inArch+" im Archiv"):null;
   if(!found.length&&!fOn){wrap.append(el("div",{class:"empty",text:"nichts gefunden"}),archLine()||"");if(gone.length)wrap.append(verwBox());board.append(wrap);return}
   const fsel=(k,lbl,ph)=>{const f=aFilt[k],id="af-"+k+(ph?"-p":"");
     const op=el("select",{id:id+"-op","aria-label":"Filterart "+lbl});for(const [v,l] of [["=","="],["!=","≠"]]){const o=el("option",{value:v,text:l});if(f.op===v)o.selected=true;op.append(o)}
@@ -1883,7 +1898,7 @@ function recText(x){return x&&x.m?x.n+" von "+x.m+" ("+Math.round(100*x.n/x.m)+"
 // Release, veröffentlicht, Commits, geänderte Zeilen, Codezeilen (the newest release's), Tokens gesamt, davon auf Karten,
 // davon von Claude geschrieben, Meiner Empfehlung gefolgt, and the time (the bar column) as a sum
 function zeitSum(rs){const nums=f=>{let t=0,any=false;for(const r of rs){const v=Number(f(r));if(r&&f(r)!=null&&f(r)!==""&&isFinite(v)){t+=v;any=true}}return any?t:null};
-  const newest=[...rs].sort((a,b)=>(b.ordnung??0)-(a.ordnung??0)).find(r=>r.codezeilen!=null);
+  const newest=sortStat([...rs]).reverse().find(r=>r.codezeilen!=null);
   const mio=t=>t?fmtMio(t):"–",rec={n:0,m:0};for(const r of rs){const x=recHit(r.version);rec.n+=x.n;rec.m+=x.m}
   return ["Gesamt ("+rs.length+(rs.length===1?" Release)":" Releases)"),"",fmtN(nums(r=>r.commits)),fmtN(nums(r=>r.geaenderte_zeilen)),fmtN(newest?newest.codezeilen:null),
     mio(nums(r=>r.tokens_neu)),mio(nums(r=>tokensOf(r.version)||null)),mio(nums(r=>r.tokens_ausgabe)),recText(rec),fmtH(nums(r=>r.zyklus_std))]}
@@ -1931,7 +1946,7 @@ function statTable(tab,cols,list,bar,sum){
     rs=rs.filter(r=>all.every((c,i)=>{const f=filt[i];return !f||passes(c,r,f)}));
     if(st.i>=0){const c=all[st.i];rs.sort((a,b)=>{const va=raw(c,a),vb=raw(c,b);const e=(va==null||va==="–")-(vb==null||vb==="–");return e||st.dir*cmp(va,vb)})}
     if(sum){const tx=sum(rs),tr=el("tr",{class:"sumrow"});all.forEach((c,i)=>tr.append(el("td",{class:(c[1]?"num":"")+(c[4]?" barcell":""),text:tx[i]==null?"":tx[i]})));tb.append(tr)}
-    for(const r of rs){const tr=el("tr",{});
+    for(const r of rs){const tr=el("tr",r._live?{class:"livesum",title:"aus den Karten im Buch gezählt"}:{});
       for(const c of cols)tr.append(el("td",{class:c[1]?"num":"",text:c[2](r)}));
       if(bar){const v=Number(r[bar.key]);const td=el("td",{class:"barcell"});if(isFinite(v)&&r[bar.key]!=null){const w=el("div",{class:"barwrap"});const b=el("div",{class:"bar"});b.style.width=Math.max(0.5,70*v/max)+"%";w.append(b,el("span",{class:"barval",text:"("+(bar.fmt?bar.fmt(v):fmtN(v))+")"}));td.append(w)}else td.append(el("span",{class:"gap",text:"keine Daten"}));tr.append(td)}
       tb.append(tr)}
@@ -1968,16 +1983,16 @@ function renderStatistik(board){
   if(!stat.length){w.append(el("div",{class:"empty",text:"noch keine Zahlen"}));board.append(w);return}
   // "davon auf Karten" and "Meiner Empfehlung gefolgt" count the archived cards too, so the archive is loaded here
   loadArchive();if(archLoading)w.append(el("p",{class:"hint",id:"st-archwait",text:"lädt das Archiv, um dessen Karten mitzuzählen …"}));
-  const V=["Release",0,r=>r.version,r=>r.ordnung,false,"list"],D=["veröffentlicht",1,r=>r.veroeffentlicht?absTime(Date.parse(r.veroeffentlicht)):"–",r=>r.veroeffentlicht,false,"date"];
+  const V=["Release",0,r=>r.version,r=>stat.findIndex(x=>x.id===r.id),false,"list"],D=["veröffentlicht",1,r=>r.veroeffentlicht?absTime(Date.parse(r.veroeffentlicht)):"–",r=>r.veroeffentlicht,false,"date"];
   const N=(l,k)=>[l,1,r=>fmtN(r[k]),r=>r[k]];
   if(statTab==="zeit")w.append(el("p",{class:"hint",text:"Codezeilen: Zeilen des Programms am Stand des Release. Geänderte Zeilen: hinzugekommene plus entfernte Programmzeilen seit dem vorigen Release. Tokens gesamt: alles, was zwischen zwei Veröffentlichungen verarbeitet wurde – Hauptsitzung und alle Stränge. davon auf Karten: was davon einer Karte zugeordnet ist. davon von Claude geschrieben: die Ausgabe-Tokens, also der Teil, den Claude selbst geschrieben hat. Was nicht gemessen wurde, steht als „–“. Meiner Empfehlung gefolgt: bei wie vielen Karten des Release Du die Option gewählt hast, die ich empfohlen hatte, etwa „40 von 43 (93 %)“ – gezählt nur, wo Empfehlung und Entscheidung eine Option nennen. Die Zeile „Gesamt“ oben zählt die gezeigten Releases zusammen (die Filter wirken mit; Codezeilen: der Stand des neuesten). Der Balken zeigt die Zeit von der Veröffentlichung des vorigen Release bis zu dieser; sinkt sie, werden wir schneller."}),statTable("zeit",[V,D,N("Commits","commits"),N("geänderte Zeilen","geaenderte_zeilen"),N("Codezeilen","codezeilen"),["Tokens gesamt",1,r=>r.tokens_neu?fmtMio(r.tokens_neu):"–",r=>r.tokens_neu],["davon auf Karten",1,r=>{const t=tokensOf(r.version);return t?fmtMio(t):"–"},r=>tokensOf(r.version)||null],["davon von Claude geschrieben",1,r=>r.tokens_ausgabe?fmtMio(r.tokens_ausgabe):"–",r=>r.tokens_ausgabe],["Meiner Empfehlung gefolgt",1,r=>recText(recHit(r.version)),r=>{const x=recHit(r.version);return x.m?x.n/x.m:null}]],stat,{key:"zyklus_std",label:"Zeit seit dem vorigen Release",fmt:fmtH},zeitSum));
   // the sums the packing writes per release; what is missing reads "–"
   if(statTab==="karten"){const num=x=>x==null||x===""||typeof x==="boolean"||!isFinite(Number(x))?null:Number(x),K=(l,f,fmt)=>[l,1,r=>{const v=num(f(r));return v==null?"–":(fmt||fmtN)(v)},r=>num(f(r))];
     const byArt=r=>r.karten_nach_art&&typeof r.karten_nach_art==="object"?r.karten_nach_art:{};
-    const arts=[...new Set([...ARTS.map(a=>a[0]),...stat.flatMap(r=>Object.keys(byArt(r)))])];
+    const KL=stat.map(cardRow),arts=[...new Set([...ARTS.map(a=>a[0]),...KL.flatMap(r=>Object.keys(byArt(r)))])];
     const tk=v=>(v<0?"−":"")+fmtMio(Math.abs(v)),sg=v=>v===0?"±0":(v>0?"+":"−")+fmtMio(Math.abs(v));
-    w.append(el("p",{class:"hint",text:"Je Release, wie Claude es beim Packen ins Archiv zusammenzählt: die Karten (und nach Art), die Tokens aller Karten – geschätzt, verbraucht und die Differenz (verbraucht minus geschätzt) –, die Aufträge und die Gespräche. Vor dem Packen steht hier „–“."}),
-      statTable("karten",[V,K("Karten",r=>r.karten),...arts.map(a=>K((ARTS.find(x=>x[0]===a)||[a,a])[1],r=>byArt(r)[a])),K("Tokens geschätzt",r=>r.tokens_prognose_summe,tk),K("verbraucht",r=>r.tokens_ist_summe,tk),K("Differenz",r=>r.tokens_diff,sg),K("Aufträge",r=>r.auftraege),K("Gespräche",r=>r.gespraeche)],stat))}
+    w.append(el("p",{class:"hint",text:"Je Release: die Karten (und nach Art), die Tokens aller Karten – geschätzt, verbraucht und die Differenz (verbraucht minus geschätzt) –, die Aufträge und die Gespräche. Ein gepacktes Release zeigt die Summen vom Packen ins Archiv; alle anderen werden aus den Karten im Buch gezählt (kursiv). Ein Release ohne Karten zeigt „–“."}),
+      statTable("karten",[V,K("Karten",r=>r.karten),...arts.map(a=>K((ARTS.find(x=>x[0]===a)||[a,a])[1],r=>byArt(r)[a])),K("Tokens geschätzt",r=>r.tokens_prognose_summe,tk),K("verbraucht",r=>r.tokens_ist_summe,tk),K("Differenz",r=>r.tokens_diff,sg),K("Aufträge",r=>r.auftraege),K("Gespräche",r=>r.gespraeche)],KL))}
   if(statTab==="pruef")w.append(el("p",{class:"hint",text:"Der Balken zeigt, wie lange der Testlauf auf GitHub zum Pull-Request des Release gedauert hat: vom Start, bis der letzte Job fertig war. Release-Lauf: der Veröffentlichungslauf. Suite hier: alle Tests auf dem eigenen Rechner. „nicht gelaufen“ zählt Tests, die ein fremdes Programm oder einen fremden Dienst brauchen."}),statTable("pruef",[V,["langsamster Job",0,r=>r.ci_langsamster||"–",null,false,"list"],["dessen Dauer",1,r=>fmtS(r.ci_langsamster_s),r=>r.ci_langsamster_s],["Release-Lauf",1,r=>fmtS(r.release_lauf_s),r=>r.release_lauf_s],N("Versuche","release_versuche"),["Weg",0,r=>r.release_weg==="short"?"kurz":r.release_weg==="long"?"lang":"–",null,false,"list"],["Suite hier",1,r=>fmtS(r.suite_lokal_s),r=>r.suite_lokal_s],N("nicht gelaufen","nicht_gelaufen")],stat,{key:"ci_pr_s",label:"Testlauf auf GitHub zum Pull-Request (Start bis letzter Job fertig)",fmt:fmtS}));
   if(statTab==="inhalt"){const keys=[...new Set(stat.flatMap(r=>Object.keys(r.changelog||{})))];const order=["Added","Changed","Fixed","Removed","Security","Documentation"];keys.sort((a,b)=>(order.indexOf(a)+99)%99-(order.indexOf(b)+99)%99);
     const de={Added:"Neu",Changed:"Geändert",Fixed:"Behoben",Removed:"Entfernt",Security:"Sicherheit",Documentation:"Handbuch"};
@@ -2054,7 +2069,7 @@ document.addEventListener("focusout",()=>setTimeout(()=>{if(!pending)return;cons
 document.addEventListener("focusout",()=>setTimeout(runRules,0));
 $("#ver").textContent=PAGE_VERSION;
 // Änderungsprotokoll des Buchs: ein Klick auf die Versionsnummer zeigt es; neueste Version oben.
-const BUCH_LOG=[{"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
+const BUCH_LOG=[{"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
 // the change log and the settings are two dialogs with one frame: an overlay, "Schließen (Esc)", a click beside it
 function dlgOpen(label){if(document.querySelector(".vlog"))return null;const box=el("div",{class:"box",role:"dialog","aria-label":label});
   const close=el("button",{type:"button",text:"Schließen (Esc)"});box.append(el("div",{class:"top"},el("h2",{text:label}),close));return {box,close}}
@@ -2178,6 +2193,104 @@ function importSection(box){
   fIn.onchange=()=>go(fIn);dIn.onchange=()=>go(dIn);
   sec.append(el("h4",{text:"Sicherung einlesen"}),el("p",{class:"hint",text:"Eine Sicherung zurück ins Buch: die Datei von „Jetzt sichern“ oder Claudes Sicherungsordner. Steht schon etwas im Buch, fragt die Seite vorher, ob es gelöscht werden soll."}),
     el("div",{class:"row"},bF,bD),fIn,dIn,note,ask,res);box.append(sec)}
+// "Archiv packen" (Einstellungen, write access only). A release can be packed when it is closed (relClosed: its
+// statistik doc has "veroeffentlicht", it is not the current release, none of its cards is open), it is numbered and
+// no later than the last published release, and its statistik doc has no "archiv" yet. Order, stopping at the first
+// error: read the three collections once, write the archive docs, read every one back and compare it entry by entry,
+// write the sums and the summary into statistik/<release> (update: its other fields stay), and only then delete the
+// originals, one at a time -- each only while the page's live copy of it (the subscription) still equals what was packed.
+// Orders not yet taken ("neu", "in_bearbeitung") and talks not yet read stay in the book. Cards with ziel "Buch",
+// "später" or none are never packed (only a numbered release is).
+const PACK_MAX=200*1024;let packMsg="";
+function statOf(z){return stat.find(x=>x&&(x.version===z||x.id===z))}
+// the span of a release: after the previous release's veroeffentlicht, up to its own
+function packSpan(z){const me=statOf(z),i=stat.indexOf(me);let prev=-Infinity;for(let j=i-1;j>=0;j--){const t=relPub(stat[j]);if(isFinite(t)){prev=t;break}}const own=relPub(me);return [prev,isFinite(own)?own:Infinity]}
+const inSpan=(t,sp)=>isFinite(t)&&t>sp[0]&&t<=sp[1];
+const talkT=g=>{const l=(Array.isArray(g.nachrichten)?g.nachrichten:[]).slice(-1)[0];return ts((l&&l.zeit)||g.start)};
+function packPick(z,cards,orders,talks){const sp=packSpan(z);
+  const k=cards.filter(r=>String(r.ziel||"").trim()===z&&(r.blatt==="erledigt"||r.blatt==="verworfen"));
+  const ia=orders.filter(a=>inSpan(ts(a.zeit),sp)),ig=talks.filter(g=>inSpan(talkT(g),sp));
+  const a=ia.filter(x=>x.status!=="neu"&&x.status!=="in_bearbeitung"),g=ig.filter(x=>x.status==="gelesen");
+  return {k,a,g,stay:ia.length-a.length+ig.length-g.length}}
+// every closed release up to the last published one, newest first: {z, packed, k, a, g, stay}
+function packList(){let last=-1;stat.forEach((s,i)=>{if(isFinite(relPub(s)))last=i});
+  const out=[];stat.forEach((s,i)=>{const z=relName(s);if(!relOrd(z)||i>last||!relClosed(z))return;
+    out.push(Object.assign({z,packed:!!(s.archiv&&typeof s.archiv==="object")},packPick(z,rows,auftraege,gsp)))});
+  return out.reverse()}
+// one canonical text per entry (keys sorted at every depth), for the read-back and for the check before a delete
+function canon(x){return JSON.stringify(x,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((o,kk)=>(o[kk]=v[kk],o),{}):v)}
+const without=(o,k)=>{const c=Object.assign({},o);delete c[k];return c};
+// entries -> archive docs of at most PACK_MAX bytes each: <art>-<release>, <art>-<release>-2 …
+function packSplit(art,z,list,zeit){const docs=[],head=utf8Len(JSON.stringify({art,release:z,gepackt:zeit,eintraege:[]}));let cur=[],size=head;
+  const flush=()=>{docs.push({name:art+"-"+z+(docs.length?"-"+(docs.length+1):""),doc:{art,release:z,gepackt:zeit,eintraege:cur}});cur=[];size=head};
+  for(const e of list){const l=utf8Len(JSON.stringify(e))+1;if(head+l>PACK_MAX)throw {pack:(art==="karten"?"Karte ":"Eintrag ")+e.id+" ist allein größer als 200 KB"};
+    if(cur.length&&size+l>PACK_MAX)flush();cur.push(e);size+=l}
+  if(cur.length)flush();return docs}
+// the card numbers of "Karten und Tokens" over a list of cards; "has" says which token sums have any value at all
+function cardNums(k){const nach={};let pro=0,ist=0,diff=0;const has={p:0,i:0,d:0};
+  for(const r of k){const x=artOf(r);nach[x]=(nach[x]||0)+1;const p=parseTok(r.tokens_prognose),i=parseTok(r.tokens_ist);if(p!=null){pro+=p;has.p++}if(i!=null){ist+=i;has.i++}if(p!=null&&i!=null){diff+=i-p;has.d++}}
+  return {karten:k.length,karten_nach_art:nach,tokens_prognose_summe:pro,tokens_ist_summe:ist,tokens_diff:diff,has}}
+function packSums(k,a,g,docs){const c=cardNums(k);
+  return {archiv:{erledigt:k.filter(r=>r.blatt==="erledigt").length,verworfen:k.filter(r=>r.blatt==="verworfen").length,auftraege:a.length,gespraeche:g.length,docs:docs.map(d=>d.name)},
+    karten:c.karten,karten_nach_art:c.karten_nach_art,tokens_prognose_summe:c.tokens_prognose_summe,tokens_ist_summe:c.tokens_ist_summe,tokens_diff:c.tokens_diff,auftraege:a.length,gespraeche:g.length}}
+// one row of "Karten und Tokens". A packed release shows the sums written when it was packed, plus the cards that
+// stand in the book with its target again; any other release is counted live from the cards in the book with that target
+// and the orders and talks of its span (marked "_live"). A release without any card keeps "–".
+function cardRow(r){const z=relName(r),live=rows.filter(c=>String(c.ziel||"").trim()===z),packed=!!(r.archiv&&typeof r.archiv==="object")&&r.karten!=null;
+  if(!live.length)return r;const L=cardNums(live),n=(v,h)=>h?v:null;
+  if(!packed){const sp=packSpan(z);return Object.assign({},r,{karten:L.karten,karten_nach_art:L.karten_nach_art,tokens_prognose_summe:n(L.tokens_prognose_summe,L.has.p),
+    tokens_ist_summe:n(L.tokens_ist_summe,L.has.i),tokens_diff:n(L.tokens_diff,L.has.d),auftraege:auftraege.filter(a=>inSpan(ts(a.zeit),sp)).length,gespraeche:gsp.filter(g=>inSpan(talkT(g),sp)).length,_live:true})}
+  const N=x=>isFinite(Number(x))?Number(x):0,nach=Object.assign({},r.karten_nach_art&&typeof r.karten_nach_art==="object"?r.karten_nach_art:{});
+  for(const [k,v] of Object.entries(L.karten_nach_art))nach[k]=N(nach[k])+v;
+  return Object.assign({},r,{karten:N(r.karten)+L.karten,karten_nach_art:nach,tokens_prognose_summe:N(r.tokens_prognose_summe)+L.tokens_prognose_summe,
+    tokens_ist_summe:N(r.tokens_ist_summe)+L.tokens_ist_summe,tokens_diff:N(r.tokens_diff)+L.tokens_diff,_live:true})}
+async function packRun(z,say){if(packing||!db||!canWrite)return;packing=z;let step="liest";const said=t=>{packMsg=t;say(t)};
+  const why=x=>failText(x,"ging nicht"+(x&&x.code?" ("+x.code+")":""));
+  try{said("liest das Buch …");
+    const get=async c=>(await db.collection(c).get()).docs.map(d=>Object.assign({id:d.id},d.data()||{}));
+    const ck=await get("entscheidungen"),ca=await get("auftraege"),cg=await get("gespraech");
+    if(ck.some(r=>String(r.ziel||"").trim()===z&&r.blatt!=="erledigt"&&r.blatt!=="verworfen"))return said("Nicht gepackt: in "+z+" ist inzwischen eine Karte offen. Nichts geschrieben, nichts gelöscht.");
+    const p=packPick(z,ck,ca,cg),zeit=new Date().toISOString(),ek=p.k,ea=p.a.map(x=>Object.assign({},x,{release:z})),eg=p.g;
+    const docs=[...packSplit("karten",z,ek,zeit),...packSplit("auftraege",z,ea,zeit),...packSplit("gespraeche",z,eg,zeit)];
+    if(!docs.length)return said("In "+z+" ist nichts zu packen.");
+    step="schreibt";let w=0;
+    for(const d of docs){said("schreibt das Archiv … "+(w+1)+" von "+docs.length+" ("+d.name+")");await db.doc("archiv/"+d.name).set(d.doc);w++}
+    step="prüft";let r=0;
+    for(const d of docs){said("prüft das Archiv … "+(r+1)+" von "+docs.length+" ("+d.name+")");const s=await db.doc("archiv/"+d.name).get(),b=s.exists?(s.data()||{}):null;
+      const got=b&&Array.isArray(b.eintraege)?b.eintraege:[],want=d.doc.eintraege;
+      let bad=!b?"fehlt":b.art!==d.doc.art||b.release!==z?"trägt einen anderen Kopf":got.length!==want.length?"hat "+got.length+" statt "+want.length+" Einträge":"";
+      if(!bad)for(let i=0;i<got.length;i++)if(canon(got[i])!==canon(want[i])){bad="weicht bei "+want[i].id+" ab";break}
+      if(bad)return said("Gestoppt bei der Rückprüfung: archiv/"+d.name+" "+bad+". Geschrieben: "+w+" von "+docs.length+" Archiv-Dokumenten, nichts gelöscht – die Originale stehen alle noch im Buch.");r++}
+    step="statistik";said("schreibt die Summen in statistik/"+z+" …");const sd=statOf(z);
+    await db.doc("statistik/"+(sd?sd.id:z)).update(packSums(ek,ea,eg,docs));
+    if(arch){const names=new Set(docs.map(d=>d.name));arch=arch.filter(a=>!names.has(a.id)).concat(docs.map(d=>Object.assign({},d.doc,{id:d.name})))}
+    step="löscht";
+    const del=[...ek.map(e=>["entscheidungen",e,rows.find(x=>x.nr===e.id),"nr"]),...p.a.map(e=>["auftraege",e,auftraege.find(x=>x.id===e.id),"id"]),...eg.map(e=>["gespraech",e,gsp.find(x=>x.id===e.id),"id"])];
+    const rest=n=>" Das Archiv ist geschrieben und geprüft; gelöscht: "+n+" von "+del.length+" Originalen, der Rest steht noch im Buch.";
+    let n=0;
+    for(const [c,e,live,key] of del){said("löscht die Originale … "+(n+1)+" von "+del.length);
+      if(live&&canon(without(live,key))!==canon(without(e,"id")))return said("Gestoppt beim Löschen: "+c+"/"+e.id+" wurde inzwischen geändert und bleibt im Buch."+rest(n));
+      try{await db.doc(c+"/"+e.id).delete()}catch(x){return said("Gestoppt beim Löschen von "+c+"/"+e.id+": "+why(x)+"."+rest(n))}n++}
+    said("Gepackt: "+z+" – "+ek.length+" Karten, "+ea.length+" Aufträge, "+eg.length+" Gespräche in "+docs.length+" Archiv-"+(docs.length===1?"Dokument":"Dokumenten")+"; die Originale sind gelöscht.")}
+  catch(x){said(x&&x.pack?"Nicht gepackt: "+x.pack+". Nichts geschrieben, nichts gelöscht.":"Gestoppt ("+step+"): "+why(x)+". Nichts gelöscht.")}
+  finally{packing=null;const s=document.getElementById("pack-liste");if(s)packFill(s);render()}}
+// the list in "Einstellungen" > "Archiv"; it is drawn again after a pack
+function packFill(list){list.textContent="";const say=t=>{const n=document.getElementById("pack-stand");if(n)n.textContent=t};
+  const L=packList();if(!L.length){list.append(el("li",{class:"hint",text:"Kein abgeschlossenes Release zu packen."}));return}
+  for(const x of L){if(x.packed||!(x.k.length+x.a.length+x.g.length))continue;const li=el("li",{"data-rel":x.z}),n=x.k.length+x.a.length+x.g.length,what=x.k.length+" Karten, "+x.a.length+" Aufträge, "+x.g.length+" Gespräche";
+    li.append(el("span",{class:"packwhat",text:x.z+": "+(x.packed?"schon gepackt":n?what+(x.stay?" · "+x.stay+" offen, bleiben im Buch":""):"nichts zu packen")}));
+    if(!x.packed&&n){const b=el("button",{type:"button",class:"act",id:"pack:"+x.z,text:"Packen"});b.disabled=!!packing;
+      b.onclick=()=>{for(const q of list.querySelectorAll("#pack-frage"))q.remove();
+        const ask=el("div",{class:"impask",id:"pack-frage"}),yes=el("button",{type:"button",class:"act",id:"pack-ja",text:"Ja, packen"}),no=el("button",{type:"button",id:"pack-nein",text:"Abbrechen"});
+        ask.append(el("p",{class:"impq",text:what+" aus "+x.z+" ins Archiv packen?"}),el("p",{class:"hint",text:"Erst wird das Archiv geschrieben und zurückgelesen, dann die Summen in „Statistik“; erst danach werden die Originale gelöscht."}),el("div",{class:"row"},yes,no));
+        no.onclick=()=>ask.remove();yes.onclick=()=>{ask.remove();for(const q of list.querySelectorAll("button"))q.disabled=true;packRun(x.z,say)};li.append(ask);yes.focus()};
+      li.append(" ",b)}
+    list.append(li)}}
+function packSection(box){if(!db||!canWrite)return;
+  const sec=el("div",{class:"sets imp",id:"archiv-packen"}),list=el("ul",{class:"packlist",id:"pack-liste"});
+  sec.append(el("h4",{text:"Archiv"}),el("p",{class:"hint",text:"Ein abgeschlossenes Release (veröffentlicht, keine seiner Karten mehr offen) ins Archiv packen: seine erledigten und verworfenen Karten, dazu die Aufträge und Gespräche aus seiner Zeit. Danach stehen sie unter „Archiv“ und zählen weiter mit. Karten mit Ziel „Buch“, „später“ oder ohne Ziel werden nie gepackt."}),
+    list,el("p",{class:"hint",id:"pack-stand","aria-live":"polite",text:packing?"Ein Packen läuft noch …":packMsg}));
+  packFill(list);box.append(sec)}
 // "⚙ Einstellungen" in the header opens the settings on their own (moved out of the change log)
 function showSettings(){const D=dlgOpen("Einstellungen");if(!D)return;const box=D.box;let first=null;
   // a backup by hand (the whole book as one JSON file, the viewer confirms the download) and how often
@@ -2202,7 +2315,7 @@ function showSettings(){const D=dlgOpen("Einstellungen");if(!D)return;const box=
          await dl.save({filename:"entscheidungsbuch-"+out.zeit.replace(/[:.]/g,"-")+".json",data:JSON.stringify(out,null,1)});note.textContent="gesichert"+(miss?" · "+impN(miss,"Bild","Bilder")+" ohne Datei":"")}
        catch(e){note.textContent="nicht gespeichert"}finally{btn.disabled=false}}}).catch(()=>{});
    sec.append(el("div",{class:"row"},btn,el("label",{for:"sicherung-zyklus",text:"Sicherung durch Claude:"}),sel,note));box.append(sec);first=sel.disabled?null:sel}
-  importSection(box);
+  importSection(box);packSection(box);
   dlgShow(D,first)}
 $("#ver").addEventListener("click",showLog);$("#setbtn").addEventListener("click",showSettings);$("#ver").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showLog()}});
 
@@ -2242,7 +2355,7 @@ function sub(name,ref,next){let tries=0,un=null;
   {const ck=armSend([$("#auftrag-senden")],$("#auftrag-text"),"auftrag");const ob=new MutationObserver(ck);ob.observe($("#auftrag-bilder"),{childList:true})}
   sub("gespraech",db.collection("gespraech"),s=>{gsp=s.docs.map(d=>Object.assign({id:d.id},d.data()));renderGespraech();renderStats();renderViews();if(view!=="sitzung"&&view!=="statistik")render()});
   sub("auftraege",db.collection("auftraege"),s=>{auftraege=s.docs.map(d=>Object.assign({id:d.id},d.data()));auftraegeLoaded=true;renderAuftrag();renderStats();if(view==="sitzung")render()});
-  sub("statistik",db.collection("statistik"),s=>{stat=s.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(a.ordnung??0)-(b.ordnung??0));if(view==="statistik")render();else renderViews()});
+  sub("statistik",db.collection("statistik"),s=>{stat=sortStat(s.docs.map(d=>Object.assign({id:d.id},d.data())));if(view==="statistik")render();else renderViews()});
   sub("meta/claude",db.doc("meta/claude"),s=>{claudeMeta=s.exists?s.data():null;renderStats()});
   sub("meta/laeufe",db.doc("meta/laeufe"),s=>{laeufe=(s.exists&&Array.isArray((s.data()||{}).laeufe))?s.data().laeufe:[];renderViews();renderReady();if(view==="releases")render()});
   sub("meta/schritte",db.doc("meta/schritte"),s=>{schritteDoc=s.exists?s.data():null;render()});

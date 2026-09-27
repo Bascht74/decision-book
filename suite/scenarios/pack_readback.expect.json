@@ -1,0 +1,1 @@
+{"expect": {"note": "Gestoppt bei der Rückprüfung: archiv/auftraege-3.0.0b27 weicht bei a1 ab. Geschrieben: 3 von 3 Archiv-Dokumenten, nichts gelöscht – die Originale stehen alle noch im Buch.", "deletes": 0, "statWrites": 0, "readsAfterMismatch": 0, "cardsLeft": 3, "stillPackable": true}}

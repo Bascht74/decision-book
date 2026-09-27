@@ -1,0 +1,1 @@
+{"expect": {"note": {"re": "^Gestoppt beim Löschen: entscheidungen/E-011 wurde inzwischen geändert und bleibt im Buch\\..*gelöscht: 1 von 5 Originalen"}, "deletes": ["delete entscheidungen/E-010"], "e011": "inzwischen geändert"}}

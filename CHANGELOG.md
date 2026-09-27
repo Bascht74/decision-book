@@ -5,6 +5,40 @@ The page shows its own change log in German (`BUCH_LOG`, when the version number
 the repository's. Every section says whether the book's data changes shape -- and if so, which migration
 brings an existing book along.
 
+## 0.2.0
+
+**Packing finished releases into the archive.** "Einstellungen" has a new section "Archiv" (only for a viewer who
+may write). It lists every closed release -- published, not the current one, none of its cards open -- that has
+something to pack, with what packing would take: its done and rejected cards, and the orders and talks from its
+time (a packed release is not listed). Orders not yet taken and talks not yet read stay in the book, and so do cards whose target is "Buch", "später" or empty. "Packen" asks once
+in the page, then writes the archive documents (split at 200 KB), reads every one back and compares it entry by
+entry, writes the sums into the release's statistics, and only then deletes the originals, one at a time -- each
+only if nobody changed it meanwhile. Any failure stops right there and says how far it got; nothing is deleted
+before the archive is written and verified. Packed cards stay findable under "Archiv", in the card search, and can
+be brought back.
+
+**"Erledigt" and "Archiv" counted apart.** The tab "Erledigt" counts only the done cards in the book; it no longer
+adds the archived ones, and its line no longer says "dazu N im Archiv". "Archiv" counts the packed cards.
+
+**Statistics in release order.** The statistics tables order releases by publication time and then by version
+(`1.0.0-beta` < `3.0.0b9` < `3.0.0b10` < `3.0.0`), no longer by the `ordnung` number in each statistics document.
+A release not yet published stands after the newest published one below it. "The previous release", the newest
+line count in the total row, and the time span packing uses all follow the same order.
+
+**Live sums in "Karten und Tokens".** A release that is not packed is counted live from the cards in the book
+(and the orders and talks of its time), shown in italics. A packed release shows its stored sums, plus any of its
+cards that are back in the book.
+
+**Smaller.** The "Ziel" dropdown offers "Buch" only while a card carries that target. `.claude/skills/book/`
+holds the skill in the Claude Code layout (it was `skill/`), `CLAUDE.md` says how to work on this repository,
+and `tools/bootstrap.sh` checks a fresh checkout. The build stops when the update block and the page declare
+the same global name (the page's new `verCmp` would otherwise have replaced the update block's).
+
+**Data: no migration.** Packing adds documents to `archiv` and fields to `statistik/<release>` (`archiv` and the
+sums) that the 0.1.0 page already reads; nothing existing is renamed, moved or reformatted. A book on
+0.1.0 is moved to 0.2.0 by opening the new page once as a viewer who may write: `meta/buch.version` becomes
+0.2.0, and `meta/buch.migriert` stays as it was.
+
 ## 0.1.0
 
 The first version of the decision book as a project of its own.

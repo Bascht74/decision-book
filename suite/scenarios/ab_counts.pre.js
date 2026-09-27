@@ -1,5 +1,5 @@
-// no number drops when cards are packed: before the archive is loaded the counts of "Erledigt" and "Archiv" take
-// the summaries in "statistik", after it the entries; the Erledigt line names the archived ones; "Statistik" loads the
+// "Erledigt" counts only the done cards in the book, before and after the archive is loaded, and its line names no
+// archived ones; the count of "Archiv" takes the summaries in "statistik" before the archive is loaded, after it the entries; "Statistik" loads the
 // archive itself and counts its cards into "davon auf Karten" and "Meiner Empfehlung gefolgt" (once "Tokens (Karten)" and "Empfehlung getroffen"); the book count has the archive docs.
 localStorage.setItem("eb-view","dich");
 // synthetic fixture (roles "Eigner" and "Claude" only): two live cards of b28, the archive of b26 and b27 as Claude packs it

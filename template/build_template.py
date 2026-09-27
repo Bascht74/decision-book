@@ -9,7 +9,8 @@ What it does, in this order:
      (PAGE_VERSION "v113" and the like) gets a change log (BUCH_LOG) of one neutral entry for that version; a page that
      already counts x.y.z keeps its log, and the top entry must name VERSION.
   2. The update block (template/update.js: MIGRATIONS and the code that runs them on load) is put in after
-     PAGE_VERSION, or replaces the one already there; the page's start calls it once the db is there.
+     PAGE_VERSION, or replaces the one already there; the page's start calls it once the db is there. A global name the
+     block declares must not be declared by the page too (the build stops).
   3. Card references in comments ("E-123:", "(E-124)", "E-125/E-126") are removed; the few format examples that carry
      a card number get neutral ones.
   4. Texts that describe one particular project (its language, build machines, outside services, first releases) are
@@ -131,6 +132,13 @@ def main():
     else:
         line = 'const PAGE_VERSION="%s";\n' % version
         page = page.replace(line, line + upd, 1)
+    # the update block shares the page's global scope: a name it declares that the page declares too would silently
+    # replace one of the two (of two function declarations the later wins -- the page's verCmp once took the block's)
+    rest = page.replace(upd, '')
+    for name in sorted(set(re.findall(r'^(?:async\s+)?function\s+(\w+)|^(?:const|let|var)\s+(\w+)\s*=', upd, flags=re.M)) - {('', '')}):
+        name = name[0] or name[1]
+        if re.search(r'(?:\bfunction\s+%s\s*\(|\b(?:const|let|var)\s+%s\s*=)' % (name, name), rest):
+            sys.exit('update.js declares %s, and so does the page: rename it in update.js' % name)
     if START_HOOK not in page:
         if page.count(START_OLD) != 1:
             sys.exit('the start of the page (db without connection) is not found once: the update call cannot be put in')

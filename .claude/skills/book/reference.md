@@ -56,13 +56,17 @@ Old fields the page neither shows nor writes: `status`, `typ`, `release`.
 
 `{asset_id, url, type, zeit}` (an uploaded asset) or `{data, zeit}` (a shrunk data URL).
 
-## `statistik/<id>` -- one row per release (written by Claude, only shown)
+## `statistik/<id>` -- one row per release (written by Claude; the page adds the sums when it packs)
 
 `version`, `ordnung`, `veroeffentlicht`, `zyklus_std`, `commits`, `geaenderte_zeilen`,
 `codezeilen`, `tokens_neu`, `tokens_ausgabe`, `ci_pr_s`, `ci_langsamster`, `ci_langsamster_s`,
 `release_lauf_s`, `release_versuche`, `release_weg`, `suite_lokal_s`, `nicht_gelaufen`,
 `changelog: {Added, Changed, Fixed, ...}`, `changelog_summe`, `testdateien`, `pruefungen`,
 `test_summe_s`, `test_gemessen`. Missing values stay missing (shown as "–").
+Packing adds `archiv: {erledigt, verworfen, auftraege, gespraeche, docs: [...]}` and the sums `karten`,
+`karten_nach_art`, `tokens_prognose_summe`, `tokens_ist_summe`, `tokens_diff`, `auftraege`, `gespraeche`
+(an update: the other fields stay). The page orders releases by `veroeffentlicht`, then by version
+(`1.0.0-beta` < `3.0.0b9` < `3.0.0b10` < `3.0.0`); `ordnung` only breaks a tie.
 
 ## `meta/*`
 
@@ -79,5 +83,6 @@ Old fields the page neither shows nor writes: `status`, `typ`, `release`.
 ## `archiv/<art>-<release>[-n]` -- the archive
 
 `{art: "karten"|"auftraege"|"gespraeche", release, gepackt, eintraege: [{id, …every field of the original…}]}`.
-Packed by Claude with a script once a release is closed; the page only shows, finds, counts and brings back.
+Packed by the page ("Einstellungen" > "Archiv", "Packen") once a release is closed: archive written and read back,
+then the sums into `statistik`, then the originals deleted. The page also shows, finds, counts and brings back.
 The comment "THE ARCHIVE" in `template/book.html` holds the full rules.

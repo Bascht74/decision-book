@@ -1,0 +1,1 @@
+{"expect":{"version":true,"migriert":["0.1.0"],"metaWrites":1,"bar":{"len":1},"bar.0":{"re":"^ok: Buch aktualisiert: Datenstand 0\\.1\\.0 → \\d+\\.\\d+\\.\\d+\\.$"},"card":"none","rule":"arbeit"}}

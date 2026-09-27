@@ -5,8 +5,8 @@ publish artifacts with runtime capabilities.
 
 ## 1. Check the page
 
-    suite/run_all.sh                      # every scenario on template/book.html, under a minute; also the forbidden-strings check
-    python3 suite/breaks/counterproof.py  # optional, about two minutes: every check goes red on its break
+    suite/run_all.sh                      # every scenario on template/book.html, about 15 s; also the forbidden-strings check
+    python3 suite/breaks/counterproof.py  # optional, under a minute: every check goes red on its break
 
 Needs macOS or Linux with Google Chrome (set `CHROME` to the binary if it is not in
 `/Applications`) and python3. No network is used.
@@ -55,10 +55,10 @@ Releases are expected as `x.y.zbN` (the page counts the next one by the number a
 
 ## 4. Point Claude at the skill
 
-Copy `skill/` to `.claude/skills/decision-book/` in the project the book belongs to (or to
-`~/.claude/skills/decision-book/` for every project). In the project's own `CLAUDE.md`, name the
-book's URL (that file is the project's, not this repository's) and say that `decision-book` is read
-before the first touch of the book.
+Copy `.claude/skills/book/` to `.claude/skills/book/` in the project the book belongs to (or to
+`~/.claude/skills/book/` for every project). In the project's own `CLAUDE.md`, name the book's URL
+(that file is the project's, not this repository's) and say that the skill `book` is read before the
+first touch of the book. A session started in this repository picks the skill up by itself.
 
 At the start of each session Claude then watches the artifact (so live comments arrive) and starts
 the 15-minute wake-up, as the skill says.
