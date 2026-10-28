@@ -1,0 +1,15 @@
+{"expect":{
+ "start.chips":"alle,Funk,Haus,Ziel offen","start.hinweise":"E-003,E-004,E-005","start.tabs":"Offen 2,Hinweise & Aufgaben 3",
+ "solo.chips":"alle (aus),Funk,Haus (aus),Ziel offen (aus)","solo.hinweise":"E-004","solo.offen":"E-001",
+ "solo.lanes":"offen:Funk:true,offen:Haus:false","solo.tabs":"Offen 1,Hinweise & Aufgaben 1",
+ "again.chips":"alle,Funk,Haus,Ziel offen","again.hinweise":"E-003,E-004,E-005","again.tabs":"Offen 2,Hinweise & Aufgaben 3",
+ "other.chips":"alle (aus),Funk,Haus (aus),Ziel offen (aus)",
+ "alle.chips":"alle,Funk,Haus,Ziel offen","alle.hinweise":"E-003,E-004,E-005","alle.lanes":"offen:Funk:true,offen:Haus:true",
+ "claude.hinweise":"E-003,E-005","claude.tabs":"Offen 2,Hinweise & Aufgaben 2",
+ "claudeHaus.hinweise":"E-003","claudeHaus.offen":"E-002","claudeHaus.tabs":"Offen 1,Hinweise & Aufgaben 1",
+ "kept":"[] Ziel offen",
+ "whoBack.chips":"alle (aus),Buch (aus),Funk (aus),Haus,Ziel offen (aus)","whoBack.offen":"E-002","whoBack.tabs":"Offen 1,Hinweise & Aufgaben 1",
+ "arrived.chips":"alle (aus),Buch (aus),Funk (aus),Haus,Neu (aus),Ziel offen (aus)","arrived.offen":"E-002",
+ "claudeView.chips":"alle (aus),Solar (aus)","claudeView.lanes":"vorrat:Solar:false",
+ "laneHead.chips":"alle (aus),Buch (aus),Funk,Haus,Neu (aus),Ziel offen (aus)","laneHead.offen":"E-001,E-002",
+ "laneHead.kept":"[\"Ziel offen\",\"Solar\",\"Buch\",\"Neu\"] null"}}

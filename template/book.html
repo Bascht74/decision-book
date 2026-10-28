@@ -271,7 +271,7 @@ details.hl{outline:2px solid var(--accent);outline-offset:2px}
 
 <script>
 // Version of this page (x.y.z), shown small next to the title: the repository's VERSION, set by template/build_template.py.
-const PAGE_VERSION="0.2.0";
+const PAGE_VERSION="0.2.1";
 /* == book-update: begin == made from template/update.js by template/build_template.py -- edit it there, then rebuild */
 // THE BOOK'S DATA VERSION. PAGE_VERSION is this page's version (x.y.z, the repository's file VERSION). The data in the
 // db carries its own: meta/buch {version:"x.y.z", migriert:["0.1.0", …], aktualisiert:"<ISO>"}. A book without
@@ -720,7 +720,7 @@ function sortStat(list){const pub=list.filter(s=>isFinite(relPub(s)));
   const t=new Map(list.map(s=>{let v=relPub(s);if(!isFinite(v)){v=-Infinity;for(const p of pub)if(verCmp(relName(p),relName(s))<=0&&relPub(p)>v)v=relPub(p)}return [s,v]}));
   return list.sort((a,b)=>(t.get(a)<t.get(b)?-1:t.get(a)>t.get(b)?1:0)||verCmp(relName(a),relName(b))||((a.ordnung??0)-(b.ordnung??0))||String(a.id).localeCompare(String(b.id)))}
 function rueckDue(r){const f=String(r.rueckblick_faellig||"").trim();if(!f||(r.rueckblick&&r.rueckblick.antwort)||isTopArt(r))return false;const z=relZ();if(f===z)return true;const a=relOrd(f),b=relOrd(z);return !!(a&&b&&b>=a)}
-function colRows(k){return k==="hinweise"?rows.filter(r=>isTopArt(r)||rueckDue(r)):rows.filter(r=>r.blatt===k&&visible(r)&&!isTopArt(r))}
+function colRows(k){return k==="hinweise"?rows.filter(r=>(isTopArt(r)||rueckDue(r))&&visible(r)):rows.filter(r=>r.blatt===k&&visible(r)&&!isTopArt(r))}
 const STEPS_DEFAULT=["Entscheidungen – keine Karte des Release mehr unter „Offen“","Umsetzung – alle Karten des Release gebaut und zusammengeführt","Übersetzungen","Zählstände","Volle Suite hier","Changelog & Handbuch","Bilder","Deine Prüfung – „Prüfen“ ist leer","GitHub-Prüflauf – alle Prüfungen grün","Veröffentlichung – Version erscheint"];
 let STEPS=Array.isArray(S("schritte",null))&&S("schritte").length?S("schritte"):STEPS_DEFAULT;
 let schritteDoc=null,stepsOpen=false,stepsDoneOpen=false;
@@ -759,10 +759,23 @@ function zielOptions(cur){
   return [...set].sort(byZiel);
 }
 try{hiddenZ=new Set(JSON.parse(localStorage.getItem("eb-hidden")||"[]"))}catch(e){}
+// soloZ: the one target a chip shows; while it is set every other target counts as left out, also one that has no
+// card yet or only in another view or under the other "Entschieden von" (kept as "eb-solo" next to "eb-hidden")
+let soloZ=null;try{soloZ=localStorage.getItem("eb-solo")||null}catch(e){}
 function visible(r){if(focusNr&&r.nr===focusNr)return true;return (who==="alle"||(r.von||OWNER)===who)}
-// Release-Filter und Einklappen sind eins: abgewählt heißt zugeklappt, in jeder Spalte; die Karten bleiben gezählt.
-function laneShut(z){return hiddenZ.has(z||"Ziel offen")}
-function laneFlip(z){const k=z||"Ziel offen";hiddenZ.has(k)?hiddenZ.delete(k):hiddenZ.add(k);try{localStorage.setItem("eb-hidden",JSON.stringify([...hiddenZ]))}catch(e){}}
+// Release-Filter und Einklappen sind eins: abgewählt heißt zugeklappt, in jeder Spalte (unter „Hinweise & Aufgaben“ ausgelassen);
+// die Zahlen an Reiter und Spaltenkopf zählen nur, was gezeigt wird, die Spur zeigt ihre Zahl auch zugeklappt.
+function laneShut(z){const k=z||"Ziel offen";return soloZ!==null?k!==soloZ:hiddenZ.has(k)}
+// a lane head folds its own lane only; while a chip shows one target, the others first become folded lanes
+function laneFlip(z){const k=z||"Ziel offen";if(soloZ!==null){hiddenZ=new Set(rows.map(r=>String(r.ziel||"").trim()||"Ziel offen").filter(x=>x!==soloZ));soloZ=null}
+  hiddenZ.has(k)?hiddenZ.delete(k):hiddenZ.add(k);saveHidden()}
+function saveHidden(){try{localStorage.setItem("eb-hidden",JSON.stringify([...hiddenZ]));if(soloZ===null)localStorage.removeItem("eb-solo");else localStorage.setItem("eb-solo",soloZ)}catch(e){}}
+// what a column SHOWS: "Hinweise & Aufgaben" has no lanes, so a target the chips leave out is left out of it here;
+// a lane column shows a left-out target as a folded lane. The tab counts count this.
+function shownRows(k){return colRows(k).filter(r=>!laneShut(String(r.ziel||"").trim()))}
+// a chip shows only its target; the chip that is already the only one shown shows the whole row again
+function chipSolo(z,zs){const only=!laneShut(z)&&zs.every(x=>x===z||laneShut(x));
+  hiddenZ.clear();soloZ=only?null:z;saveHidden()}
 
 // The live line: when Claude last read the orders / worked on the owner's cards / worked in the book at all
 // (Claude writes meta/claude {auftraege_gelesen, karten_bearbeitet, zuletzt}), and when the owner last worked.
@@ -925,12 +938,13 @@ function renderFilter(){
   const zs=[...new Set(keys.flatMap(k=>colRows(k)).map(r=>String(r.ziel||"").trim()||"Ziel offen"))].sort(byZiel);
   if(!zs.length)return;
   f.append(el("span",{class:"who",text:"  ·  Release:"}));
-  for(const z of zs){const b=el("button",{type:"button","aria-pressed":String(!hiddenZ.has(z)),title:"Auf- oder zuklappen"},el("span",{class:"lng",text:z}),el("span",{class:"sht",text:z.replace(/^3\.0\.0/,"")}));b.onclick=()=>{hiddenZ.has(z)?hiddenZ.delete(z):hiddenZ.add(z);try{localStorage.setItem("eb-hidden",JSON.stringify([...hiddenZ]))}catch(e){}render()};f.append(b)}
+  const all=el("button",{type:"button","aria-pressed":String(soloZ===null&&!zs.some(z=>hiddenZ.has(z))),title:"Alle Ziele zeigen",text:"alle"});all.onclick=()=>{hiddenZ.clear();soloZ=null;saveHidden();render()};f.append(all);
+  for(const z of zs){const b=el("button",{type:"button","aria-pressed":String(!laneShut(z)),title:"Nur dieses Ziel zeigen"},el("span",{class:"lng",text:z}),el("span",{class:"sht",text:z.replace(/^3\.0\.0/,"")}));b.onclick=()=>{chipSolo(z,zs);render()};f.append(b)}
 }
 function renderTabs(shown){
   const nav=$("#tabs");nav.textContent="";
   for(const c of shown){
-    const n=colRows(c.key).length;
+    const n=shownRows(c.key).length;
     const b=el("button",{role:"tab","aria-selected":String(c.key===tab)},c.label,el("span",{class:"n",text:String(n)}));
     b.onclick=()=>{tab=c.key;try{localStorage.setItem("eb-tab",tab)}catch(e){}render()};nav.append(b);
   }
@@ -2044,11 +2058,11 @@ function renderBoard(){
   for(const c of viewCols()){
     const col=el("section",{class:"col"+(c.key===tab?" on":""),"aria-label":c.label});
     const mine=colRows(c.key);
-    col.append(el("div",{class:"colhead"},c.label,el("span",{class:"n",text:String(mine.length)})),el("p",{class:"hint",text:c.hint}));
+    col.append(el("div",{class:"colhead"},c.label,el("span",{class:"n",text:String(shownRows(c.key).length)})),el("p",{class:"hint",text:c.hint}));
     const lanes=[...new Set(mine.map(r=>r.ziel||""))].sort(laneOrder);
     if(c.key==="erledigt")lanes.reverse();
-    if(!mine.length)col.append(el("div",{class:"empty",text:"leer"}));
-    if(c.key==="hinweise"){const l=[...mine].sort((a,b)=>lastChange(b)-lastChange(a)||b.nr.localeCompare(a.nr,"de",{numeric:true}));for(const r of l)col.append(rueckDue(r)?rueckItem(r):card(r,l));board.append(col);continue}
+    if(!(c.key==="hinweise"?shownRows(c.key):mine).length)col.append(el("div",{class:"empty",text:"leer"}));
+    if(c.key==="hinweise"){const l=shownRows(c.key).sort((a,b)=>lastChange(b)-lastChange(a)||b.nr.localeCompare(a.nr,"de",{numeric:true}));for(const r of l)col.append(rueckDue(r)?rueckItem(r):card(r,l));board.append(col);continue}
     for(const z of lanes){
       let lr=mine.filter(r=>(r.ziel||"")===z);
       if(c.key==="entschieden")lr.sort((a,b)=>(a.rang??1e9)-(b.rang??1e9)||a.nr.localeCompare(b.nr,"de",{numeric:true}));
@@ -2069,7 +2083,7 @@ document.addEventListener("focusout",()=>setTimeout(()=>{if(!pending)return;cons
 document.addEventListener("focusout",()=>setTimeout(runRules,0));
 $("#ver").textContent=PAGE_VERSION;
 // Änderungsprotokoll des Buchs: ein Klick auf die Versionsnummer zeigt es; neueste Version oben.
-const BUCH_LOG=[{"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
+const BUCH_LOG=[{"v": "0.2.1", "datum": "2026-10-28", "uhrzeit": "14:35", "karten": [], "punkte": ["Die Knöpfe hinter „Release:“ filtern jetzt: ein Klick zeigt nur dieses Ziel, alle anderen werden ausgeblendet – auch unter „Bei Claude“, beim Wechsel von „Entschieden von“ und bei neu hinzukommenden Karten. Ein zweiter Klick auf denselben Knopf zeigt wieder alle; der neue Knopf „alle“ ebenso.", "„Hinweise & Aufgaben“ folgt jetzt dem Ziel-Filter und „Entschieden von“ wie die anderen Spalten.", "Die Zahlen an den Reitern und Spaltenköpfen zählen nur, was gerade gezeigt wird.", "Einzelne Spuren klappst Du weiterhin über ihre Kopfzeile auf und zu."]}, {"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
 // the change log and the settings are two dialogs with one frame: an overlay, "Schließen (Esc)", a click beside it
 function dlgOpen(label){if(document.querySelector(".vlog"))return null;const box=el("div",{class:"box",role:"dialog","aria-label":label});
   const close=el("button",{type:"button",text:"Schließen (Esc)"});box.append(el("div",{class:"top"},el("h2",{text:label}),close));return {box,close}}

@@ -5,6 +5,21 @@ The page shows its own change log in German (`BUCH_LOG`, when the version number
 the repository's. Every section says whether the book's data changes shape -- and if so, which migration
 brings an existing book along.
 
+## 0.2.1
+
+**The "Release:" chips filter.** A click on a chip shows only that target: every other target is left out
+(folded in the lane columns), also in the other view, under the other "Entschieden von" and on cards that come in
+later. The page remembers the choice in the browser as "eb-solo" next to "eb-hidden". A click on the chip that is already the only one shown shows all again, and a
+new first chip "alle" shows all. Lane heads still fold one lane at a time.
+
+**"Hinweise & Aufgaben" follows the filters.** The tab leaves out the cards whose target the chips leave out
+("Ziel offen" for an empty one) and follows "Entschieden von", like the other tabs.
+
+**Counts of what is shown.** The tab counts and column heads count the cards the column shows under the current
+filter; the chips still offer every target of the tab.
+
+No data migration: the data does not change shape.
+
 ## 0.2.0
 
 **Packing finished releases into the archive.** "Einstellungen" has a new section "Archiv" (only for a viewer who
