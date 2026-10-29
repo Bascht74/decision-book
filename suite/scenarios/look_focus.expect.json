@@ -1,0 +1,6 @@
+{"run":{"width":1280},
+ "expect":{"bar.visible":true,"bar.style":"solid","bar.width":"2px","bar.c":{"min":3},
+  "waits.width":"2px","waits.c":{"min":3},"tab.width":"2px","tab.c":{"min":3},
+  "button.width":"2px","button.c":{"min":3},"card.width":"2px","card.c":{"min":3},
+  "field.0":"rgb(47, 85, 151)","field.1":true,"field.2":{"min":3},
+  "clipped":[],"tableField.0":"rgb(47, 85, 151)","tableField.1":true,"tableField.2":{"min":3}}}

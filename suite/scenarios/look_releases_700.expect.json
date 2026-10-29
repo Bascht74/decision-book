@@ -1,0 +1,2 @@
+{"run":{"width":700},
+ "expect":{"heads":4,"headsCut":[],"titleWidth":{"min":200},"within":true,"cardOpen":true}}

@@ -16,6 +16,8 @@ def once(page, old, new):
     n = page.count(old)
     if n != 1: raise Stale('break text found %d times, not once' % n)
     return page.replace(old, new)
+# the start of the dark colours: a break adds a declaration there that wins over the one the block sets
+DARK = '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){'
 # scenario, what the break does, old text, new text, field expected in the FAIL line
 B = [
  ('ab_counts', 'the count of "Erledigt" adds the archive again', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;', 'rows.filter(r=>visible(r)&&r.blatt==="erledigt").length+archCount("erledigt");', 'erledigtBefore'),
@@ -228,7 +230,7 @@ B = [
  ('releases_groups', 'a group row sums the estimate into "verbraucht"', 'si=sum(list,r=>parseTok(r.tokens_ist))', 'si=sum(list,r=>parseTok(r.tokens_prognose))', 'groups'),
  ('releases_groups', 'the rows are no longer sorted within their group', 'const mine=g.rows.filter(pass).sort(cmp);', 'const mine=g.rows.filter(pass);', 'sortedDown'),
  ('releases_groups', 'a toggle is not kept for the session', 'try{sessionStorage.setItem("eb-rgrp",JSON.stringify([...rgOpen]))}catch(e){}', '', 'storedToggle'),
- ('releases_layout', 'the releases table keeps the 980 px limit of "Erledigt"', '.archive.releases{max-width:none}', '', 'tableWidthShare'),
+ ('releases_layout', 'the releases table is held to 980 px again', '.archive{display:flex;flex-direction:column;gap:8px}', '.archive{display:flex;flex-direction:column;gap:8px;max-width:980px}', 'tableWidthShare'),
  ('releases_layout', 'the counts table\'s monospace reaches every ".rtab" again', '.rtabw .rtab td{font-family:var(--mono)', '.rtab td{font-family:var(--mono)', 'titleMono'),
  ('releases_layout', 'the headline is right-aligned like the numbers', '.atab.rtab td.t{width:100%;text-align:left;', '.atab.rtab td.t{width:100%;text-align:right;', 'titleAlign'),
  ('releases_move', 'a card in work or in "Prüfen" can be moved', '"schon erledigt":r.blatt==="arbeit"||r.blatt==="pruefen"?"wird schon bearbeitet"', '"schon erledigt":false?"wird schon bearbeitet"', 'arbeitDisabled'),
@@ -383,6 +385,60 @@ B = [
  # the "Ziel" dropdown and the target "Buch"
  ('ziel_buch', '"Buch" is offered although no card carries it', 'if(rows.some(r=>r.ziel==="Buch"))set.add("Buch");', 'set.add("Buch");', 'without'),
  ('ziel_buch', '"Buch" is never offered', 'if(rows.some(r=>r.ziel==="Buch"))set.add("Buch");', '', 'with'),
+ # the look: dark blue title bar, view tabs, toolbar card, contrast, focus, no overflow
+ ('look_titlebar', 'the title bar is the colour of the page again', ';padding:6px 16px;background:var(--bar);color:var(--on-accent)}', ';padding:6px 16px;background:var(--paper);color:var(--on-accent)}', 'background'),
+ ('look_titlebar', '"wartet auf Dich" is a dark button in the bar', '--bar-btn:#ebf3fc;', '--bar-btn:#26426c;', 'waitsLight'),
+ ('look_tabs', 'the active view tab is regular weight', '.views button[aria-selected="true"]{color:var(--title);font-weight:600}', '.views button[aria-selected="true"]{color:var(--title);font-weight:400}', 'dich.weight'),
+ ('look_tabs', 'the bar under the active view tab is 1 px', 'bottom:2px;height:3px;border-radius:2px;background:var(--accent)}', 'bottom:2px;height:1px;border-radius:2px;background:var(--accent)}', 'dich.line'),
+ ('look_toolbar', 'search and filters no longer share one card', '<div class="toolbar">', '<div class="toolbar-off">', 'card'),
+ ('look_contrast', 'the edge of a secondary button fades', '--btn-line:#4f6283;', '--btn-line:#c3cfdf;', 'edgeBelow3'),
+ ('look_contrast', 'the lower edge of a field fades', '--field-edge:#858585;', '--field-edge:#d9dee8;', 'fieldBelow3'),
+ ('look_focus', 'the focus ring in the title bar is dark blue on dark blue', '.wrap>header :focus-visible{outline-color:var(--on-accent)}', '.wrap>header :focus-visible{}', 'bar.c'),
+ ('look_focus', 'the focus ring is 1 px', '[tabindex]:focus-visible{outline:2px solid var(--title);outline-offset:2px}', '[tabindex]:focus-visible{outline:1px solid var(--title);outline-offset:2px}', 'tab.width'),
+ ('look_wide_1000', 'cards add their padding to the full width', '.wrap>:not(header,.views,.toolbar){box-sizing:border-box;', '.wrap>:not(header,.views,.toolbar){box-sizing:content-box;', 'overflowing'),
+ ('look_wide_1300', 'cards add their padding to the full width', '.wrap>:not(header,.views,.toolbar){box-sizing:border-box;', '.wrap>:not(header,.views,.toolbar){box-sizing:content-box;', 'overflowing'),
+ ('look_wide_1920', 'the toolbar is wider than the window', '.toolbar{order:-1;', '.toolbar{order:-1;min-width:1940px;', 'overflowing'),
+ ('look_phone', 'on a phone version and settings drop below the name', '.ver{grid-row:1;grid-column:2}.setbtn{grid-row:1;grid-column:3}', '', 'oneLine'),
+ ('look_phone', 'the release card keeps its wide padding on a phone', '.ready{padding:8px 12px;gap:2px 10px}', '', 'phone'),
+ ('look_phone', 'the filter buttons keep 14 px on a phone', '.filter button{font-size:13px;padding:0 8px}', '', 'phone'),
+ ('look_phone', 'the bar under the active view tab keeps its 7 px inset on a phone', '.views button[aria-selected="true"]::after{left:6px;right:6px}', '', 'phone'),
+ ('look_tabs', 'the active view tab does not anchor its bar (it would hang off the next positioned box)', '.views button{position:relative;', '.views button{', 'dich.anchored'),
+ ('look_focus', 'a card clips its head, and the focus ring with it', 'details{background:var(--sheet);border:1px solid var(--line);border-radius:8px}', 'details{background:var(--sheet);border:1px solid var(--line);border-radius:8px;overflow:hidden}', 'clipped'),
+ ('look_focus', 'a filter field in a table head shows a 1 px line in focus', '.atab .fcell select:focus-visible,', '', 'tableField'),
+ ('look_focus_1000', 'the ring of a column tab lies outside it again, and the bar cuts it', 'nav button:focus-visible{outline-offset:-2px}', '', 'first.cut'),
+ ('look_focus_1000', 'the ring of a column tab is 1 px', 'nav button:focus-visible{outline-offset:-2px}', 'nav button:focus-visible{outline-offset:-2px;outline-width:1px}', 'first.width'),
+ ('look_focus_dark', 'the focus ring is dark blue in dark mode', DARK, DARK + '--title:#1f3864 !important;', 'tab.c'),
+ ('look_focus_dark', 'the line of a focused field is dark in dark mode', DARK, DARK + '--accent:#26426c !important;', 'field.2'),
+ ('look_contrast', 'a hint fades to light grey', '.hint{font-size:13px;color:var(--muted);margin:0}', '.hint{font-size:13px;color:#b4bac4;margin:0}', 'plainBelow'),
+ ('look_contrast_dark', 'the lower edge of a field fades in dark mode', DARK, DARK + '--field-edge:#2a3140 !important;', 'fieldBelow3'),
+ ('look_contrast_dark', 'the edge and the fill of a secondary button fade in dark mode', DARK, DARK + '--btn-line:#283040 !important;--btn:#1b2230 !important;', 'edgeBelow3'),
+ ('look_contrast_dark', 'secondary text fades in dark mode', DARK, DARK + '--muted:#555d6e !important;', 'plainBelow'),
+ ('look_narrow_320', 'the counts table keeps its wide cells on a phone', '.rtabw .rtab th,.rtabw .rtab td{padding:1px 4px}', '', 'overflowing'),
+ ('look_narrow_320', 'a long word in a headline does not wrap', '.head{font-weight:500;font-size:14px;line-height:1.35;overflow-wrap:anywhere}', '.head{font-weight:500;font-size:14px;line-height:1.35}', 'overflowing'),
+ ('look_narrow_320', 'the run line falls into the number column again', '.steps li .steprun{display:block;margin:2px 0 0;grid-column:2/-1}', '.steps li .steprun{display:block;margin:2px 0 0}', 'runColumn'),
+ ('look_narrow_320', 'step pills stretch to the height of their row', 'gap:2px 10px;align-items:start;border-top', 'gap:2px 10px;border-top', 'pillHeight'),
+ ('look_narrow_320', 'the releases table keeps the phone columns below 360 px', '@media (max-width:359px){.atab.rtab{font-size:12.5px}', '@media (max-width:1px){.atab.rtab{font-size:12.5px}', 'headsCut'),
+ ('look_narrow_320', 'the column tabs keep their wide padding on a phone', '@media (max-width:640px){nav button{padding:6px 6px 8px;font-size:13.5px}', '@media (max-width:1px){nav button{padding:6px 6px 8px;font-size:13.5px}', 'tabsScroll'),
+ ('look_narrow_320', 'a column tab shrinks below its text', 'nav button{position:relative;flex-shrink:0;', 'nav button{position:relative;', 'tabsSqueezed'),
+ ('look_narrow_320', 'the close button of the change log wraps', '.vlog .top>button{white-space:nowrap}', '', 'closeHeight'),
+ ('look_toolbar_1000', '"Release:" stands outside its group', 'const g2=el("span",{class:"fgrp"},el("span",{class:"who",text:"Release:"}));f.append(g2);', 'const g2=el("span",{class:"fgrp"});f.append(el("span",{class:"who",text:"Release:"}),g2);', 'withLabel'),
+ ('look_toolbar_1000', 'the line before "Release:" shows at the start of its line', '.toolbar>.filter .fgrp+.fgrp>.who{border-left:1px solid var(--line);padding-left:11px;margin-left:-6px}', '.toolbar>.filter .fgrp+.fgrp>.who{border-left:1px solid var(--line);padding-left:11px;margin-left:6px}', 'edge'),
+ ('look_releases_700', 'the releases table keeps its token columns down to 641 px', '@media (max-width:760px){.atab.rtab .w{display:none}', '@media (max-width:640px){.atab.rtab .w{display:none}', 'headsCut'),
+ ('look_parts', 'the gear in the title bar is drawn at 13 px', '.setbtn>[aria-hidden]{font-size:17px;line-height:0;vertical-align:-1px}', '', 'gear'),
+ ('look_parts', 'unselected tabs and group labels take the text colour', '--tab-ink:#424242', '--tab-ink:#1d2433', 'tabInk'),
+ ('look_parts', 'a kind label is lower than the stand chip beside it', 'text-transform:uppercase;border-radius:10px;padding:3px 8px;margin-right:6px}', 'text-transform:uppercase;border-radius:10px;padding:1px 8px;margin-right:6px}', 'labelHeight'),
+ ('look_parts', 'the label "Auftrag" takes the rule of the order box', 'div.auftrag{', '.auftrag{', 'auftragLabel'),
+ ('look_parts', 'a card link in a table row is smaller than 24 px', '.atab td>.linkbtn{min-height:24px;margin:-2px 0}', '.atab td>.linkbtn{margin:-2px 0}', 'targets'),
+ ('look_parts', 'a dependency pill is smaller than 24 px', 'border-radius:12px;padding:0 8px;min-height:24px;cursor:pointer}', 'border-radius:12px;padding:0 8px;cursor:pointer}', 'targets'),
+ ('look_parts', 'a row with a card link is higher than one without', '.atab td>.linkbtn{min-height:24px;margin:-2px 0}', '.atab td>.linkbtn{min-height:24px}', 'linkRow'),
+ ('look_parts', '"Erledigt" stops at 980 px', '.archive{display:flex;flex-direction:column;gap:8px}', '.archive{display:flex;flex-direction:column;gap:8px;max-width:980px}', 'tableShare'),
+ ('look_parts', 'an opened row sticks to the edge of the table', '.atab tr.gfull>td{padding:6px 8px 8px}', '.atab tr.gfull>td{padding:0 0 6px}', 'gfull'),
+ ('look_parts', 'the filters in table heads stay small', 'padding:0 4px;min-height:28px;max-width:100%}', 'padding:0 4px;max-width:100%}', 'fields'),
+ ('look_parts_dark', 'a column is lighter than its cards in dark mode', DARK, DARK + '--panel:#242d3c !important;', 'surfaces'),
+ ('look_parts_dark', 'a group row is darker than its table in dark mode', DARK, DARK + '--row-group:#11141a !important;', 'surfaces'),
+ ('look_narrow_320', '"Öffnen" in a wrapped hit goes to the left', '#gtreffer .kbtn{margin-left:auto}', '', 'openOff'),
+ ('look_phone', 'a hit with a long stand drops "Öffnen" to a line of its own', '#gtreffer .gh{flex-basis:8em}', '', 'openWrapped'),
+ ('look_wide_1920', 'the line of a hit runs across the whole toolbar', '.toolbar #gtreffer>li{max-width:980px}', '', 'hitWidth'),
 ]
 def run(page_text, tag, name):
     p = os.path.join(here, tag + '.html'); open(p, 'w', encoding='utf-8').write(page_text)

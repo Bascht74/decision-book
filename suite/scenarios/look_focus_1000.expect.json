@@ -1,0 +1,3 @@
+{"run":{"width":1000},
+ "expect":{"tabs":{"min":2},"first.visible":true,"first.width":"2px","first.c":{"min":3},"first.cut":0,"last.width":"2px","last.cut":0,
+  "view.width":"2px","view.cut":0}}

@@ -36,6 +36,15 @@ WORDS = {
     '0f999c500ee6299775b79c479f561e7b7c789a265370c4a658e8c3466377cb8f': 'a project the book served',
     '81861f2a7cc2b429795efae68dc1d0d3bd3c7d4752acaf5974a213c6243d4312': 'that project\'s services',
     '7a62c1187b4217e70a6661e2182c744a5d8cd555f5f5d5d66ff5fdcadeeda0d7': 'that project\'s tools',
+    '4b7e172afd07683e8e12fd8bea360920535010006a497822d67568dbd26bc043': 'a project the book served',
+    '5baa00c42bd1a2df3d3f773b0637e1583e550aa83d2d07acd6bc4c060208d5fa': 'a project the book served',
+    '3c5e667cecd7e879f03afcda0eacfd82ca830e1460c3e59995cb8a3b2614a593': 'that project\'s services',
+    '871eaa97588df5f8f58695ae8b61a6c4bd55f0a68d7fccb6138f65b68e25320d': 'that project\'s tools',
+    'feb1a3cfa2429a764b4da551d73ae090673d99148c9212c0c8908bca626be64d': 'a project the book served',
+    '665df801a414eb5a05cd3e3f61fb353876cae542910d6a3ebeec2c834bf0c6d0': 'that project\'s services',
+    '392a0ffd9056ef5b7b07d82668139b7a3685f6d889a0075137b8a4bbc5f06808': 'that project\'s services',
+    '2c2ef83dd493bb102ac016675bedee76393aad3a331a3a006e7dd49ca7417668': 'a place of that project',
+    '12fcd4cc4784502382340c568426b1e8325d78d3adf8d9c975f6267f01a8962b': 'a place of that project',
 }
 # sha256(token exactly as written) -- words that are ordinary in lower case (a JavaScript "resolve")
 WORDS_CASE = {
@@ -52,7 +61,6 @@ RULES = [
 # session that made it -- it opens only for its owner): allowed in commit messages, and counted in the summary
 TRAILER = re.compile(r'^(Co-Authored-By: Claude [^<>]*<noreply@anthropic\.com>|Claude-Session: https://claude\.ai/code/session_\w+)$')
 CARD = ('card number', re.compile(r'\bE-\d{3}'))
-# the one e-mail-like string the page needs: the font request "…wght@400;500…" is no address (the rule needs a dot-domain)
 SKIP_DIRS = {'.git', 'out'}
 TEXT = ('.html', '.js', '.json', '.py', '.sh', '.md', '.txt', '.css', '.gitignore', 'VERSION')
 TOKEN = re.compile(r'[A-Za-z0-9]+')

@@ -1,0 +1,5 @@
+{"run":{"width":1280},
+ "expect":{"dich.label":{"re":"^Für Dich"},"dich.weight":{"min":600},"dich.anchored":"relative","dich.color":"rgb(31, 56, 100)","dich.line":"3px",
+  "dich.lineColor":"rgb(47, 85, 151)","dich.lineInset":["10px","10px"],"dich.othersWeight":{"max":500},"dich.othersLines":0,
+  "releases.label":{"re":"^Releases"},"releases.weight":{"min":600},"releases.line":"3px","releases.othersWeight":{"max":500},
+  "lineContrast":{"min":3}}}

@@ -1,0 +1,4 @@
+{"run":{"width":1300},
+ "expect":{"gear":{"min":19},"tabInk":["rgb(66, 66, 66)","rgb(66, 66, 66)"],"labelHeight":{"min":-1.5,"max":1.5},
+  "auftragLabel":["inline","0px"],"targets":{"min":24},"targetsCount":{"min":2},"linkRow":{"min":-1,"max":1},
+  "tableShare":{"min":0.98},"gfull":{"min":6},"fields":{"min":28},"fieldsCount":{"min":6}}}

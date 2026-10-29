@@ -1,0 +1,3 @@
+{"run":{"width":390,"height":844,"wrap":true},
+ "expect":{"oneLine":true,"waitsBelow":true,"header":[0,0,"rgb(31, 56, 100)"],"targets.0":{"min":32},"targets.1":{"min":32},"targets.2":{"min":32},
+  "toolbar":[true,true],"phone":["8px 12px","13px","6px","6px"],"openWrapped":[],"hitCount":{"min":3}}}

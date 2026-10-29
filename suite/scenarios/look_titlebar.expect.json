@@ -1,0 +1,3 @@
+{"run":{"width":1280},
+ "expect":{"background":"rgb(31, 56, 100)","edges":[0,0,0],"height":{"min":48,"max":72},"name":"rgb(255, 255, 255)",
+  "minText":{"min":4.5},"waitsLight":true,"waitsFromRight":{"min":0,"max":20}}}

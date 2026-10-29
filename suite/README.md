@@ -46,7 +46,11 @@ Three files in `scenarios/`:
   the roles "Eigner" and "Claude", example.org addresses, no names from real life.
 * `NAME.epi.js` -- the actions: `scenario(async out=>{ … out.x = … })`. Helpers: `until(cond, ms)`, `sleep(ms)`,
   `$$(sel)`, `findBtn(sel, /re/)`, `goView('Aufträge')`, `typeIn(field, text)`, `press(target, key, {metaKey:true})`,
-  `__DB.external(path, patch)` (another writer), `CALLS` (writes and sends in order), `READS` (doc gets).
+  `__DB.external(path, patch)` (another writer), `CALLS` (writes and sends in order), `READS` (doc gets); for the look:
+  `rgbaOf(colour)` (also what `color-mix()` computes to), `groundOf(el, self)` (the backgrounds an element or its
+  surroundings show, laid over each other), `lumOf(rgb)`, `ratio(a, b)` (WCAG contrast), `sticksOut()` (elements that
+  run over the window's edge outside a box that scrolls or clips them), `ringCut(el)` (how many px of an element's focus
+  ring a box that scrolls or clips it cuts away).
   A `</script>` inside a string must be written `<\/script>`.
 * `NAME.expect.json` -- `{"run": {…}, "expect": {…}}`.
   * `run` (all optional): `width` (1280), `height` (900), `budget` (virtual ms, 10000), `wrap` (true: inside an
@@ -94,7 +98,9 @@ epilogue with `__SYNC = true`. Do not measure time in an `async` scenario.
   for, so the `imp_*` scenarios hand the page files whose `text()` answers at once, and set `files` on the input directly
   (no file dialog). A picked folder's `webkitRelativePath` is set by hand. Whether a real browser gives the same paths is
   not modelled.
-* Fonts from Google Fonts are blocked (no network), so layout uses the fallback font.
+* Other fonts: the page loads no web font and uses the system font, so the suite measures with the font of the
+  machine it runs on. A wider system font wraps the toolbar earlier; the one-line checks (titles, `.pct`, `rr_pct`)
+  are proven with the macOS font only.
 * Several open tabs or viewers at once, the 15-minute look, and a page republished under an open view.
 
 ## Files

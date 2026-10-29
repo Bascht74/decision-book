@@ -1,0 +1,3 @@
+{"run":{"width":320,"height":700,"wrap":true},
+ "expect":{"width":320,"overflowing":[],"runColumn":"2","pillHeight":{"max":24},"headsCut":[],"tabsScroll":{"max":0},"tabsCut":[],
+  "tabsCutDich":[],"tabsSqueezed":[[],true],"closeHeight":{"max":34},"openOff":{"max":1},"openCount":{"min":3}}}

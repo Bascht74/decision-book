@@ -1,0 +1,4 @@
+{"run":{"width":1280},
+ "expect":{"holds":[true,false,false],"card":["rgb(255, 255, 255)","8px",true],"order":[true,true,true],
+  "labels.0":"Entschieden von:","labels.1":{"re":"Release:$"},"lines":["solid","none","solid"],"heights":[32,32],
+  "pressed":["rgb(219, 233, 248)",true,600],"notPressed":["rgba(0, 0, 0, 0)","none",400]}}

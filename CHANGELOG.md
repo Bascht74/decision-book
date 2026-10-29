@@ -5,6 +5,48 @@ The page shows its own change log in German (`BUCH_LOG`, when the version number
 the repository's. Every section says whether the book's data changes shape -- and if so, which migration
 brings an existing book along.
 
+## 0.3.0
+
+**A new look.** A dark blue title bar across the whole window, the views as tabs below it, and an office-style
+ribbon for search and filters. This is the one look; there is no setting for the old one.
+
+**Title bar.** Name, version and "Einstellungen" on the left; "wartet auf Dich" is a light button on the right,
+next to "live" and the four times ("Buch fast voll" in a light red). On a phone, name, version and "⚙" stay on one
+line and the rest wraps below.
+
+**Views, search and filters.** The view in front is bold with a bar under its name. Search and filters share one
+white toolbar card under the views; "Entschieden von:" and "Release:" are groups set apart by a line (the "·" before
+"Release:" is gone). When the toolbar gets narrow, a group wraps as a whole, so its buttons stay with their label. A
+pressed filter has a light blue ground, bold text and a line along its lower edge. The release card now follows below
+the toolbar, so the Tab key reaches the views, the search and the filters first.
+
+**Buttons, fields, marks.** Main buttons ("Senden", "Release … starten") are filled blue; secondary ones
+("Bearbeiten", "↑"/"↓", "Öffnen", the fold buttons) are light blue with an edge. Fields have a darker lower edge
+and show focus as a 2 px blue line along it (the filters in table heads too); everything else shows focus as a 2 px
+ring, white in the title bar, and inside the column tabs, whose bar scrolls sideways. Stand, kind, deadline,
+dependency and step state are pills that carry their word. Headings and column heads take the dark blue of the title
+bar; tables have a grey head row with dark text, and only the sorted column is blue. In dark mode a column lies darker
+than its cards, and a group row or a row under the pointer lighter than its table. The page uses the system font and
+no longer loads a web font.
+
+**Also fixed.** The line that names the check run of a running step ("…-Prüflauf: … – Live") stands under the
+step's name again, not letter by letter in the number column. A long word in a card's headline wraps instead of making a phone page wider.
+Below 761 px the releases table takes the phone's narrow columns (between 641 and about 760 px the headline had no room
+left), and below 360 px narrower ones still. "Erledigt" and "Archiv" take the full width like the release card. Filter
+fields in table heads are 28 px high (32 px on a phone), dependency pills and the card links in table rows 24 px. A card
+opened in a table row keeps off the table's edge, and the change log's close button stays on one line.
+
+**Contrast in light and dark.** Text reaches 4.5:1 and the edges of buttons and fields 3:1 (WCAG 2.2 AA) in both
+modes; the dark mode keeps its page and text colours. New scenarios hold the look: `look_titlebar`, `look_tabs`,
+`look_toolbar` and `look_toolbar_1000`, `look_contrast` and `look_contrast_dark` (every text, not only buttons and
+fields), `look_focus`, `look_focus_1000` and `look_focus_dark` (no ring cut by a box that scrolls), `look_phone`,
+`look_narrow_320`, `look_releases_700`, `look_parts` and `look_parts_dark` (field heights, target sizes, labels, the
+order of surfaces in dark mode), and `look_wide_1000`/`_1300`/`_1920` (no view runs over the right edge).
+`suite/lib/common.js` has helpers for them (colours from `color-mix()`, the ground an element stands on, elements that
+stick out of the window, how much of a focus ring a box cuts away).
+
+The book's data does not change shape; no migration.
+
 ## 0.2.1
 
 **The "Release:" chips filter.** A click on a chip shows only that target: every other target is left out
