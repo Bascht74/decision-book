@@ -2,7 +2,8 @@ scenario(async out=>{
   await until(()=>document.querySelector('#board details[data-nr="E-931"]')&&/Eignerin/.test(document.getElementById('filter').textContent));await sleep(100);
   out.filter=$$('#filter button').slice(0,3).map(b=>b.textContent);
   out.metaOfCardWithoutVon=[...document.querySelectorAll('details[data-nr="E-931"] .meta span')].map(s=>s.textContent).find(t=>/^von /.test(t));
-  const lbl=document.querySelector('details[data-nr="E-930"] .answer label').textContent;
+  document.querySelector('details[data-nr="E-932"]').open=true;await sleep(60); // since 0.4.0 every card starts closed
+  const lbl=document.querySelector('details[data-nr="E-932"] .answer label').textContent;
   out.answerLabelNamesTheOwner=lbl.startsWith('Entscheidung Eignerin');
   out.ready=document.querySelector('#ready .stepbtn').textContent;
   out.cachedSettings=JSON.parse(localStorage.getItem('eb-set')||'{}').eigner;

@@ -1,0 +1,8 @@
+{"expect":{
+ "pasteHint":false, "sendsAfterTap":0, "message":"Eigner: Option 1 – wie empfohlen|false", "undoShown":true,
+ "sendsAfterUndo":0, "afterUndo":["Option 1 – wie empfohlen|false","Rückgängig: „Option 1 – wie empfohlen“ gilt nicht.|false"],
+ "hint":"Jetzt machen|beantwortet|Claude|0",
+ "externHere":false, "order":"Bitte Angebot prüfen|false|Claude", "sendsAfterOrder":0,
+ "orderNote":"gesendet – steht unter Aufträge · ich lese es beim nächsten Blick, spätestens nach 15 Minuten",
+ "externThere":true, "sendsLive":1
+}}

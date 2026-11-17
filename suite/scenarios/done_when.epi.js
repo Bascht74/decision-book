@@ -1,7 +1,7 @@
 scenario(async out=>{
   const card=nr=>document.querySelector('#board details[data-nr="'+nr+'"]');
   await until(()=>card('E-711')&&card('E-712'));
-  card('E-711').open=true;
+  card('E-711').open=true;card('E-712').open=true; // since 0.4.0 every card starts closed
   const body=nr=>card(nr).querySelector('.body');
   out.firstPruefen=body('E-711').firstElementChild.className;
   out.items711=[...body('E-711').querySelectorAll('.fw li')].map(x=>x.textContent);

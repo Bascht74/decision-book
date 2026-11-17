@@ -1,6 +1,7 @@
 scenario(async out=>{
   if(!matchMedia('(prefers-color-scheme: dark)').matches){out._skip='this Chrome does not emulate prefers-color-scheme: dark';return}
-  const ta=await until(()=>document.querySelector('#board details[open] .answer textarea'));typeIn(ta,'Antwort');await sleep(100); // enables "Senden"
+  // since 0.4.0 every card starts closed: open the first one under "Offen"
+  const ta=await until(()=>{const d=document.querySelector('#board details[data-blatt="offen"]');if(d&&!d.open)d.open=true;return document.querySelector('#board details[open] .answer textarea')});typeIn(ta,'Antwort');await sleep(100); // enables "Senden"
   const rgb=c=>c.match(/[\d.]+/g).map(Number);
   const L=c=>{const [r,g,b]=rgb(c).slice(0,3).map(x=>{x/=255;return x<=0.03928?x/12.92:((x+0.055)/1.055)**2.4});return 0.2126*r+0.7152*g+0.0722*b};
   const cr=(a,b)=>{const [x,y]=[L(a),L(b)].sort((p,q)=>p-q);return (y+0.05)/(x+0.05)};

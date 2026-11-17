@@ -1,0 +1,9 @@
+{"expect":{
+ "none.ready":false, "none.views":"Für Dich,Aufträge,Bei Claude,Erledigt,Archiv,Statistik", "none.groups":"Entschieden von:", "none.lanes":"", "none.badge":"● 3 Karten warten auf Dich", "none.cards":3,
+ "two.groups":"Entschieden von:,Release:", "two.lanes":"offen:später,offen:", "two.cards":3,
+ "folded.lanes":"offen:", "folded.groups":"Entschieden von:,Release:", "folded.cards":0,
+ "unfolded.lanes":"", "unfolded.groups":"Entschieden von:", "unfolded.cards":3,
+ "target.views":"Releases,Für Dich,Aufträge,Bei Claude,Erledigt,Archiv,Statistik", "target.ready":false,
+ "release.ready":true, "release.views":"Releases,Für Dich,Aufträge,Bei Claude,Erledigt,Archiv,Statistik", "release.groups":"Entschieden von:,Release:", "release.lanes":"offen:",
+ "release.badge":"● 3 Karten warten auf Dich · 0 für b28"
+}}

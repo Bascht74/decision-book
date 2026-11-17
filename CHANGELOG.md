@@ -5,6 +5,66 @@ The page shows its own change log in German (`BUCH_LOG`, when the version number
 the repository's. Every section says whether the book's data changes shape -- and if so, which migration
 brings an existing book along.
 
+## 0.4.0
+
+**Answer with one tap.** Right under the text of a decision under "Offen" stands a row of buttons: "Wie empfohlen"
+(only with a recommendation; it answers "Option N – wie empfohlen" when the recommendation starts with an option), one
+button per option, "Später" (back to the backlog with the target "später") and "Erklär es einfacher" (only a message;
+the card stays). A Hinweis has "Gelesen", "Jetzt machen" and "Nein" there, an Aufgabe "Erledigt". A tap goes the way
+of "Senden": live to Claude, into the card's messages and its fields in one write, re-reading the card first. The
+yellow field stays for a free answer ("Oder frei antworten"). The statistics count an answer that starts with "Wie
+empfohlen" as following the recommendation.
+
+**Undo.** After a tap a line at the lower edge of the window says for ten seconds what was done, with "Rückgängig".
+Taking back writes the card's fields as they stood, adds a message of its own (it never rewrites one), tells Claude
+live in the card's thread where the answer had gone live, and the card is back, open.
+
+**On a phone, written only.** The one-tap buttons and the order field under "Für Dich" write to the book without a
+live comment on a phone (the Claude app closes the book when one goes out); Claude reads them at the next look. On a
+computer they go live as before.
+
+**Cards start closed.** Every card starts closed, in every column: its head shows number, project, Stand, headline
+and deadline. A tap on the head opens and closes it; what a viewer opened is remembered in the browser ("eb-open", as
+before) and the page works without storage. The answer buttons stand only in the opened card. Only a card the owner
+has already acted on and that comes back with a new message of Claude's opens once, as before.
+
+**Deadlines.** Under "Offen", "Prüfen" and "Hinweise & Aufgaben" the cards with a deadline stand first, nearest
+first, then the others by their last change. The mark says what is left: "noch 2 Tage", "morgen", "heute",
+"überfällig", red on its day and after. A deadline without a time ("2026-11-19") holds until the end of that day in
+local time (before, it was read as midnight UTC and ran out the night before) and shows no time. "warten auf Dich"
+adds "· n mit Frist bis <day>" for deadlines within three days.
+
+**Projects.** A new optional field `projekt` (a short name): a coloured pill after the card's number and, while a
+card carries one, a filter group "Projekt:" with "alle Projekte", a button per project with the number of its cards
+under "Für Dich", and "ohne Projekt". The choice is remembered per viewer ("eb-proj"); a remembered project that no
+card carries any more hides nothing.
+
+**Order field under "Für Dich".** The field for a new order also stands under "Für Dich": label "Auftrag an Claude",
+the field and "Senden" in one line; after sending, "gesendet – steht unter Aufträge". Talks, orders and "Frühere" stay
+under "Aufträge".
+
+**Text to pass on.** A new optional field `kopiertext` (plain text, never read as Markdown): a box "Zum Weitergeben"
+after "Worum es geht", a read-only field that marks all of its text on focus, and "Kopieren". Where the browser
+refuses the clipboard, the text stays marked and the line says so. Project and text are in the find text of a closed
+card.
+
+**Less above the first card.** Without a current release (`meta/stand.aktuell` empty) there is no release card; the
+tab "Releases" goes while no card has a release as its target and the statistics are empty (not while it is open);
+the "Release:" chips and the lone "Ziel offen" lane head go while there is nothing to choose. On a phone a column's
+explanation is one line behind a "?". The marks of a card's head share one line. The column hints name the buttons as
+they are called ("Gelesen", "Senden"), and a phone no longer shows a key shortcut at the yellow field.
+
+New scenarios: `quick_decide`, `quick_hint`, `quick_undo`, `quick_phone`, `cards_closed`, `cards_closed_nostore`,
+`deadline_order`, `project`, `project_kept`, `order_here`, `copy_text`, `no_release`, `no_release_open`,
+`look_new_phone` and `look_new_dark` (the new parts at 390 px: 4.5:1 and nothing over the edge); `deadline` covers
+plain dates and what is left. Scenarios that relied on a card under "Offen" standing open now open it themselves
+(`dark_contrast`, `done_when`, `local_times`, `fields_phone`); `settings_absent` and `settings_present` read the
+owner's name at the yellow field of a card under "Prüfen" (under "Offen" it reads "Oder frei antworten").
+
+**Also fixed.** "warten auf Dich" follows a release that becomes current while the page is open.
+
+The book's data does not change shape: `projekt` and `kopiertext` are optional fields; no migration.
+
 ## 0.3.0
 
 **A new look.** A dark blue title bar across the whole window, the views as tabs below it, and an office-style

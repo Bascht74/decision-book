@@ -1,0 +1,8 @@
+{"expect":{
+ "label":"Projekt:", "buttons":"alle Projekte*,Funk2,Garten,Haus2,ohne Projekt1", "pills":["Haus","Funk",null],
+ "twoColours":true, "contrast":{"min":4.5}, "all":"E-661,E-662,E-663,E-664,E-665",
+ "haus.buttons":"alle Projekte,Funk2,Garten,Haus2*,ohne Projekt1", "haus.cards":"E-661,E-664", "haus.views":"Releases 3,Für Dich 2,Aufträge ,Bei Claude 1",
+ "kept":"Haus", "hausClaude":"E-666", "ohne":"E-663",
+ "again":"alle Projekte*,Funk2,Garten,Haus2,ohne Projekt1|E-661,E-662,E-663,E-664,E-665",
+ "alle":"alle Projekte*,Funk2,Garten,Haus2,ohne Projekt1|E-661,E-662,E-663,E-664,E-665", "keptAfterAll":null
+}}

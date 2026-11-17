@@ -1,0 +1,8 @@
+{"run":{"budget":30000},
+ "expect":{
+ "sent":"Option 2|entschieden|Claude", "back":"|offen|offen|Dich",
+ "kommentare":["Eigner: Option 2 (live)","Eigner: Rückgängig: „Option 2“ gilt nicht. (live)"],
+ "takeBack":["thread [K:E-611] Rückgängig: „Option 2“ gilt nicht."], "undoWrites":1,
+ "cardBack":"Offen|open", "lineAfter":"E-611: zurückgenommen", "lineGone":true,
+ "later":"E-612: auf später gelegt", "stillAt5s":true, "goneAt11s":true, "stands":"vorrat|später|Claude|Später"
+}}

@@ -29,7 +29,9 @@ The document id is the card number (`E-001`, `E-002`, ...).
 | `abweichung` | what differs from the decision / what Claude decided alone |
 | `verlauf` | `[{zeit, text}]` steps of the work |
 | `kommentare` | `[{von, text, zeit, live, bilder}]` messages under the card -- append only |
-| `frist`, `ersatz` | a deadline and what Claude takes if it passes unanswered (shown only) |
+| `frist`, `ersatz` | a deadline and what Claude takes if it passes unanswered (shown only); a time in UTC, or a plain date (`2026-11-19`, holds until the end of that day in the viewer's time). Since 0.4.0 cards with a deadline stand first in the owner's columns, with what is left |
+| `projekt` | optional (0.4.0): a short project name -- a pill on the card and a filter "Projekt:" |
+| `kopiertext` | optional (0.4.0): plain text to pass on to somebody else -- a box "Zum Weitergeben" with "Kopieren"; never read as Markdown |
 | `haengt_an` | card numbers this one waits for (`"E-12, E-13"` or a list); the page shows the reverse |
 | `rueckblick_faellig`, `rueckblick` | a release after which the page asks "Hat es gewirkt?"; the answer |
 | `thread` | the comment thread of the card's live messages |

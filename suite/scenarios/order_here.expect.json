@@ -1,0 +1,6 @@
+{"expect":{
+ "dich.box":true, "dich.kurz":true, "dich.label":"Auftrag an Claude", "dich.talks":false, "dich.list":false, "dich.earlier":false,
+ "oneLine":true, "aboveCards":true, "boxHeight":{"max":110},
+ "sends":["[G:id] Bitte das Angebot prüfen"], "note":"gesendet – steht unter Aufträge", "fieldAfter":"", "stillDich":"Für Dich",
+ "claude":false, "sitzung.box":true, "sitzung.kurz":false, "sitzung.label":"An Claude – live", "sitzung.talks":true, "sitzung.earlier":true, "talkThere":true
+}}

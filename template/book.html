@@ -9,7 +9,7 @@
   --accent:#2f5597; --accent-soft:#dbe9f8; --on-accent:#ffffff; --accent-fill:#2f5597; --accent-hover:#1f3864; --answer:#fff1d6; --answer-line:#b7791f;
   --wait:#b3261e; --wait-soft:#fde2e2; --ready:#27702c; --notready:#8a5a00;
   --hinweis:#7a4f00; --hinweis-soft:#fff1d6; --aufgabe:#8a4b00; --aufgabe-soft:#fdebd3;
-  --st-offen:#a84500; --st-entschieden:#2f5597; --st-umgesetzt:#27702c; --st-zurueck:#606777; --st-verworfen:#b3261e; --st-abgeloest:#6a1b7a;
+  --st-offen:#a84500; --st-entschieden:#2f5597; --st-umgesetzt:#27702c; --st-zurueck:#606777; --st-verworfen:#b3261e; --st-abgeloest:#6a1b7a; --pj-teal:#0b6b73; --pj-rose:#9b2c5a;
   /* title bar (dark blue), headings, secondary buttons, the lower edge of a field */
   --bar:#1f3864; --bar-muted:#bcc3d0; --bar-link:#9cc3ff; --bar-line:#8492aa; --bar-warn:#ffb3a7;
   --bar-btn:#ebf3fc; --bar-btn-ink:#1f3864; --bar-btn-line:#cfe0f5; --bar-btn-hover:#d8e8fb;
@@ -25,7 +25,7 @@
   --accent:#86b2f5; --accent-soft:#21406b; --on-accent:#ffffff; --accent-fill:#3e6dbf; --accent-hover:#4574c5; --answer:#262013; --answer-line:#9a7a2c;
   --wait:#ff9e9e; --wait-soft:#43191e; --ready:#5cbf6a; --notready:#e3a73e;
   --hinweis:#f0d27e; --hinweis-soft:#372c0e; --aufgabe:#f5b47c; --aufgabe-soft:#3c2512;
-  --st-offen:#f5b47c; --st-entschieden:#a9c9ff; --st-umgesetzt:#91d9ad; --st-zurueck:#bcc4d2; --st-verworfen:#ff9e9e; --st-abgeloest:#e2b6ef;
+  --st-offen:#f5b47c; --st-entschieden:#a9c9ff; --st-umgesetzt:#91d9ad; --st-zurueck:#bcc4d2; --st-verworfen:#ff9e9e; --st-abgeloest:#e2b6ef; --pj-teal:#7fd4dc; --pj-rose:#ffadc9;
   --bar:#172b4e; --bar-muted:#b9bfca; --bar-line:#7f8a9e; --bar-btn:#26426c; --bar-btn-ink:#eef4ff; --bar-btn-line:#6f8fc4; --bar-btn-hover:#2e4d7c;
   --title:#9cc3ff; --btn:#25344b; --btn-ink:#dce7f8; --btn-line:#7b8eae; --btn-hover:#2e405c; --field:#131a26; --field-edge:#8c97ac;
   --veil:rgba(0,0,0,.6);
@@ -37,7 +37,7 @@
   --accent:#86b2f5; --accent-soft:#21406b; --on-accent:#ffffff; --accent-fill:#3e6dbf; --accent-hover:#4574c5; --answer:#262013; --answer-line:#9a7a2c;
   --wait:#ff9e9e; --wait-soft:#43191e; --ready:#5cbf6a; --notready:#e3a73e;
   --hinweis:#f0d27e; --hinweis-soft:#372c0e; --aufgabe:#f5b47c; --aufgabe-soft:#3c2512;
-  --st-offen:#f5b47c; --st-entschieden:#a9c9ff; --st-umgesetzt:#91d9ad; --st-zurueck:#bcc4d2; --st-verworfen:#ff9e9e; --st-abgeloest:#e2b6ef;
+  --st-offen:#f5b47c; --st-entschieden:#a9c9ff; --st-umgesetzt:#91d9ad; --st-zurueck:#bcc4d2; --st-verworfen:#ff9e9e; --st-abgeloest:#e2b6ef; --pj-teal:#7fd4dc; --pj-rose:#ffadc9;
   --bar:#172b4e; --bar-muted:#b9bfca; --bar-line:#7f8a9e; --bar-btn:#26426c; --bar-btn-ink:#eef4ff; --bar-btn-line:#6f8fc4; --bar-btn-hover:#2e4d7c;
   --title:#9cc3ff; --btn:#25344b; --btn-ink:#dce7f8; --btn-line:#7b8eae; --btn-hover:#2e405c; --field:#131a26; --field-edge:#8c97ac;
   --veil:rgba(0,0,0,.6);
@@ -286,6 +286,25 @@ details.hl{outline:2px solid var(--accent);outline-offset:2px}
 .rueck .body{padding-top:8px}.rueck input{font:inherit;padding:4px 8px;border:1px solid var(--line);border-bottom-color:var(--field-edge);border-radius:5px;background:var(--field);color:var(--ink)}
 .atab .fcell select:focus-visible,.stab .fcell select:focus-visible,.stab .fcell input:focus-visible,.rueck input:focus-visible{border-bottom-color:var(--accent)}
 @media (max-width:640px),(pointer:coarse){.dep{min-height:32px}}
+/* 0.4.0 -- every card starts closed: the mark before its number says which way it folds */
+summary .nr::before{content:"▸";display:inline-block;width:1.1em;font-weight:400}details[open]>summary .nr::before{content:"▾"}
+/* the marks of a card's head (waits, deadline, tokens) share one line and wrap */
+.flags{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:flex-start}.flags:empty{display:none}.flags .flag{align-self:auto;overflow-wrap:anywhere}
+/* the project of a card: a pill after its number, its colour inline (projCol), the ground its 14 % tint like .chip */
+.proj{display:inline-block;max-width:13em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:-4px;font-size:11.5px;font-weight:600;border-radius:10px;padding:1px 8px;margin-left:6px;background:var(--col);background:color-mix(in srgb,currentColor 14%,var(--sheet))}
+.filter button .n{font:400 12px var(--font);font-variant-numeric:tabular-nums;margin-left:5px;color:var(--muted)}.filter button[aria-pressed="true"] .n{color:inherit}
+/* the answer with one tap: a row of buttons right under the text of the card */
+.quick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.quick .saved{flex-basis:100%}.quick .saved:empty{display:none}
+/* a text to pass on ("kopiertext"): a field that only reads, with "Kopieren" */
+.kopie{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:0 10px 8px}.kopie textarea{min-height:0;background:var(--col)}
+/* what a one-tap answer did, with the way back: a line fixed to the lower edge of the window, apart from the cards */
+.undo{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;box-sizing:border-box;width:max-content;max-width:calc(100% - 32px);display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;background:var(--sheet);color:var(--ink);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:8px 12px;box-shadow:0 4px 16px rgba(0,0,0,.3);font-size:14px;overflow-wrap:anywhere}
+/* the order field under "Für Dich": one line, the field and "Senden" side by side */
+.auftrag.kurz{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:4px 8px;padding:8px 12px}.auftrag.kurz label{flex:0 0 100%;font-size:13px}.auftrag.kurz textarea{flex:1 1 12em;width:auto;min-height:38px;height:38px}.auftrag.kurz .thumbs{order:3;flex:0 0 100%}.auftrag.kurz .fpickw{display:none}.auftrag.kurz>.row{flex:0 1 auto;max-width:100%}
+/* a column's explanation: on a phone one line behind a "?", which unfolds it */
+.hintq{display:none}
+@media (max-width:640px){.auftrag.kurz label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .hintrow{display:flex;gap:8px;align-items:flex-start}.hintrow .hintq{display:inline-block;flex:none}.hintrow .hint{flex:1 1 0;min-width:0}.hintrow:not(.open) .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:32px}}
 </style>
 
 <div class="wrap">
@@ -311,10 +330,11 @@ details.hl{outline:2px solid var(--accent);outline-offset:2px}
   <nav role="tablist" id="tabs"></nav>
   <div class="board" id="board"></div>
 </div>
+<div class="undo" id="undo" role="status" aria-live="polite" hidden></div>
 
 <script>
 // Version of this page (x.y.z), shown small next to the title: the repository's VERSION, set by template/build_template.py.
-const PAGE_VERSION="0.3.0";
+const PAGE_VERSION="0.4.0";
 /* == book-update: begin == made from template/update.js by template/build_template.py -- edit it there, then rebuild */
 // THE BOOK'S DATA VERSION. PAGE_VERSION is this page's version (x.y.z, the repository's file VERSION). The data in the
 // db carries its own: meta/buch {version:"x.y.z", migriert:["0.1.0", …], aktualisiert:"<ISO>"}. A book without
@@ -429,11 +449,11 @@ let OWNER=S("eigner","Eigner");
 // "id"), then writes the archive doc's eintraege without it, then lowers statistik/<release>.archiv.<Stand> by one.
 const COLS=[
   {key:"vorrat",label:"Vorrat",hint:"Alles Ausstehende, das ich Dir noch nicht vorgelegt habe – Aufgaben, große Themen. Von hier kommt es nach „Offen“."},
-  {key:"offen",label:"Offen",hint:"Du entscheidest. Antwort ins gelbe Feld – beim Verlassen wandert die Karte nach „Entschieden“."},
+  {key:"offen",label:"Offen",hint:"Du entscheidest. Karte aufklappen, lesen – dann genügt ein Tipp auf einen Knopf; die Karte wandert nach „Entschieden“."},
   {key:"entschieden",label:"Entschieden",hint:"Steht fest, noch nicht begonnen. Oben steht, was ich als Nächstes nehme; die Reihenfolge bestimmst Du (Pfeile oder Ziehen)."},
   {key:"arbeit",label:"In Umsetzung",hint:"Wird gerade gebaut. Rot „Token fehlen“: aus „Prüfen“ oder „Erledigt“ zurückgeholt, weil Schätzung oder Verbrauch fehlt."},
-  {key:"pruefen",label:"Prüfen",hint:"Nur was nicht 1:1 wie beschrieben umgesetzt wurde oder was ich selbst entschieden habe – der rote Hinweis sagt, was. Bestätige mit „Gesichtet“ oder gib die Karte zurück. Vor jedem Release leer."},
-  {key:"hinweise",label:"Hinweise & Aufgaben",hint:"Aufgabe: etwas, das Du tun musst. Hinweis: etwas, das Du wissen solltest. „Erledigt“ bzw. „Gelesen“ legt die Karte ab; eine Antwort geht an mich wie eine Entscheidung."},
+  {key:"pruefen",label:"Prüfen",hint:"Nur was nicht 1:1 wie beschrieben umgesetzt wurde oder was ich selbst entschieden habe – der rote Hinweis sagt, was. Bestätige mit „Gelesen“ oder gib die Karte zurück. Vor jedem Release leer."},
+  {key:"hinweise",label:"Hinweise & Aufgaben",hint:"Aufgabe: etwas, das Du tun musst. Hinweis: etwas, das Du wissen solltest. „Erledigt“ bzw. „Gelesen“ legt die Karte ab; „Jetzt machen“, „Nein“ oder eine Antwort gehen an mich wie eine Entscheidung."},
 ];
 const ARCHIV={key:"erledigt",label:"Erledigt",hint:"Umgesetzt und von Dir gesichtet – zum Nachsehen. Verworfenes steht darunter, zugeklappt."};
 // "Releases" stands first: every card by its release, with tokens, expander and "Verschieben"
@@ -805,7 +825,18 @@ try{hiddenZ=new Set(JSON.parse(localStorage.getItem("eb-hidden")||"[]"))}catch(e
 // soloZ: the one target a chip shows; while it is set every other target counts as left out, also one that has no
 // card yet or only in another view or under the other "Entschieden von" (kept as "eb-solo" next to "eb-hidden")
 let soloZ=null;try{soloZ=localStorage.getItem("eb-solo")||null}catch(e){}
-function visible(r){if(focusNr&&r.nr===focusNr)return true;return (who==="alle"||(r.von||OWNER)===who)}
+// 0.4.0 -- a card's project ("projekt", a short name; a voluntary field): a pill on the card and a filter of its own.
+// A card without it counts as "ohne Projekt". The choice is kept per viewer ("eb-proj"); null shows every project.
+const PJ_NONE="ohne Projekt",PJCOL=["--st-entschieden","--st-umgesetzt","--st-abgeloest","--st-offen","--pj-teal","--pj-rose"];
+function projOf(r){return String(r&&r.projekt||"").trim()}
+function projCol(p){let h=0;for(const c of String(p))h=(h*31+c.charCodeAt(0))>>>0;return PJCOL[h%PJCOL.length]}
+function projPill(r){const p=projOf(r);if(!p)return null;const s=el("span",{class:"proj",title:"Projekt "+p,text:p});s.style.color=`var(${projCol(p)})`;return s}
+let proj=null;try{const v=localStorage.getItem("eb-proj");if(v!=null&&v!=="")proj=v}catch(e){}
+function saveProj(){try{if(proj===null)localStorage.removeItem("eb-proj");else localStorage.setItem("eb-proj",proj)}catch(e){}}
+// the project shown now: a remembered one that no card carries (any more, or not yet) shows all; the choice itself stays
+let pjMemo=[null,null,null];
+function projNow(){if(proj===null)return null;if(pjMemo[0]!==rows||pjMemo[1]!==proj)pjMemo=[rows,proj,rows.some(r=>(projOf(r)||PJ_NONE)===proj)?proj:null];return pjMemo[2]}
+function visible(r){if(focusNr&&r.nr===focusNr)return true;const p=projNow();return (who==="alle"||(r.von||OWNER)===who)&&(p===null||(projOf(r)||PJ_NONE)===p)}
 // Release-Filter und Einklappen sind eins: abgewählt heißt zugeklappt, in jeder Spalte (unter „Hinweise & Aufgaben“ ausgelassen);
 // die Zahlen an Reiter und Spaltenkopf zählen nur, was gezeigt wird, die Spur zeigt ihre Zahl auch zugeklappt.
 function laneShut(z){const k=z||"Ziel offen";return soloZ!==null?k!==soloZ:hiddenZ.has(k)}
@@ -850,8 +881,10 @@ function renderWaits(){const b=$("#waits");if(!b)return;
   const part=(k,one,many,v,cls)=>{const x=el("button",{type:"button",class:cls,text:k+" "+(k===1?one:many)});x.onclick=e=>{e.stopPropagation();go(v)};return x};
   const parts=[];if(cards)parts.push(part(cards,"Karte","Karten","dich","wk"));if(talks)parts.push(part(talks,"Antwort","Antworten","sitzung","wa"));
   b.append("● ");parts.forEach((x,i)=>{if(i)b.append(" · ");b.append(x)});
-  b.append(" "+(n===1?"wartet":"warten")+" auf Dich"+(cur?" · "+forCur+" für "+cur.replace(/^3\.0\.0/,""):""));
-  b.title=cards+" Karten unter „Für Dich“ ("+forCur+" davon für das aktuelle Release "+cur+"), "+talks+" beantwortete Gespräche";
+  // 0.4.0: deadlines that run out within three days (passed ones too) are named: "· 2 mit Frist bis 19.11."
+  const soon=mineRows.map(fristOf).filter(t=>t<=Date.now()+3*864e5).sort((x,y)=>x-y);
+  b.append(" "+(n===1?"wartet":"warten")+" auf Dich"+(cur?" · "+forCur+" für "+cur.replace(/^3\.0\.0/,""):"")+(soon.length?" · "+soon.length+" mit Frist bis "+fristDay(soon[soon.length-1]):""));
+  b.title=cards+" Karten unter „Für Dich“"+(cur?" ("+forCur+" davon für das aktuelle Release "+cur+")":"")+", "+talks+" beantwortete Gespräche"+(soon.length?", "+soon.length+(soon.length===1?" Karte":" Karten")+" mit Frist in den nächsten drei Tagen":"");
   b.onclick=()=>go(cards||!talks?"dich":"sitzung");
   const base=document.title.replace(/^\(\d+\) /,"");document.title=(n?"("+n+") ":"")+base}
 function renderStats(){renderWaits();
@@ -892,6 +925,26 @@ async function save(r,patch,note){
   try{await db.doc("entscheidungen/"+r.nr).update(Object.assign({geaendert:now,eigner_am:now},patch));if(note)note.textContent="gespeichert";return true}
   catch(e){if(note)note.textContent=e&&e.code==="invalid_argument"?"Du kannst hier nur lesen.":failText(e,"Nicht gespeichert – bitte noch einmal.");return false}
 }
+// 0.4.0 -- "Rückgängig". An answer with one tap moves its card out of sight, so the line that says what was done stands
+// apart from the cards (#undo, fixed to the lower edge of the window) for UNDO_MS, with the way back. Taking back writes
+// the card's fields as they stood before and adds a message of its own (never rewrites one); what had gone out live to
+// me is taken back live too. The card comes back open (undoKeep: the snapshot does not reset its fold).
+const UNDO_MS=10000;let undo=null,undoTimer=0,undoKeep=null;
+function undoSet(u){undo=u;clearTimeout(undoTimer);undoTimer=setTimeout(()=>{undo=null;renderUndo()},UNDO_MS);renderUndo()}
+function renderUndo(){const box=$("#undo");if(!box)return;box.textContent="";box.hidden=!undo;if(!undo)return;const u=undo;
+  const b=el("button",{class:"act ghost",type:"button",id:"undo-btn",text:"Rückgängig"}),note=el("span",{class:"saved"});
+  box.append(el("span",{class:"utext",text:u.nr+": "+u.label}),b,note);
+  b.onclick=async()=>{if(b.disabled||!db)return;b.disabled=true;clearTimeout(undoTimer);note.textContent="nimmt zurück …";
+    const now=new Date().toISOString(),patch=Object.assign({},u.prev,{geaendert:now,eigner_am:now});
+    try{if(u.text){const t="Rückgängig: „"+u.text+"“ gilt nicht.";let live=false;
+        if(u.live){const L=await liveSend(null,t,"u","[K:"+u.nr+"] "+t,u.thread,box);live=L.live}
+        const c=await db.doc("entscheidungen/"+u.nr).get(),ks=c.exists?(c.data()||{}).kommentare:null;
+        patch.kommentare=[...(Array.isArray(ks)?ks:[]),{von:"Eigner",text:t,zeit:now,live,bilder:[]}]}
+      undoKeep=u.nr;openState.set(u.nr+":"+(u.prev.blatt||""),true);saveOpen();
+      await db.doc("entscheidungen/"+u.nr).update(patch);
+      undo=null;box.textContent="";box.append(el("span",{class:"utext",text:u.nr+": zurückgenommen"}));undoTimer=setTimeout(renderUndo,3000)}
+    catch(e){undoKeep=null;b.disabled=false;note.textContent=failText(e,"Nicht zurückgenommen – bitte noch einmal.");undoTimer=setTimeout(()=>{undo=null;renderUndo()},UNDO_MS)}};
+}
 // list: rows in desired order within one lane of "entschieden". writes only the ranks that must change, and only
 // "rang" -- no geaendert/eigner_am, which would move "Du zuletzt" and the rule cut-offs. The lane sorts by rang
 // (none = 1e9), then number. Kept: the longest run already in that order with room between its gaps; the rest get
@@ -916,6 +969,8 @@ let startSure="";
 function renderReady(){
   const box=$("#ready");box.textContent="";
   const z=relZ();
+  // 0.4.0: a book without a current release (meta/stand.aktuell empty) has no release card
+  box.hidden=!z;if(!z)return;
   const count=k=>relRows(k).length;
   const st=stepStates();const cur=st.findIndex(s=>s.z!=="erledigt");
   const btn=el("button",{class:"stepbtn",type:"button","aria-expanded":String(stepsOpen),"aria-controls":"steps-list"});
@@ -976,11 +1031,22 @@ function renderFilter(){
   // each group (its label and its buttons) in a box of its own, so the group wraps as a whole
   const f=$("#filter");f.textContent="";const g1=el("span",{class:"fgrp"},el("span",{class:"who",text:"Entschieden von:"}));f.append(g1);
   for(const w of ["alle",OWNER,"Claude"]){const b=el("button",{type:"button","aria-pressed":String(w===who),text:w});b.onclick=()=>{who=w;render()};g1.append(b)}
+  // "Projekt:" -- only while a card carries one. Each button with the number of its cards under "Für Dich"; the first
+  // is named "alle Projekte", because a phone shows the groups without their labels. The pressed one again shows all.
+  {const ps=[...new Set(rows.map(projOf).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"de",{numeric:true}));
+   if(ps.length){if(rows.some(r=>!projOf(r)))ps.push(PJ_NONE);const cur=projNow();
+     const gp=el("span",{class:"fgrp pgrp"},el("span",{class:"who",text:"Projekt:"}));f.append(gp);
+     const mine=p=>rows.filter(r=>(projOf(r)||PJ_NONE)===p&&(who==="alle"||(r.von||OWNER)===who)&&(isTopArt(r)||rueckDue(r)||r.blatt==="offen"||r.blatt==="pruefen")).length;
+     const add=(p,text,title)=>{const n=p===null?0:mine(p);const b=el("button",{type:"button","aria-pressed":String(cur===p),title,"data-proj":p===null?"":p},text,n?el("span",{class:"n",text:String(n)}):null);
+       b.onclick=()=>{proj=cur===p?null:p;saveProj();render()};gp.append(b)};
+     add(null,"alle Projekte","Alle Projekte zeigen");for(const p of ps)add(p,p,p===PJ_NONE?"Nur Karten ohne Projekt zeigen":"Nur dieses Projekt zeigen")}}
   // only the targets a card SHOWN IN THIS TAB carries (its columns, "Entschieden von" applied, the
   // chips themselves not -- a folded target stays offered); in the order of byZiel. A tab without columns has no chips.
   const vw=VIEWS.find(x=>x[0]===view),keys=vw&&vw[2];if(!keys)return;
   const zs=[...new Set(keys.flatMap(k=>colRows(k)).map(r=>String(r.ziel||"").trim()||"Ziel offen"))].sort(byZiel);
   if(!zs.length)return;
+  // 0.4.0: without a current release and with one target at most there is nothing to choose -- no chips (while none is folded)
+  if(!relZ()&&zs.length<2&&soloZ===null&&!zs.some(z=>hiddenZ.has(z)))return;
   const g2=el("span",{class:"fgrp"},el("span",{class:"who",text:"Release:"}));f.append(g2);
   const all=el("button",{type:"button","aria-pressed":String(soloZ===null&&!zs.some(z=>hiddenZ.has(z))),title:"Alle Ziele zeigen",text:"alle"});all.onclick=()=>{hiddenZ.clear();soloZ=null;saveHidden();render()};g2.append(all);
   for(const z of zs){const b=el("button",{type:"button","aria-pressed":String(!laneShut(z)),title:"Nur dieses Ziel zeigen"},el("span",{class:"lng",text:z}),el("span",{class:"sht",text:z.replace(/^3\.0\.0/,"")}));b.onclick=()=>{chipSolo(z,zs);render()};g2.append(b)}
@@ -1102,10 +1168,11 @@ async function liveSend(k,text,tag,body,thread,anchorEl,extra){
     return {live:true,thread:r.threadId||null,why:""}}
   catch(e){return {live:false,thread:null,why:(e&&e.code)||"Fehler"}}
 }
-async function gSend(id,text,imgKey,fk){
+async function gSend(id,text,imgKey,fk,quiet){
   const mem=liveMem(fk,text,"g");if(mem&&mem.id)id=mem.id;
   const zeit=(mem&&mem.zeit)||new Date().toISOString(),prev=gsp.find(g=>g.id===id);
-  const L=await liveSend(fk,text,"g","[G:"+id+"] "+(text||"(Bild)"),prev&&prev.thread,$("#auftrag"),{id,zeit});
+  // quiet (0.4.0): written only, no live comment -- I read it at my next look
+  const L=quiet?{live:false,thread:null,why:"Handy"}:await liveSend(fk,text,"g","[G:"+id+"] "+(text||"(Bild)"),prev&&prev.thread,$("#auftrag"),{id,zeit});
   const live=L.live,thread=L.thread,why=L.why;
   const ids=imgKey?await storeImages(imgKey):[];
   const msg={von:"Eigner",text,zeit,bilder:ids,live};
@@ -1257,7 +1324,13 @@ function cardTalk(r,d){
   paint();wrap.append(btn,body);return wrap;
 }
 function renderAuftrag(){
-  const box=$("#auftrag");box.hidden=(view!=="sitzung");$("#fruehere").hidden=box.hidden;if(box.hidden)return;
+  // 0.4.0: the field for a new order also stands under "Für Dich" -- there only its label, the field and "Senden" in
+  // one line ("kurz"); the talks, the old orders and "Frühere" stay under "Aufträge"
+  const box=$("#auftrag"),here=view==="sitzung",kurz=view==="dich";
+  box.hidden=!here&&!kurz;box.classList.toggle("kurz",kurz);$("#fruehere").hidden=!here;$("#gespraech").hidden=!here;$("#auftrag-list").hidden=!here;
+  {const l=box.querySelector("label"),ta=$("#auftrag-text"),x=box.querySelector(".extern");if(l)l.textContent=kurz?"Auftrag an Claude":"An Claude – live";
+   ta.placeholder=kurz?"Auftrag an Claude …":"Frage, Auftrag, Hinweis · Bilder ("+K_PASTE+")";if(!kurz)ta.style.height="";if(x)x.hidden=kurz&&PHONE}
+  if(!here)return;
   renderGespraech();
   const ul=$("#auftrag-list");
   // keep the focused editor field (and its caret) through the rebuild; its text lives in the draft anyway
@@ -1336,8 +1409,13 @@ function auftragItem(a){
   li.append(time,ta,kept,dth,row);
   return li;
 }
+// 0.4.0: a book without releases -- no current one, no card with a release as its target, no row in the statistics --
+// has no tab "Releases" (once the cards and meta/stand have arrived; the view itself stays reachable while it is open)
+let rowsLoaded=false;
+function noReleases(){return rowsLoaded&&metaHave.has("meta/stand")&&!relZ()&&!stat.length&&!rows.some(r=>relNum(String(r.ziel||"").trim()))}
 function renderViews(){const v=$("#views");v.textContent="";
-  for(const [k,l,keys] of VIEWS){const n=k==="releases"?relGroups().reduce((a,g)=>a+g.rows.length,0):k==="dich"?forYou().all.length:keys?keys.reduce((a,k)=>a+colRows(k).length,0):k==="statistik"?stat.length:k==="sitzung"?"":k==="ablage"?(arch?archOnly().filter(visible).length:statArch("erledigt")+statArch("verworfen")):rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;
+  for(const [k,l,keys] of VIEWS){if(k==="releases"&&view!=="releases"&&noReleases())continue;
+    const n=k==="releases"?relGroups().reduce((a,g)=>a+g.rows.length,0):k==="dich"?forYou().all.length:keys?keys.reduce((a,k)=>a+colRows(k).length,0):k==="statistik"?stat.length:k==="sitzung"?"":k==="ablage"?(arch?archOnly().filter(visible).length:statArch("erledigt")+statArch("verworfen")):rows.filter(r=>visible(r)&&r.blatt==="erledigt").length;
     // every open talk counts -- still waiting for me or answered and not yet read -- plus old orders not yet taken
     const unread=k==="sitzung"?gsp.filter(g=>g.status!=="gelesen").length+auftraege.filter(aOpen).length:0;
     const SH={releases:"Rel.",dich:"Dich",sitzung:"Aufträge",claude:"Claude",archiv:"Erledigt",ablage:"Archiv",statistik:"Zahlen"};
@@ -1690,7 +1768,19 @@ function pick(r,note,[pre,field,label,opts,dflt]){
 function section(t,x){return x?el("div",{},el("h3",{text:t}),mdBox(x)):null}
 
 function fwList(v){return (Array.isArray(v)?v:String(v==null?"":v).split("\n")).map(x=>String(x).replace(/^\s*(?:[-*•]|\[ ?\])\s*/,"").trim()).filter(Boolean)}
-function fristAt(t){const d=new Date(t),n=new Date(),p=x=>String(x).padStart(2,"0");return (d.toDateString()===n.toDateString()?"":p(d.getDate())+"."+p(d.getMonth()+1)+". ")+p(d.getHours())+":"+p(d.getMinutes())}
+// 0.4.0 -- a deadline ("frist") is a time, or a plain date ("2026-11-19"): that one holds until the end of its day here
+// (Date.parse reads a plain date as midnight UTC, so it used to run out a day early). fristRest says what is left, in
+// calendar days here: "überfällig", "heute", "morgen", "noch 3 Tage". fristOf is the deadline a card is ordered by
+// in the owner's columns (none, or filed away: Infinity).
+const FRIST_DAY=/^\s*(\d{4})-(\d\d)-(\d\d)\s*$/;
+function fristTs(v){const m=FRIST_DAY.exec(String(v==null?"":v));return m?new Date(+m[1],+m[2]-1,+m[3],23,59,59,999).getTime():ts(v)}
+function fristRest(t,now){now=now||Date.now();if(t<=now)return "überfällig";const day=x=>{const d=new Date(x);return Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5};
+  const n=Math.round(day(t)-day(now));return n<=0?"heute":n===1?"morgen":"noch "+n+" Tage"}
+function fristDay(t){const d=new Date(t),p=x=>String(x).padStart(2,"0");return p(d.getDate())+"."+p(d.getMonth()+1)+"."+(d.getFullYear()!==new Date().getFullYear()?d.getFullYear():"")}
+function fristAt(v,t){const d=new Date(t),p=x=>String(x).padStart(2,"0");return fristDay(t)+(FRIST_DAY.test(String(v))?"":" "+p(d.getHours())+":"+p(d.getMinutes()))}
+function fristOf(r){if(!r||!r.frist||r.blatt==="erledigt"||r.blatt==="verworfen")return Infinity;const t=fristTs(r.frist);return isFinite(t)?t:Infinity}
+const byFrist=(a,b)=>{const x=fristOf(a),y=fristOf(b);return x===y?0:x<y?-1:1};
+const byNewest=(a,b)=>lastChange(b)-lastChange(a)||b.nr.localeCompare(a.nr,"de",{numeric:true});
 // the question "Hat es gewirkt?" for a card whose look back is due; the answer goes live to me and onto the card
 function rueckItem(r){
   const d=el("details",{"data-nr":r.nr,"data-blatt":"rueckblick",class:"art-hinweis rueck"});d.open=true;
@@ -1723,13 +1813,16 @@ function pctAvg(list){const k=list.map(r=>[fertigPct(r),parseTok(r.tokens_progno
 function card(r,laneRows){
   const d=el("details",{"data-nr":r.nr,"data-blatt":r.blatt||""});
   if(r.wartet&&r.blatt!=="erledigt")d.classList.add("waits");
-  // a card is open by default only where the owner acts on it ("Offen", "Prüfen", Hinweise) and there only
-// when it is "Offen" or holds his unsent draft; under "Bei Claude" and "Erledigt" it starts closed
+  // 0.4.0: every card starts closed, in every column -- its head line only (number, project, Stand, headline, deadline).
+  // A tap on the head opens and closes it, and what this viewer opened stays so ("eb-open", per card and column). Open
+  // without his tap only: a card in his columns that holds his unsent draft, and a card he has acted on that comes
+  // back with a message of mine (below). A card I have just made is never opened for him.
 const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt(r);
   // in his column with a message of mine newer than his last own act: open, its talk open, my newest message
-  // unfolded -- once per message (kSeen), written into his remembered states, so his own closing counts again from then on
-  {const nz=his?newestMine(r):"",oa=ownerActed(r);if(nz&&kSeen[r.nr]!==nz&&!(ts(nz)<=oa)){kSeen[r.nr]=nz;saveSeen();openState.set(okey,true);saveOpen();dSet("kz:"+r.nr,1);d._fresh=nz}}
-  d.open=openState.has(okey)?openState.get(okey):(r.blatt==="offen"||(his&&(dText("ans:"+r.nr)!=null||dImgs("ans:"+r.nr).length>0||!!dGet("ask:"+r.nr))));
+  // unfolded -- once per message (kSeen), written into his remembered states, so his own closing counts again from then on.
+  // Only a card he has acted on before (his answer, his comment, his stamp): a new card of mine has no act of his.
+  {const nz=his?newestMine(r):"",oa=ownerActed(r);if(nz&&isFinite(oa)&&kSeen[r.nr]!==nz&&!(ts(nz)<=oa)){kSeen[r.nr]=nz;saveSeen();openState.set(okey,true);saveOpen();dSet("kz:"+r.nr,1);d._fresh=nz}}
+  d.open=openState.has(okey)?openState.get(okey):(his&&(dText("ans:"+r.nr)!=null||dImgs("ans:"+r.nr).length>0||!!dGet("ask:"+r.nr)));
   d.addEventListener("toggle",()=>{openState.set(okey,d.open);saveOpen()});
   const metaLine=el("span",{class:"meta"});
   // the "Roadmap" badge is gone with the public roadmap
@@ -1741,14 +1834,16 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
   // one label from the one field "Art" (artOf); an Entscheidung carries none. The chip says the Stand, not "status".
   const art=artOf(r);if(isArt(r))d.classList.add("art-"+art);
   const artLbl=art==="entscheidung"?null:el("span",{class:"artlbl "+art,text:artName(r),title:art==="auftrag"?"Aus einem Deiner Aufträge entstanden":""});
-  const sum=el("summary",{},el("span",{class:"top"},el("span",{class:"nr"},artLbl,r.nr),chip(r.blatt)),el("span",{class:"head",text:r.ueberschrift}));
-  if(r.wartet&&r.blatt!=="erledigt")sum.append(el("span",{class:"flag",text:"wartet auf "+r.wartet}));
+  const flags=el("span",{class:"flags"});
+  const sum=el("summary",{},el("span",{class:"top"},el("span",{class:"nr"},artLbl,r.nr,projPill(r)),chip(r.blatt)),el("span",{class:"head",text:r.ueberschrift}),flags);
+  // a deadline and what I take without an answer; the page only shows it, it never acts. It stands first among the
+  // marks: "Frist: 19.11. 18:00 – noch 2 Tage · sonst: …"; red on its day and after it ("überfällig · ich nehme: …")
+  if(r.frist&&r.blatt!=="erledigt"){const t=fristTs(r.frist);if(isFinite(t)){const e=String(r.ersatz||"").trim(),cut=x=>x.length>90?x.slice(0,88)+" …":x,rest=fristRest(t),over=rest==="überfällig";
+    flags.append(el("span",{class:"flag frist"+(over||rest==="heute"?"":" soon"),title:absTime(t),text:"Frist: "+fristAt(r.frist,t)+" – "+rest+(e?" · "+(over?"ich nehme: ":"sonst: ")+cut(e):"")}))}}
+  if(r.wartet&&r.blatt!=="erledigt")flags.append(el("span",{class:"flag",text:"wartet auf "+r.wartet}));
   if(r.blatt==="erledigt"){const lc=lastChange(r);if(lc)sum.append(el("span",{class:"when",text:"geändert "+absTime(lc)}))}
-  if(tokBadge(r))sum.append(el("span",{class:"flag tokfehlt",text:"Token fehlen"}));
-  if(r.abweichung&&r.blatt==="pruefen")sum.append(el("span",{class:"flag",text:r.abweichung.length>90?r.abweichung.slice(0,88)+" …":r.abweichung}));
-  // a deadline and what I take without an answer; the page only shows it, it never acts
-  if(r.frist&&r.blatt!=="erledigt"){const t=ts(r.frist);if(isFinite(t)){const e=String(r.ersatz||"").trim(),cut=x=>x.length>90?x.slice(0,88)+" …":x;
-    sum.append(t<=Date.now()?el("span",{class:"flag frist",text:"Frist abgelaufen"+(e?" – ich nehme: "+cut(e):"")}):el("span",{class:"flag frist soon",text:"Frist: "+fristAt(t)+(e?" – sonst: "+cut(e):"")}))}}
+  if(tokBadge(r))flags.append(el("span",{class:"flag tokfehlt",text:"Token fehlen"}));
+  if(r.abweichung&&r.blatt==="pruefen")flags.append(el("span",{class:"flag",text:r.abweichung.length>90?r.abweichung.slice(0,88)+" …":r.abweichung}));
   // what this card hangs on and what it blocks; a chip opens that card; nothing is held back
   {const on=nrList(r.haengt_an).filter(n=>n!==r.nr),by=blocks(r.nr);if(on.length||by.length){const w=el("span",{class:"deps"});
     const dep=(n,t,open)=>{const b=el("button",{type:"button",class:"dep"+(open?" open":""),text:(open?"⧗ ":"")+t+" "+n,title:open?n+" ist noch nicht erledigt":"Karte "+n+" öffnen"});b.onclick=e=>{e.preventDefault();e.stopPropagation();gotoCard(n)};return b};
@@ -1772,7 +1867,7 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
   // a closed card carries its plain text, so the browser's find (⌘F / Strg+F) finds it and opens the card;
   // the text goes as soon as the card is built. Not under "Erledigt" -- the table's search is enough there.
   let ftx=null;if(!d.open&&r.blatt!=="erledigt"){const km=(r.kommentare||[]).map(k=>k&&k.text).filter(Boolean);
-    const tx=[r.beschreibung,r.option1,r.option2,r.option3,r.empfehlung,r.entscheidung,r.abweichung,...km].filter(Boolean).join("\n");
+    const tx=[r.projekt,r.beschreibung,r.kopiertext,r.option1,r.option2,r.option3,r.empfehlung,r.entscheidung,r.abweichung,...km].filter(Boolean).join("\n");
     if(tx){ftx=el("div",{class:"ftext",text:tx});d.append(ftx)}}
   const build=()=>{if(built)return;built=true;if(ftx){ftx.remove();ftx=null}
   const b=el("div",{class:"body"});
@@ -1785,6 +1880,19 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
     go.onclick=()=>{dSet("kz:"+r.nr,1);const k=d.querySelector(".ktalk");if(k){const bt=k.querySelector(".donebtn");if(bt&&bt.getAttribute("aria-expanded")!=="true")bt.click();const last=k.querySelector(".step:last-of-type");if(last)last.scrollIntoView({block:"center"})}};
     b.append(el("div",{class:r.blatt==="pruefen"?"dev":"rec"},el("h3",{text:r.blatt==="pruefen"?"Was Du prüfen sollst":artOf(r)!=="entscheidung"?"Antwort von Claude":"Ergebnis"}),go))}
   b.append(section("Worum es geht",r.beschreibung));
+  // 0.4.0: "kopiertext" (a voluntary field) -- a text to pass on to somebody else, plain text, never read as Markdown.
+  // It stands in a field that only reads; going into the field marks all of it, "Kopieren" puts it on the clipboard.
+  // Where the browser refuses the clipboard, the text stays marked and the line says so.
+  if(String(r.kopiertext||"").trim()){const kt=String(r.kopiertext),kn=el("span",{class:"saved"});
+    const kf=el("textarea",{id:"kt-"+r.nr,class:"ktext",readonly:"",rows:String(Math.min(14,1+kt.split("\n").reduce((a,l)=>a+Math.max(1,Math.ceil(l.length/56)),0))),"aria-label":"Text zum Weitergeben"});kf.value=kt;
+    const all=()=>{try{kf.focus({preventScroll:true});kf.setSelectionRange(0,kf.value.length)}catch(e){}};
+    kf.addEventListener("focus",()=>{try{kf.setSelectionRange(0,kf.value.length)}catch(e){}});
+    const kb=el("button",{class:"act",type:"button",text:"Kopieren"});
+    kb.onclick=async()=>{all();let ok=false;
+      try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(kt);ok=true}}catch(e){ok=false}
+      if(!ok){try{ok=document.execCommand("copy")===true}catch(e){ok=false}}
+      kn.textContent=ok?"kopiert":"Der Text ist markiert – bitte von Hand kopieren."};
+    b.append(el("div",{class:"kopie"},el("h3",{text:"Zum Weitergeben"}),kf,el("div",{class:"row"},kb,kn)))}
   if(fwb&&r.blatt!=="pruefen")b.append(fwb);
   for(const [t,v] of [["Option 1",r.option1],["Option 2",r.option2],["Weitere Optionen",r.weitere]])if(v)b.append(el("div",{class:"opt"},el("div",{class:"l",text:t}),el("div",{},md(v))));
   if(r.empfehlung)b.append(el("div",{class:"rec"},el("h3",{text:"Empfehlung & Begründung"}),mdBox(r.empfehlung)));
@@ -1797,6 +1905,8 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
   const dth=el("div",{class:"thumbs"});draftThumbs(dth,fk);
   if(restored||dImgs(fk).length)note.textContent="ungesendeter Entwurf";
   const top=isTopArt(r);
+  // 0.4.0: the answer with one tap -- a row of buttons right under the text, above the fields and the history
+  const qrow=el("div",{class:"quick"}),qnote=el("span",{class:"saved"});b.append(qrow);
   // the pictures belong to the order and stand with it, above the history
   if(Array.isArray(r.bilder)&&r.bilder.length)b.append(el("div",{},el("h3",{text:"Bilder"}),storedThumbs(r.bilder)));
   const talkAt=el("div");b.append(talkAt);
@@ -1822,6 +1932,22 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
     if(ok){liveDone(fk);dClearSent(fk,sent);if(ta.value===sent)ta.value="";last="";ta.dispatchEvent(new Event("input"));if(imgs){dSet("i:"+fk,null);draftThumbs(dth,fk)}if((t||imgs)&&!live)note.textContent=gWhy(why)}
     return ok;
   };
+  // 0.4.0: one tap. A fixed text goes the way of "Senden": live to me ("[K:…]"), into the card's messages and, with
+  // its patch, in one write; whatever stands unsent in the yellow field stays there as a draft. On a phone the live
+  // comment is left out (the Claude app closes the book when one goes out) -- I find the answer at my next look.
+  // Without a text it is only the patch ("Gelesen", "Erledigt"). Either way the undo line holds the way back (undoSet).
+  const quick=async(label,text,patch,nt)=>{if(sending||!db||!canWrite)return false;sending=true;
+    try{const prev={};for(const k of Object.keys(patch))prev[k]=r[k]===undefined?null:r[k];
+      let live=false;const qk="q:"+r.nr;
+      if(text){if(!PHONE){const L=await liveSend(qk,text,"q","[K:"+r.nr+"] "+text,r.thread,d);live=L.live;if(L.thread)patch.thread=L.thread}
+        // the messages as they stand in the book now (another writer may have added one since the card was drawn)
+        let ks=r.kommentare;try{const snap=await db.doc("entscheidungen/"+r.nr).get();if(snap.exists)ks=(snap.data()||{}).kommentare}catch(e){}
+        patch.kommentare=[...(Array.isArray(ks)?ks:[]),{von:"Eigner",text,zeit:new Date().toISOString(),live,bilder:[]}]}
+      const ok=await save(r,patch,nt||qnote);
+      if(ok){liveDone(qk);undoSet({nr:r.nr,label,prev,text,live,thread:patch.thread||r.thread||null})}
+      return ok}
+    finally{sending=false}};
+  const qbtn=(text,ghost,title,fn)=>{const x=el("button",{class:"act"+(ghost?" ghost":""),type:"button",text});if(title)x.title=title;x.onclick=()=>fn();qrow.append(x);return x};
   const autoSave=()=>{if(top)return;const t=ta.value.trim();if(t||dImgs(fk).length){const p={wartet:"Claude"};if(r.blatt==="offen"&&t){p.entscheidung=t;p.blatt="entschieden";p.status="entschieden"}sendCard(p)}};
   // nothing is sent by leaving the field; only the button "Antworten" sends (the card used to jump away on blur).
   pasteImages(ta,fk,dth,note);
@@ -1876,13 +2002,28 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
     const doneTxt=artOf(r)==="hinweis"?"Gelesen":"Erledigt";
     const dn=el("button",{class:"act",type:"button",text:doneTxt});
     // A leftover draft used to block this silently on a phone: the first tap says so, the second lays the card away and drops the draft.
+    // 0.4.0: the same button stands in the answer row under the text too (fileAway), and laying away can be undone.
     let sure=false;
-    dn.onclick=()=>{if(!sure&&(ta.value.trim()||dImgs(fk).length)){sure=true;dn.textContent="Trotzdem ablegen";note.textContent="Im Feld steht noch eine nicht gesendete Antwort oder ein Bild. „Antworten“ schickt sie; „Trotzdem ablegen“ verwirft sie und legt die Karte ab.";note.scrollIntoView({block:"nearest"});return}if(sure){dSet("t:"+fk,null);dSet("i:"+fk,null)}const p={blatt:"erledigt",wartet:""};p[artOf(r)==="hinweis"?"gelesen":"erledigt_am"]=new Date().toISOString();moveTo(p)};
+    const fileAway=(bt,nt)=>()=>{if(!sure&&(ta.value.trim()||dImgs(fk).length)){sure=true;bt.textContent="Trotzdem ablegen";nt.textContent="Im Feld steht noch eine nicht gesendete Antwort oder ein Bild. „Senden“ schickt sie; „Trotzdem ablegen“ verwirft sie und legt die Karte ab.";nt.scrollIntoView({block:"nearest"});return}if(sure){dSet("t:"+fk,null);dSet("i:"+fk,null)}const p={blatt:"erledigt",wartet:""};p[artOf(r)==="hinweis"?"gelesen":"erledigt_am"]=new Date().toISOString();return quick(artOf(r)==="hinweis"?"als gelesen abgelegt":"als erledigt abgelegt","",p,nt)};
+    dn.onclick=fileAway(dn,note);
+    if(canWrite){const q1=qbtn(doneTxt,false,artOf(r)==="hinweis"?"Gelesen: die Karte wird abgelegt":"Erledigt: die Karte wird abgelegt",()=>q1h());const q1h=fileAway(q1,qnote);
+      // a Hinweis also takes "Jetzt machen" and "Nein": an answer to me like a decision
+      if(artOf(r)==="hinweis")for(const t of ["Jetzt machen","Nein"])qbtn(t,true,"„"+t+"“ als Antwort an Claude",()=>quick("„"+t+"“ gesendet",t,{entscheidung:t,status:"beantwortet",wartet:"Claude",blatt:"entschieden"}))}
     const an=el("button",{class:"act",type:"button",text:"Senden"});
     an.onclick=()=>{const t=ta.value.trim();if(!t&&!dImgs(fk).length){note.textContent="Bitte Deine Antwort ins gelbe Feld schreiben.";ta.focus();return}last=ta.value;sendCard({entscheidung:t||r.entscheidung||"",status:"beantwortet",wartet:"Claude",blatt:"entschieden"})};
     row.append(an,dn);armSend([an],ta,fk,[dn]);
   }
   if(!top&&r.blatt!=="erledigt"&&canWrite){const q=el("button",{class:"act",type:"button",text:"Senden"});q.onclick=()=>{if(!ta.value.trim()&&!dImgs(fk).length){note.textContent="Bitte Deine Antwort ins gelbe Feld schreiben.";ta.focus();return}if(r.blatt==="pruefen"){sendCard({blatt:"entschieden",status:"entschieden",wartet:"Claude",zurueck:new Date().toISOString(),entscheidung:ta.value.trim()});return}autoSave()};row.append(q);if(r.blatt!=="pruefen")armSend([q],ta,fk);r._q=q}
+  // 0.4.0: a decision under "Offen" -- "Wie empfohlen" (when there is a recommendation; it names the option the
+  // recommendation starts with), a button per option, "Später" (back to the backlog with the target "später", and a
+  // word to me) and "Erklär es einfacher" (only a message to me; the card stays)
+  if(!top&&r.blatt==="offen"&&canWrite){
+    const dec=t=>quick("„"+t+"“ gesendet",t,{entscheidung:t,blatt:"entschieden",status:"entschieden",wartet:"Claude"});
+    if(String(r.empfehlung||"").trim()){const o=optOf(r.empfehlung),t=o?"Option "+o+" – wie empfohlen":"Wie empfohlen";qbtn("Wie empfohlen",false,o?"Antwortet „"+t+"“":"Antwortet „Wie empfohlen“",()=>dec(t))}
+    for(const [n,v] of [["1",r.option1],["2",r.option2]])if(String(v||"").trim())qbtn("Option "+n,true,"Antwortet „Option "+n+"“",()=>dec("Option "+n));
+    qbtn("Später",true,"Zurück in den Vorrat, Ziel „später“",()=>quick("auf später gelegt","Später",{ziel:"später",blatt:"vorrat",wartet:"Claude"}));
+    qbtn("Erklär es einfacher",true,"Bittet Claude um eine einfachere Erklärung; die Karte bleibt hier",()=>quick("„Erklär es einfacher“ gesendet","Erklär es einfacher",{wartet:"Claude"}))}
+  if(qrow.firstChild)qrow.append(qnote);else qrow.remove();
   if(r.blatt==="pruefen"&&!top){const g=el("button",{class:"act",type:"button",text:"Gelesen",title:"Gesehen und in Ordnung: nach Erledigt"});g.onclick=()=>moveTo({blatt:"erledigt",wartet:"",gesichtet:new Date().toISOString()});row.append(g);if(r._q)armSend([r._q],ta,fk,[g])}
   if(r.blatt==="erledigt"){const bk=el("button",{class:"act ghost",type:"button",text:"Zurück nach Prüfen"});bk.onclick=()=>moveTo({blatt:"pruefen"});row.append(bk)}
   row.append(note);
@@ -1890,7 +2031,7 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
   const lk=[...linked(r.entscheidung||"").childNodes].filter(n=>n.nodeName==="A");
   const links=lk.length?el("div",{class:"links"},el("span",{class:"who",text:"Links:"}),...lk):null;
   // the card's number and headline stand again right above the field, so the answer is written knowing what to
-  ans.append(el("div",{class:"anshead",text:r.nr+" · "+(r.ueberschrift||"")}),el("label",{for:"ans-"+r.nr,text:(top?"Deine Antwort (freiwillig) – ich lese sie wie eine Entscheidung":r.von==="Claude"?"Deine Anmerkung (Claude hat entschieden)":"Entscheidung "+OWNER+"")+(canWrite?" · Bilder mit ⌘V":"")}),ta,dth,row,ask);
+  ans.append(el("div",{class:"anshead",text:r.nr+" · "+(r.ueberschrift||"")}),el("label",{for:"ans-"+r.nr,text:(qrow.isConnected||qrow.parentNode?"Oder frei antworten":top?"Deine Antwort (freiwillig) – ich lese sie wie eine Entscheidung":r.von==="Claude"?"Deine Anmerkung (Claude hat entschieden)":"Entscheidung "+OWNER+"")+(canWrite&&!PHONE?" · Bilder mit "+K_PASTE:"")}),ta,dth,row,ask);
   talkAt.replaceWith(fields,cardTalk(r,d));
   b.append(ans);d.append(b)};
   if(d.open)build();
@@ -1949,7 +2090,8 @@ function fmtMio(t){return t>=1e6?(t/1e6).toLocaleString("de-DE",{maximumFraction
 // how often my recommendation was the owner's answer, per release (release as in tokensOf); a card counts only
 // when both name an option ("Option 2", "2", "b)")
 function optOf(s){const m=/^\s*(?:option\s*)?(\d+|[a-h])(?=$|[\s.,:;)\]–—\/])/i.exec(String(s||""));return m?m[1].toLowerCase():null}
-function recHit(v){let n=0,m=0;for(const r of allCards()){const z=/^\d+\.\d+\.\d+/.test(r.ziel||"")?r.ziel:r.release;if(z!==v)continue;const a=optOf(r.empfehlung),b=optOf(r.entscheidung);if(a&&b){m++;if(a===b)n++}}return {n,m}}
+function recHit(v){let n=0,m=0;for(const r of allCards()){const z=/^\d+\.\d+\.\d+/.test(r.ziel||"")?r.ziel:r.release;if(z!==v)continue;const a=optOf(r.empfehlung),b=optOf(r.entscheidung);
+    if(/^\s*wie empfohlen/i.test(String(r.entscheidung||""))&&String(r.empfehlung||"").trim()){m++;n++}else if(a&&b){m++;if(a===b)n++}}return {n,m}}
 // "40 von 43 (93 %)"
 function recText(x){return x&&x.m?x.n+" von "+x.m+" ("+Math.round(100*x.n/x.m)+" %)":"–"}
 // the row "Gesamt" of "Zeit, Umfang und Aufwand" over the releases shown (rs), one text per column:
@@ -2088,6 +2230,7 @@ function render(force){
   renderBoard();
   focusBack(fk);
 }
+const hintOpen=new Set();
 function renderBoard(){
   renderReady();renderFilter();renderViews();renderAuftrag();gsearch();
   const board=$("#board");board.textContent="";
@@ -2098,25 +2241,33 @@ function renderBoard(){
   if(view==="ablage"){$("#tabs").hidden=true;board.style.display="block";renderAblage(board);return}
   if(view==="releases"){$("#tabs").hidden=true;board.style.display="block";renderReleases(board);return}
   if(view==="treffer"){$("#tabs").hidden=true;$("#filter").hidden=true;board.style.display="block";renderFound(board);return}
-  $("#tabs").hidden=false;$("#ready").hidden=false;board.style.display="";const shown=viewCols();if(!shown.some(c=>c.key===tab))tab=shown[0].key;board.style.setProperty("--cols",shown.length);renderTabs(shown);
+  $("#tabs").hidden=false;board.style.display="";const shown=viewCols();if(!shown.some(c=>c.key===tab))tab=shown[0].key;board.style.setProperty("--cols",shown.length);renderTabs(shown);
   for(const c of viewCols()){
     const col=el("section",{class:"col"+(c.key===tab?" on":""),"aria-label":c.label});
     const mine=colRows(c.key);
-    col.append(el("div",{class:"colhead"},c.label,el("span",{class:"n",text:String(shownRows(c.key).length)})),el("p",{class:"hint",text:c.hint}));
+    // the explanation of the column; on a phone it is one line behind a "?" that unfolds it (hintOpen, in memory)
+    {const hq=el("button",{class:"kbtn hintq",type:"button","aria-expanded":String(hintOpen.has(c.key)),"aria-controls":"hint-"+c.key,"aria-label":"Erklärung zu „"+c.label+"“",title:"Was hier steht",text:"?"});
+     const hr=el("div",{class:"hintrow"+(hintOpen.has(c.key)?" open":"")},hq,el("p",{class:"hint",id:"hint-"+c.key,text:c.hint}));
+     hq.onclick=()=>{const o=!hintOpen.has(c.key);o?hintOpen.add(c.key):hintOpen.delete(c.key);hr.classList.toggle("open",o);hq.setAttribute("aria-expanded",String(o))};
+     col.append(el("div",{class:"colhead"},c.label,el("span",{class:"n",text:String(shownRows(c.key).length)})),hr)}
     const lanes=[...new Set(mine.map(r=>r.ziel||""))].sort(laneOrder);
     if(c.key==="erledigt")lanes.reverse();
     if(!(c.key==="hinweise"?shownRows(c.key):mine).length)col.append(el("div",{class:"empty",text:"leer"}));
-    if(c.key==="hinweise"){const l=shownRows(c.key).sort((a,b)=>lastChange(b)-lastChange(a)||b.nr.localeCompare(a.nr,"de",{numeric:true}));for(const r of l)col.append(rueckDue(r)?rueckItem(r):card(r,l));board.append(col);continue}
+    // 0.4.0: in the owner's columns the cards with a deadline stand first, the nearest on top; then newest change first
+    if(c.key==="hinweise"){const l=shownRows(c.key).sort((a,b)=>byFrist(a,b)||byNewest(a,b));for(const r of l)col.append(rueckDue(r)?rueckItem(r):card(r,l));board.append(col);continue}
+    const bare=!relZ()&&lanes.length===1&&!lanes[0];
     for(const z of lanes){
       let lr=mine.filter(r=>(r.ziel||"")===z);
       if(c.key==="entschieden")lr.sort((a,b)=>(a.rang??1e9)-(b.rang??1e9)||a.nr.localeCompare(b.nr,"de",{numeric:true}));
-      else lr.sort((a,b)=>lastChange(b)-lastChange(a)||b.nr.localeCompare(a.nr,"de",{numeric:true}));
+      else if(c.key==="offen"||c.key==="pruefen")lr.sort((a,b)=>byFrist(a,b)||byNewest(a,b));
+      else lr.sort(byNewest);
       // Einklappbar: der Zustand je Spalte und Release bleibt gemerkt.
       const zu=laneShut(z);
       const lh=el("div",{class:"lane fold",role:"button",tabindex:"0","data-lane":c.key+":"+(z||""),"aria-expanded":String(!zu),title:zu?"aufklappen":"einklappen"},el("span",{class:"arr",text:zu?"▸":"▾"}),z||"Ziel offen",el("span",{class:"cnt",text:"("+lr.length+")"}));
       const flip=()=>{laneFlip(z);render(true)};
       lh.onclick=flip;lh.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}};
-      col.append(lh);
+      // 0.4.0: one lane without a target in a book without a current release -- its head says nothing and is left out
+      if(!(bare&&!zu))col.append(lh);
       if(!zu)for(const r of lr)col.append(card(r,lr));
     }
     board.append(col);
@@ -2127,7 +2278,7 @@ document.addEventListener("focusout",()=>setTimeout(()=>{if(!pending)return;cons
 document.addEventListener("focusout",()=>setTimeout(runRules,0));
 $("#ver").textContent=PAGE_VERSION;
 // Änderungsprotokoll des Buchs: ein Klick auf die Versionsnummer zeigt es; neueste Version oben.
-const BUCH_LOG=[{"v": "0.3.0", "datum": "2026-10-29", "uhrzeit": "06:43", "karten": [], "punkte": ["Neues Aussehen: oben eine dunkelblaue Titelleiste über die ganze Breite – links Name, Version und „Einstellungen“, rechts „wartet auf Dich“ als heller Knopf, daneben „live“ und die Zeiten. Auf dem Telefon bleiben Name, Version und „⚙“ in einer Zeile, der Rest steht darunter.", "Die Ansichten sind Reiter: der gewählte ist fett und blau unterstrichen.", "Suche und Filter stehen zusammen in einer weißen Leiste unter den Reitern; „Entschieden von:“ und „Release:“ sind durch eine Linie getrennt, und wird die Leiste zu schmal, rückt eine Gruppe als Ganzes in die nächste Zeile. Ein gedrückter Filter ist hellblau hinterlegt, fett und unten blau unterstrichen.", "Die Release-Karte steht jetzt unter Suche und Filter; mit der Tab-Taste kommst Du erst zu Reitern, Suche und Filtern, dann zu ihr.", "Hauptknöpfe wie „Senden“ sind blau gefüllt, Nebenknöpfe wie „Bearbeiten“, „↑“/„↓“ und „Öffnen“ hellblau mit Rand. Eingabefelder haben eine dunklere Unterkante und zeigen den Fokus als blaue Linie darunter; Knöpfe zeigen ihn als deutlichen Ring.", "Stand, Art, Fristen und Abhängigkeiten stehen als Pillen mit ihrem Wort; Überschriften und Spaltenköpfe sind im Blau der Titelleiste, Tabellen haben einen grauen Kopf, die sortierte Spalte ist blau. Die Seite nutzt die Schrift des Systems.", "Texte und Bedienelemente erfüllen hell und dunkel die Kontraste nach WCAG 2.2 AA. Was die Seite tut und was im Buch steht, bleibt gleich.", "Behoben: Die Zeile mit dem Prüflauf eines laufenden Schritts steht wieder unter seinem Namen statt Buchstabe für Buchstabe in der Nummernspalte. Lange Wörter in Kartenüberschriften brechen um, statt die Seite zu verbreitern; in Fenstern bis 760 px zeigt die Releases-Tabelle die schmalen Spalten des Telefons."]}, {"v": "0.2.1", "datum": "2026-10-28", "uhrzeit": "14:35", "karten": [], "punkte": ["Die Knöpfe hinter „Release:“ filtern jetzt: ein Klick zeigt nur dieses Ziel, alle anderen werden ausgeblendet – auch unter „Bei Claude“, beim Wechsel von „Entschieden von“ und bei neu hinzukommenden Karten. Ein zweiter Klick auf denselben Knopf zeigt wieder alle; der neue Knopf „alle“ ebenso.", "„Hinweise & Aufgaben“ folgt jetzt dem Ziel-Filter und „Entschieden von“ wie die anderen Spalten.", "Die Zahlen an den Reitern und Spaltenköpfen zählen nur, was gerade gezeigt wird.", "Einzelne Spuren klappst Du weiterhin über ihre Kopfzeile auf und zu."]}, {"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
+const BUCH_LOG=[{"v": "0.4.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Antworten mit einem Tipp: Unter dem Text einer Entscheidung steht eine Knopfzeile – „Wie empfohlen“ (wenn es eine Empfehlung gibt), je Option ein Knopf, „Später“ und „Erklär es einfacher“. Ein Hinweis hat dort „Gelesen“, „Jetzt machen“ und „Nein“, eine Aufgabe „Erledigt“. Das gelbe Feld bleibt für freie Antworten („Oder frei antworten“).", "„Später“ legt die Karte mit dem Ziel „später“ zurück in den Vorrat und sagt es Claude; „Erklär es einfacher“ schickt nur die Bitte, die Karte bleibt unter „Offen“.", "Nach jedem Tipp steht zehn Sekunden lang am unteren Fensterrand, was geschehen ist, mit „Rückgängig“. Zurücknehmen stellt die Karte wieder her, wie sie war, und vermerkt es im Verlauf.", "Am Handy schreiben diese Knöpfe nur ins Buch, ohne Live-Kommentar – so bleibt das Buch offen. Claude liest die Antwort beim nächsten Blick, spätestens nach 15 Minuten. Am Rechner geht sie wie bisher sofort live hinaus.", "Jede Karte ist zunächst zugeklappt: Du siehst Nummer, Projekt, Stand, Überschrift und die Frist. Ein Tipp auf die Kopfzeile klappt sie auf und wieder zu; was Du aufgeklappt hast, merkt sich Dein Browser. Die Antwort-Knöpfe stehen erst in der aufgeklappten Karte. Nur eine Karte, auf die Du schon geantwortet hast und die mit einer neuen Nachricht von Claude zurückkommt, steht wie bisher einmal offen.", "Fristen: Karten mit Frist stehen unter „Offen“, „Prüfen“ und „Hinweise & Aufgaben“ oben, die nächste zuerst, mit der Restzeit – „noch 2 Tage“, „morgen“, „heute“, „überfällig“. Eine Frist ohne Uhrzeit gilt bis zum Ende ihres Tages (bisher lief sie schon in der Nacht davor ab). Der Knopf „warten auf Dich“ nennt die Fristen der nächsten drei Tage.", "Projekt: Eine Karte kann ein Projekt tragen; es steht als farbiges Etikett hinter der Nummer. Sobald eine Karte eines trägt, gibt es in der Leiste die Filter „alle Projekte“, je Projekt einen Knopf mit der Zahl seiner Karten unter „Für Dich“ und „ohne Projekt“. Die Wahl bleibt in Deinem Browser gemerkt.", "Das Feld für einen neuen Auftrag steht jetzt auch direkt unter „Für Dich“, in einer Zeile mit „Senden“. Gespräche und frühere Aufträge bleiben unter „Aufträge“; am Handy geht ein Auftrag von dort ohne Live-Kommentar, damit das Buch offen bleibt.", "Text zum Weitergeben: Trägt eine Karte einen solchen Text, steht er in einem eigenen Kasten „Zum Weitergeben“ mit dem Knopf „Kopieren“. Ein Tipp in das Feld markiert den ganzen Text.", "Weniger über der ersten Karte: Ohne laufendes Release gibt es keine Release-Karte und keinen Reiter „Releases“; die Knöpfe „Release:“ und die Zeile „Ziel offen“ entfallen, wenn es nichts zu wählen gibt. Am Handy steht die Erklärung einer Spalte einzeilig hinter einem „?“.", "Die Marken einer Karte (Frist, „wartet auf“, „Token fehlen“) stehen in einer Zeile statt untereinander. Berichtigt: Der Hinweis unter „Prüfen“ nennt den Knopf „Gelesen“, die Meldung beim Ablegen den Knopf „Senden“, und am Handy steht am gelben Feld kein Tastenkürzel mehr. Der Knopf „warten auf Dich“ folgt sofort, wenn ein Release startet.", "Die Daten des Buchs bleiben, wie sie sind: „projekt“ und „kopiertext“ sind freiwillige Felder."]}, {"v": "0.3.0", "datum": "2026-10-29", "uhrzeit": "06:43", "karten": [], "punkte": ["Neues Aussehen: oben eine dunkelblaue Titelleiste über die ganze Breite – links Name, Version und „Einstellungen“, rechts „wartet auf Dich“ als heller Knopf, daneben „live“ und die Zeiten. Auf dem Telefon bleiben Name, Version und „⚙“ in einer Zeile, der Rest steht darunter.", "Die Ansichten sind Reiter: der gewählte ist fett und blau unterstrichen.", "Suche und Filter stehen zusammen in einer weißen Leiste unter den Reitern; „Entschieden von:“ und „Release:“ sind durch eine Linie getrennt, und wird die Leiste zu schmal, rückt eine Gruppe als Ganzes in die nächste Zeile. Ein gedrückter Filter ist hellblau hinterlegt, fett und unten blau unterstrichen.", "Die Release-Karte steht jetzt unter Suche und Filter; mit der Tab-Taste kommst Du erst zu Reitern, Suche und Filtern, dann zu ihr.", "Hauptknöpfe wie „Senden“ sind blau gefüllt, Nebenknöpfe wie „Bearbeiten“, „↑“/„↓“ und „Öffnen“ hellblau mit Rand. Eingabefelder haben eine dunklere Unterkante und zeigen den Fokus als blaue Linie darunter; Knöpfe zeigen ihn als deutlichen Ring.", "Stand, Art, Fristen und Abhängigkeiten stehen als Pillen mit ihrem Wort; Überschriften und Spaltenköpfe sind im Blau der Titelleiste, Tabellen haben einen grauen Kopf, die sortierte Spalte ist blau. Die Seite nutzt die Schrift des Systems.", "Texte und Bedienelemente erfüllen hell und dunkel die Kontraste nach WCAG 2.2 AA. Was die Seite tut und was im Buch steht, bleibt gleich.", "Behoben: Die Zeile mit dem Prüflauf eines laufenden Schritts steht wieder unter seinem Namen statt Buchstabe für Buchstabe in der Nummernspalte. Lange Wörter in Kartenüberschriften brechen um, statt die Seite zu verbreitern; in Fenstern bis 760 px zeigt die Releases-Tabelle die schmalen Spalten des Telefons."]}, {"v": "0.2.1", "datum": "2026-10-28", "uhrzeit": "14:35", "karten": [], "punkte": ["Die Knöpfe hinter „Release:“ filtern jetzt: ein Klick zeigt nur dieses Ziel, alle anderen werden ausgeblendet – auch unter „Bei Claude“, beim Wechsel von „Entschieden von“ und bei neu hinzukommenden Karten. Ein zweiter Klick auf denselben Knopf zeigt wieder alle; der neue Knopf „alle“ ebenso.", "„Hinweise & Aufgaben“ folgt jetzt dem Ziel-Filter und „Entschieden von“ wie die anderen Spalten.", "Die Zahlen an den Reitern und Spaltenköpfen zählen nur, was gerade gezeigt wird.", "Einzelne Spuren klappst Du weiterhin über ihre Kopfzeile auf und zu."]}, {"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
 // the change log and the settings are two dialogs with one frame: an overlay, "Schließen (Esc)", a click beside it
 function dlgOpen(label){if(document.querySelector(".vlog"))return null;const box=el("div",{class:"box",role:"dialog","aria-label":label});
   const close=el("button",{type:"button",text:"Schließen (Esc)"});box.append(el("div",{class:"top"},el("h2",{text:label}),close));return {box,close}}
@@ -2405,11 +2556,15 @@ function sub(name,ref,next){let tries=0,un=null;
   window.claude.use("assets").then(a=>{assets=a},()=>{assets=null});
   pasteImages($("#auftrag-text"),"auftrag",$("#auftrag-bilder"),$("#auftrag-note"));
   window.claude.use("comments").then(c=>{comments=c},()=>{comments=null});
+  // under "Für Dich" the line says where the order went; on a phone it goes from there without the live comment (the
+  // Claude app closes the book when one goes out), so the book stays open and I read it at my next look
   $("#auftrag-senden").onclick=async()=>{const ta=$("#auftrag-text");const sent=ta.value,t=sent.trim();if(!t&&!dImgs("auftrag").length)return;const n=$("#auftrag-note");n.textContent="sendet …";
-    dClearSent("auftrag",sent);ta.value="";
-    try{const r=await gSend("g"+Date.now().toString(36),t,"auftrag","auftrag");
-      dSet("i:auftrag",null);renderPasted();ta.dispatchEvent(new Event("input"));n.textContent=r.live?"":gWhy(r.why)}catch(e){if(!ta.value){ta.value=sent;dSet("t:auftrag",sent)}n.textContent=failText(e,"Nicht gesendet – bitte noch einmal.")}};
-  $("#auftrag-text").placeholder="Frage, Auftrag, Hinweis · Bilder ("+K_PASTE+")";
+    const kurz=view==="dich",quiet=kurz&&PHONE,where=kurz?"gesendet – steht unter Aufträge":"";
+    dClearSent("auftrag",sent);ta.value="";ta.style.height="";
+    try{const r=await gSend("g"+Date.now().toString(36),t,"auftrag","auftrag",quiet);
+      dSet("i:auftrag",null);renderPasted();ta.dispatchEvent(new Event("input"));n.textContent=quiet?where+" · ich lese es beim nächsten Blick, spätestens nach 15 Minuten":r.live?where:gWhy(r.why)}catch(e){if(!ta.value){ta.value=sent;dSet("t:auftrag",sent)}n.textContent=failText(e,"Nicht gesendet – bitte noch einmal.")}};
+  // the one-line field under "Für Dich" grows with its text
+  $("#auftrag-text").addEventListener("input",e=>{const ta=e.target;if(!$("#auftrag").classList.contains("kurz"))return;ta.style.height="";if(ta.value)ta.style.height=Math.min(220,ta.scrollHeight+2)+"px"});
   {const ck=armSend([$("#auftrag-senden")],$("#auftrag-text"),"auftrag");const ob=new MutationObserver(ck);ob.observe($("#auftrag-bilder"),{childList:true})}
   sub("gespraech",db.collection("gespraech"),s=>{gsp=s.docs.map(d=>Object.assign({id:d.id},d.data()));renderGespraech();renderStats();renderViews();if(view!=="sitzung"&&view!=="statistik")render()});
   sub("auftraege",db.collection("auftraege"),s=>{auftraege=s.docs.map(d=>Object.assign({id:d.id},d.data()));auftraegeLoaded=true;renderAuftrag();renderStats();if(view==="sitzung")render()});
@@ -2420,12 +2575,13 @@ function sub(name,ref,next){let tries=0,un=null;
   sub("meta/einstellungen",db.doc("meta/einstellungen"),s=>{SET=s.exists?(s.data()||{}):{};try{localStorage.setItem("eb-set",JSON.stringify(SET))}catch(e){}
     OWNER=S("eigner","Eigner");TOKEN_RULE_AB=Date.parse(S("token_regel_ab","1970-01-01T00:00:00Z"));ANSWER_RULE_AB=Date.parse(S("antwort_regel_ab","1970-01-01T00:00:00Z"));
     STEPS=Array.isArray(S("schritte",null))&&S("schritte").length?S("schritte"):STEPS_DEFAULT;if(!meta.aktuell)meta.aktuell=S("release","");render()});
-  sub("meta/stand",db.doc("meta/stand"),s=>{if(s.exists){meta=Object.assign({aktuell:S("release","")},s.data())}render()});
+  sub("meta/stand",db.doc("meta/stand"),s=>{if(s.exists){meta=Object.assign({aktuell:S("release","")},s.data())}render();renderWaits()});
   sub("entscheidungen",db.collection("entscheidungen"),snap=>{
     const was=new Map(rows.map(r=>[r.nr,r.blatt]));
     rows=snap.docs.map(d=>{const u=d.updatedAt||d.updateTime||(d.metadata&&d.metadata.updatedAt);if(u!=null)updAt.set(d.id,String(u));else updAt.delete(d.id);return Object.assign({nr:d.id},d.data())});
     // a card that moved starts in its new column's default state, not in one remembered from an earlier stay there
-    {let ch=false;for(const r of rows){const b=was.get(r.nr);if(b!=null&&b!==r.blatt&&openState.delete(r.nr+":"+r.blatt))ch=true}if(ch)saveOpen()}
+    {let ch=false;for(const r of rows){const b=was.get(r.nr);if(b==null||b===r.blatt)continue;if(r.nr===undoKeep){undoKeep=null;continue}if(openState.delete(r.nr+":"+r.blatt))ch=true}if(ch)saveOpen()}
+    rowsLoaded=true;
     liveAt=Date.now();liveLine();
     render();renderStats();setTimeout(runRules,0);
   });

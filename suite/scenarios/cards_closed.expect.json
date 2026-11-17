@@ -1,0 +1,6 @@
+{"expect":{
+ "forYou":"E-641,E-642:open,E-643,E-644,E-645",
+ "head":["E-641Haus","Haus","Offen","Karte 641",true], "closedBody":false, "closedButtons":0,
+ "afterTap":true, "remembered":["E-641:offen","E-642:offen"], "afterSecondTap":false, "rememberedClosed":["E-642:offen"],
+ "newCard":"closed", "claude":"E-646,E-647"
+}}

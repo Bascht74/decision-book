@@ -1,0 +1,12 @@
+{"expect":{
+ "closedHasRow":false,
+ "buttons":["Wie empfohlen","Option 1","Option 2","Später","Erklär es einfacher"],
+ "noRec":["Option 1","Option 2","Später","Erklär es einfacher"],
+ "recNoOption":["Wie empfohlen","Option 1","Später","Erklär es einfacher"],
+ "primary":["Wie empfohlen"], "rowPlace":[true,true], "label":"Oder frei antworten", "notOffen":[],
+ "sends":["[K:E-601] Option 2 – wie empfohlen"], "writes":1, "doc":"Option 2 – wie empfohlen|entschieden|entschieden|Claude",
+ "kommentare":["Claude: Vorlage","Claude: Zwischenfrage","Eigner: Option 2 – wie empfohlen"], "lastLive":true, "threadSaved":true, "left":true,
+ "undoShown":true, "undoText":"E-601: „Option 2 – wie empfohlen“ gesendet", "undoBtn":true,
+ "plain":"Wie empfohlen", "option":"Option 1", "undoLater":"E-602: „Option 1“ gesendet",
+ "explain":"offen|Claude||Erklär es einfacher"
+}}

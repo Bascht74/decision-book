@@ -1,0 +1,8 @@
+{"run":{"budget":20000},
+ "expect":{
+ "hinweis":["Gelesen","Jetzt machen","Nein"], "aufgabe":["Erledigt"],
+ "nein":"Nein|beantwortet|entschieden|Claude", "neinSend":["[K:E-631] Nein"], "neinMessage":["Eigner: Nein"],
+ "gelesen":"erledigt||string|0", "gelesenSends":0, "undoText":"E-632: als gelesen abgelegt",
+ "undone":"offen|Dich||0", "undoSends":0,
+ "erledigt":"erledigt|string", "lower":"erledigt|string|E-634: als gelesen abgelegt"
+}}
