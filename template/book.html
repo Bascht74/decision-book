@@ -160,7 +160,7 @@ nav .n,.colhead .n{font:400 12px var(--font);font-variant-numeric:tabular-nums;m
   .hint{font-size:12px}
 }
 .lane{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0;font-weight:600}
-.lane.fold{cursor:pointer;user-select:none;display:flex;gap:6px;align-items:center}.lane.fold:hover{color:var(--ink)}.lane .arr{display:inline-block;width:10px}.lane .cnt{font-variant-numeric:tabular-nums;font-weight:400;text-transform:none;letter-spacing:0}
+.lane.fold{cursor:pointer;user-select:none;display:flex;gap:6px;align-items:center}.lane.frist{display:flex;gap:6px;align-items:center;padding-left:16px}.lane.fold:hover{color:var(--ink)}.lane .arr{display:inline-block;width:10px}.lane .cnt{font-variant-numeric:tabular-nums;font-weight:400;text-transform:none;letter-spacing:0}
 details{background:var(--sheet);border:1px solid var(--line);border-radius:8px}
 details.waits{border-color:var(--wait)}
 details.drag-over{outline:2px dashed var(--accent)}
@@ -303,6 +303,9 @@ summary .nr::before{content:"▸";display:inline-block;width:1.1em;font-weight:4
 .auftrag.kurz{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:4px 8px;padding:8px 12px}.auftrag.kurz label{flex:0 0 100%;font-size:13px}.auftrag.kurz textarea{flex:1 1 12em;width:auto;min-height:38px;height:38px}.auftrag.kurz .thumbs{order:3;flex:0 0 100%}.auftrag.kurz .fpickw{display:none}.auftrag.kurz>.row{flex:0 1 auto;max-width:100%}
 /* a column's explanation: on a phone one line behind a "?", which unfolds it */
 .hintq{display:none}
+.aufbtn{display:none}
+/* 0.4.0: on a phone the order field under "Für Dich" is a button beside the search until it is used (or holds a draft) */
+@media (max-width:640px){.toolbar .aufbtn:not([hidden]){display:inline-block;flex:none;margin:0 0 2px 6px;white-space:nowrap}.toolbar .search{flex:1 1 0}.auftrag.kurz:not(.auf){display:none}}
 @media (max-width:640px){.auftrag.kurz label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .hintrow{display:flex;gap:8px;align-items:flex-start}.hintrow .hintq{display:inline-block;flex:none}.hintrow .hint{flex:1 1 0;min-width:0}.hintrow:not(.open) .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:32px}}
 </style>
@@ -315,6 +318,7 @@ summary .nr::before{content:"▸";display:inline-block;width:1.1em;font-weight:4
   <div class="views" id="views"></div>
   <div class="toolbar">
     <div class="gsearch"><input class="search" id="gsuche" type="search" autocomplete="off" aria-label="Karte suchen" placeholder="Karte suchen (/)"><ul class="alist" id="gtreffer"></ul></div>
+    <button type="button" class="kbtn aufbtn" id="auftrag-auf" aria-controls="auftrag" aria-expanded="false" hidden>+ Auftrag</button>
     <div class="filter" id="filter"></div>
   </div>
   <div class="ready" id="ready"></div>
@@ -453,7 +457,7 @@ const COLS=[
   {key:"entschieden",label:"Entschieden",hint:"Steht fest, noch nicht begonnen. Oben steht, was ich als Nächstes nehme; die Reihenfolge bestimmst Du (Pfeile oder Ziehen)."},
   {key:"arbeit",label:"In Umsetzung",hint:"Wird gerade gebaut. Rot „Token fehlen“: aus „Prüfen“ oder „Erledigt“ zurückgeholt, weil Schätzung oder Verbrauch fehlt."},
   {key:"pruefen",label:"Prüfen",hint:"Nur was nicht 1:1 wie beschrieben umgesetzt wurde oder was ich selbst entschieden habe – der rote Hinweis sagt, was. Bestätige mit „Gelesen“ oder gib die Karte zurück. Vor jedem Release leer."},
-  {key:"hinweise",label:"Hinweise & Aufgaben",hint:"Aufgabe: etwas, das Du tun musst. Hinweis: etwas, das Du wissen solltest. „Erledigt“ bzw. „Gelesen“ legt die Karte ab; „Jetzt machen“, „Nein“ oder eine Antwort gehen an mich wie eine Entscheidung."},
+  {key:"hinweise",label:"Hinweise & Aufgaben",hint:"Aufgabe: etwas, das Du tun musst. Hinweis: etwas, das Du wissen solltest. „Erledigt“ bzw. „Gelesen“ legt die Karte ab; „Jetzt machen“ oder eine Antwort gehen an mich wie eine Entscheidung; „Nein“ verwirft die Karte und sagt es mir."},
 ];
 const ARCHIV={key:"erledigt",label:"Erledigt",hint:"Umgesetzt und von Dir gesichtet – zum Nachsehen. Verworfenes steht darunter, zugeklappt."};
 // "Releases" stands first: every card by its release, with tokens, expander and "Verschieben"
@@ -462,7 +466,9 @@ let view="dich";try{const v=localStorage.getItem("eb-view");if(VIEWS.some(x=>x[0
 // the old field "status" is neither shown nor edited any more; the Stand is "blatt" (a card's one visible state).
 const STCOL={vorrat:"--st-zurueck",offen:"--st-offen",entschieden:"--st-entschieden",arbeit:"--st-entschieden",pruefen:"--st-abgeloest",erledigt:"--st-umgesetzt",verworfen:"--st-verworfen"};
 // Auf- und zugeklappte Karten bleiben beim Neuladen so; der Schlüssel trägt das Blatt, eine gewanderte Karte beginnt neu.
-function saveOpen(){try{localStorage.setItem("eb-open",JSON.stringify([...openState].slice(-400)))}catch(e){}}
+// 0.4.0 keeps them under "eb-klapp": up to 0.3.0 every card the page opened by itself was written to "eb-open" as open,
+// and that list would keep those cards open after the update. It is dropped once, unread (only what he opens counts).
+function saveOpen(){try{localStorage.setItem("eb-klapp",JSON.stringify([...openState].slice(-400)))}catch(e){}}
 // per card the message of mine that already opened it once ({nr: zeit}), so his own closing wins after that.
 // Not seeded from what stands at load (v101's "eb-kseen" was, and so kept existing "Prüfen" cards shut; it is dropped).
 let kSeen={};try{const v=JSON.parse(localStorage.getItem("eb-kopen"));if(v&&typeof v==="object")kSeen=v}catch(e){}
@@ -478,7 +484,11 @@ let lanesZu=new Set();try{lanesZu=new Set(JSON.parse(localStorage.getItem("eb-la
 let importing=false;// true while a backup is being read in (the rules then write nothing)
 let packing=null;// the release being packed into "archiv" (the rules then write nothing either)
 let hiddenZ=new Set(),assets=null,auftraege=[],rows=[],meta={aktuell:S("release","")},tab="offen",who="alle",db=null,canWrite=true,openIds=new Set(),openState=new Map(),pending=false,dragNr=null;
-try{for(const [k,v] of JSON.parse(localStorage.getItem("eb-open")||"[]"))openState.set(k,!!v)}catch(e){}
+try{for(const [k,v] of JSON.parse(localStorage.getItem("eb-klapp")||"[]"))openState.set(k,!!v)}catch(e){}
+try{localStorage.removeItem("eb-open")}catch(e){}
+// 0.4.0: a narrow window (a phone) -- the waiting button says less, the order field under "Für Dich" waits behind a button
+const NARROW=(()=>{try{return matchMedia("(max-width:640px)")}catch(e){return {matches:false}}})();let aufOpen=false;
+try{NARROW.addEventListener("change",()=>{renderWaits();renderAuftrag()})}catch(e){}
 try{const t=localStorage.getItem("eb-tab");if(t&&COLS.some(c=>c.key===t))tab=t}catch(e){}
 try{if(location.hash&&COLS.some(c=>c.key===location.hash.slice(1)))tab=location.hash.slice(1)}catch(e){}
 const $=s=>document.querySelector(s);
@@ -883,8 +893,9 @@ function renderWaits(){const b=$("#waits");if(!b)return;
   b.append("● ");parts.forEach((x,i)=>{if(i)b.append(" · ");b.append(x)});
   // 0.4.0: deadlines that run out within three days (passed ones too) are named: "· 2 mit Frist bis 19.11."
   const soon=mineRows.map(fristOf).filter(t=>t<=Date.now()+3*864e5).sort((x,y)=>x-y);
-  b.append(" "+(n===1?"wartet":"warten")+" auf Dich"+(cur?" · "+forCur+" für "+cur.replace(/^3\.0\.0/,""):"")+(soon.length?" · "+soon.length+" mit Frist bis "+fristDay(soon[soon.length-1]):""));
-  b.title=cards+" Karten unter „Für Dich“"+(cur?" ("+forCur+" davon für das aktuelle Release "+cur+")":"")+", "+talks+" beantwortete Gespräche"+(soon.length?", "+soon.length+(soon.length===1?" Karte":" Karten")+" mit Frist in den nächsten drei Tagen":"");
+  // on a phone "· 2 bald fällig" (the long form broke the title bar into a third line); the title says the rest
+  b.append(" "+(n===1?"wartet":"warten")+" auf Dich"+(cur?" · "+forCur+" für "+cur.replace(/^3\.0\.0/,""):"")+(soon.length?" · "+soon.length+(NARROW.matches?" bald fällig":" mit Frist bis "+fristDay(soon[soon.length-1])):""));
+  b.title=cards+" Karten unter „Für Dich“"+(cur?" ("+forCur+" davon für das aktuelle Release "+cur+")":"")+", "+talks+" beantwortete Gespräche"+(soon.length?", "+soon.length+(soon.length===1?" Karte":" Karten")+" mit Frist in den nächsten drei Tagen, bis "+fristDay(soon[soon.length-1]):"");
   b.onclick=()=>go(cards||!talks?"dich":"sitzung");
   const base=document.title.replace(/^\(\d+\) /,"");document.title=(n?"("+n+") ":"")+base}
 function renderStats(){renderWaits();
@@ -929,20 +940,26 @@ async function save(r,patch,note){
 // apart from the cards (#undo, fixed to the lower edge of the window) for UNDO_MS, with the way back. Taking back writes
 // the card's fields as they stood before and adds a message of its own (never rewrites one); what had gone out live to
 // me is taken back live too. The card comes back open (undoKeep: the snapshot does not reset its fold).
+// The card is read first: when its Stand or "wartet" is no longer what the tap left (I took it over within the ten
+// seconds), the fields stay as they are and only the message goes -- taking back must not undo my work on it. A field
+// the card did not have before is written back empty ("") rather than null; the old field "status" is left alone.
 const UNDO_MS=10000;let undo=null,undoTimer=0,undoKeep=null;
 function undoSet(u){undo=u;clearTimeout(undoTimer);undoTimer=setTimeout(()=>{undo=null;renderUndo()},UNDO_MS);renderUndo()}
 function renderUndo(){const box=$("#undo");if(!box)return;box.textContent="";box.hidden=!undo;if(!undo)return;const u=undo;
   const b=el("button",{class:"act ghost",type:"button",id:"undo-btn",text:"Rückgängig"}),note=el("span",{class:"saved"});
   box.append(el("span",{class:"utext",text:u.nr+": "+u.label}),b,note);
   b.onclick=async()=>{if(b.disabled||!db)return;b.disabled=true;clearTimeout(undoTimer);note.textContent="nimmt zurück …";
-    const now=new Date().toISOString(),patch=Object.assign({},u.prev,{geaendert:now,eigner_am:now});
-    try{if(u.text){const t="Rückgängig: „"+u.text+"“ gilt nicht.";let live=false;
+    const now=new Date().toISOString(),said=x=>{undo=null;box.textContent="";box.append(el("span",{class:"utext",text:u.nr+": "+x}));undoTimer=setTimeout(renderUndo,3000)};
+    try{const c=await db.doc("entscheidungen/"+u.nr).get(),cur=c.exists?(c.data()||{}):{};
+      const moved=String(cur.blatt||"")!==String(u.after.blatt||"")||String(cur.wartet||"")!==String(u.after.wartet||"");
+      if(moved&&!u.text)return said("inzwischen geändert – nicht zurückgenommen");
+      const patch=Object.assign({},moved?{}:u.prev,{geaendert:now,eigner_am:now});
+      if(u.text){const t="Rückgängig: „"+u.text+"“ gilt nicht.";let live=false;
         if(u.live){const L=await liveSend(null,t,"u","[K:"+u.nr+"] "+t,u.thread,box);live=L.live}
-        const c=await db.doc("entscheidungen/"+u.nr).get(),ks=c.exists?(c.data()||{}).kommentare:null;
-        patch.kommentare=[...(Array.isArray(ks)?ks:[]),{von:"Eigner",text:t,zeit:now,live,bilder:[]}]}
-      undoKeep=u.nr;openState.set(u.nr+":"+(u.prev.blatt||""),true);saveOpen();
+        patch.kommentare=[...(Array.isArray(cur.kommentare)?cur.kommentare:[]),{von:"Eigner",text:t,zeit:now,live,bilder:[]}]}
+      if(!moved){undoKeep=u.nr;openState.set(u.nr+":"+(u.prev.blatt||""),true);saveOpen()}
       await db.doc("entscheidungen/"+u.nr).update(patch);
-      undo=null;box.textContent="";box.append(el("span",{class:"utext",text:u.nr+": zurückgenommen"}));undoTimer=setTimeout(renderUndo,3000)}
+      said(moved?"inzwischen übernommen – nur die Nachricht ist gegangen":"zurückgenommen")}
     catch(e){undoKeep=null;b.disabled=false;note.textContent=failText(e,"Nicht zurückgenommen – bitte noch einmal.");undoTimer=setTimeout(()=>{undo=null;renderUndo()},UNDO_MS)}};
 }
 // list: rows in desired order within one lane of "entschieden". writes only the ranks that must change, and only
@@ -1329,7 +1346,11 @@ function renderAuftrag(){
   const box=$("#auftrag"),here=view==="sitzung",kurz=view==="dich";
   box.hidden=!here&&!kurz;box.classList.toggle("kurz",kurz);$("#fruehere").hidden=!here;$("#gespraech").hidden=!here;$("#auftrag-list").hidden=!here;
   {const l=box.querySelector("label"),ta=$("#auftrag-text"),x=box.querySelector(".extern");if(l)l.textContent=kurz?"Auftrag an Claude":"An Claude – live";
-   ta.placeholder=kurz?"Auftrag an Claude …":"Frage, Auftrag, Hinweis · Bilder ("+K_PASTE+")";if(!kurz)ta.style.height="";if(x)x.hidden=kurz&&PHONE}
+   ta.placeholder=kurz?"Auftrag an Claude …":"Frage, Auftrag, Hinweis · Bilder ("+K_PASTE+")";if(!kurz)ta.style.height="";if(x)x.hidden=kurz&&PHONE;
+   // on a phone the field stands open once tapped (until tapped shut), and always while it holds a draft
+   const ab=$("#auftrag-auf"),auf=aufOpen||!!ta.value.trim()||dImgs("auftrag").length>0;
+   box.classList.toggle("auf",auf);if(ab){ab.hidden=!kurz;ab.setAttribute("aria-expanded",String(auf&&NARROW.matches));ab.textContent=(auf?"− ":"+ ")+"Auftrag";
+     ab.onclick=()=>{aufOpen=!box.classList.contains("auf");renderAuftrag();if(aufOpen)ta.focus()}}}
   if(!here)return;
   renderGespraech();
   const ul=$("#auftrag-list");
@@ -1814,7 +1835,7 @@ function card(r,laneRows){
   const d=el("details",{"data-nr":r.nr,"data-blatt":r.blatt||""});
   if(r.wartet&&r.blatt!=="erledigt")d.classList.add("waits");
   // 0.4.0: every card starts closed, in every column -- its head line only (number, project, Stand, headline, deadline).
-  // A tap on the head opens and closes it, and what this viewer opened stays so ("eb-open", per card and column). Open
+  // A tap on the head opens and closes it, and what this viewer opened stays so ("eb-klapp", per card and column). Open
   // without his tap only: a card in his columns that holds his unsent draft, and a card he has acted on that comes
   // back with a message of mine (below). A card I have just made is never opened for him.
 const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt(r);
@@ -1937,14 +1958,15 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
   // comment is left out (the Claude app closes the book when one goes out) -- I find the answer at my next look.
   // Without a text it is only the patch ("Gelesen", "Erledigt"). Either way the undo line holds the way back (undoSet).
   const quick=async(label,text,patch,nt)=>{if(sending||!db||!canWrite)return false;sending=true;
-    try{const prev={};for(const k of Object.keys(patch))prev[k]=r[k]===undefined?null:r[k];
+    try{const prev={};for(const k of Object.keys(patch)){if(r[k]!==undefined)prev[k]=r[k];else if(k!=="status")prev[k]=""}
+      const after={blatt:"blatt" in patch?patch.blatt:r.blatt,wartet:"wartet" in patch?patch.wartet:r.wartet};
       let live=false;const qk="q:"+r.nr;
       if(text){if(!PHONE){const L=await liveSend(qk,text,"q","[K:"+r.nr+"] "+text,r.thread,d);live=L.live;if(L.thread)patch.thread=L.thread}
         // the messages as they stand in the book now (another writer may have added one since the card was drawn)
         let ks=r.kommentare;try{const snap=await db.doc("entscheidungen/"+r.nr).get();if(snap.exists)ks=(snap.data()||{}).kommentare}catch(e){}
         patch.kommentare=[...(Array.isArray(ks)?ks:[]),{von:"Eigner",text,zeit:new Date().toISOString(),live,bilder:[]}]}
       const ok=await save(r,patch,nt||qnote);
-      if(ok){liveDone(qk);undoSet({nr:r.nr,label,prev,text,live,thread:patch.thread||r.thread||null})}
+      if(ok){liveDone(qk);undoSet({nr:r.nr,label,prev,after,text,live,thread:patch.thread||r.thread||null})}
       return ok}
     finally{sending=false}};
   const qbtn=(text,ghost,title,fn)=>{const x=el("button",{class:"act"+(ghost?" ghost":""),type:"button",text});if(title)x.title=title;x.onclick=()=>fn();qrow.append(x);return x};
@@ -2007,8 +2029,10 @@ const okey=r.nr+":"+r.blatt,his=r.blatt==="offen"||r.blatt==="pruefen"||isTopArt
     const fileAway=(bt,nt)=>()=>{if(!sure&&(ta.value.trim()||dImgs(fk).length)){sure=true;bt.textContent="Trotzdem ablegen";nt.textContent="Im Feld steht noch eine nicht gesendete Antwort oder ein Bild. „Senden“ schickt sie; „Trotzdem ablegen“ verwirft sie und legt die Karte ab.";nt.scrollIntoView({block:"nearest"});return}if(sure){dSet("t:"+fk,null);dSet("i:"+fk,null)}const p={blatt:"erledigt",wartet:""};p[artOf(r)==="hinweis"?"gelesen":"erledigt_am"]=new Date().toISOString();return quick(artOf(r)==="hinweis"?"als gelesen abgelegt":"als erledigt abgelegt","",p,nt)};
     dn.onclick=fileAway(dn,note);
     if(canWrite){const q1=qbtn(doneTxt,false,artOf(r)==="hinweis"?"Gelesen: die Karte wird abgelegt":"Erledigt: die Karte wird abgelegt",()=>q1h());const q1h=fileAway(q1,qnote);
-      // a Hinweis also takes "Jetzt machen" and "Nein": an answer to me like a decision
-      if(artOf(r)==="hinweis")for(const t of ["Jetzt machen","Nein"])qbtn(t,true,"„"+t+"“ als Antwort an Claude",()=>quick("„"+t+"“ gesendet",t,{entscheidung:t,status:"beantwortet",wartet:"Claude",blatt:"entschieden"}))}
+      // a Hinweis also takes "Jetzt machen" and "Nein": an answer to me. "Jetzt machen" goes to "Entschieden", where I
+      // start it; "Nein" is his "Verworfen" (his hand, like "Gelesen") -- under "Entschieden" my wake-up would start it.
+      // Both wait for me: I read the answer and reply on the card.
+      if(artOf(r)==="hinweis")for(const [t,bl,ti] of [["Jetzt machen","entschieden","„Jetzt machen“ an Claude: die Karte geht nach Entschieden"],["Nein","verworfen","„Nein“ an Claude: die Karte wird verworfen, nichts wird gebaut"]])qbtn(t,true,ti,()=>quick(bl==="verworfen"?"„Nein“ gesendet, verworfen":"„"+t+"“ gesendet",t,{entscheidung:t,status:"beantwortet",wartet:"Claude",blatt:bl}))}
     const an=el("button",{class:"act",type:"button",text:"Senden"});
     an.onclick=()=>{const t=ta.value.trim();if(!t&&!dImgs(fk).length){note.textContent="Bitte Deine Antwort ins gelbe Feld schreiben.";ta.focus();return}last=ta.value;sendCard({entscheidung:t||r.entscheidung||"",status:"beantwortet",wartet:"Claude",blatt:"entschieden"})};
     row.append(an,dn);armSend([an],ta,fk,[dn]);
@@ -2250,14 +2274,21 @@ function renderBoard(){
      const hr=el("div",{class:"hintrow"+(hintOpen.has(c.key)?" open":"")},hq,el("p",{class:"hint",id:"hint-"+c.key,text:c.hint}));
      hq.onclick=()=>{const o=!hintOpen.has(c.key);o?hintOpen.add(c.key):hintOpen.delete(c.key);hr.classList.toggle("open",o);hq.setAttribute("aria-expanded",String(o))};
      col.append(el("div",{class:"colhead"},c.label,el("span",{class:"n",text:String(shownRows(c.key).length)})),hr)}
-    const lanes=[...new Set(mine.map(r=>r.ziel||""))].sort(laneOrder);
+    let lanes=[...new Set(mine.map(r=>r.ziel||""))].sort(laneOrder);
     if(c.key==="erledigt")lanes.reverse();
     if(!(c.key==="hinweise"?shownRows(c.key):mine).length)col.append(el("div",{class:"empty",text:"leer"}));
     // 0.4.0: in the owner's columns the cards with a deadline stand first, the nearest on top; then newest change first
     if(c.key==="hinweise"){const l=shownRows(c.key).sort((a,b)=>byFrist(a,b)||byNewest(a,b));for(const r of l)col.append(rueckDue(r)?rueckItem(r):card(r,l));board.append(col);continue}
     const bare=!relZ()&&lanes.length===1&&!lanes[0];
+    // 0.4.0: with more than one lane, the cards with a deadline in "Offen" and "Prüfen" stand together on top ("Mit
+    // Frist", the nearest first), whatever their target -- a lane of their own would put a later target's cards above an
+    // overdue one. The lanes below hold the rest. With one bare lane the deadlines lead inside it (sorted below).
+    let rest=mine;
+    if((c.key==="offen"||c.key==="pruefen")&&!bare){const fr=mine.filter(r=>isFinite(fristOf(r))).sort((a,b)=>byFrist(a,b)||byNewest(a,b));
+      if(fr.length){rest=mine.filter(r=>!fr.includes(r));lanes=lanes.filter(z=>rest.some(r=>(r.ziel||"")===z));
+        col.append(el("div",{class:"lane frist","data-lane":c.key+":frist"},"Mit Frist",el("span",{class:"cnt",text:"("+fr.length+")"})));for(const r of fr)col.append(card(r,fr))}}
     for(const z of lanes){
-      let lr=mine.filter(r=>(r.ziel||"")===z);
+      let lr=rest.filter(r=>(r.ziel||"")===z);
       if(c.key==="entschieden")lr.sort((a,b)=>(a.rang??1e9)-(b.rang??1e9)||a.nr.localeCompare(b.nr,"de",{numeric:true}));
       else if(c.key==="offen"||c.key==="pruefen")lr.sort((a,b)=>byFrist(a,b)||byNewest(a,b));
       else lr.sort(byNewest);
@@ -2278,7 +2309,7 @@ document.addEventListener("focusout",()=>setTimeout(()=>{if(!pending)return;cons
 document.addEventListener("focusout",()=>setTimeout(runRules,0));
 $("#ver").textContent=PAGE_VERSION;
 // Änderungsprotokoll des Buchs: ein Klick auf die Versionsnummer zeigt es; neueste Version oben.
-const BUCH_LOG=[{"v": "0.4.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Antworten mit einem Tipp: Unter dem Text einer Entscheidung steht eine Knopfzeile – „Wie empfohlen“ (wenn es eine Empfehlung gibt), je Option ein Knopf, „Später“ und „Erklär es einfacher“. Ein Hinweis hat dort „Gelesen“, „Jetzt machen“ und „Nein“, eine Aufgabe „Erledigt“. Das gelbe Feld bleibt für freie Antworten („Oder frei antworten“).", "„Später“ legt die Karte mit dem Ziel „später“ zurück in den Vorrat und sagt es Claude; „Erklär es einfacher“ schickt nur die Bitte, die Karte bleibt unter „Offen“.", "Nach jedem Tipp steht zehn Sekunden lang am unteren Fensterrand, was geschehen ist, mit „Rückgängig“. Zurücknehmen stellt die Karte wieder her, wie sie war, und vermerkt es im Verlauf.", "Am Handy schreiben diese Knöpfe nur ins Buch, ohne Live-Kommentar – so bleibt das Buch offen. Claude liest die Antwort beim nächsten Blick, spätestens nach 15 Minuten. Am Rechner geht sie wie bisher sofort live hinaus.", "Jede Karte ist zunächst zugeklappt: Du siehst Nummer, Projekt, Stand, Überschrift und die Frist. Ein Tipp auf die Kopfzeile klappt sie auf und wieder zu; was Du aufgeklappt hast, merkt sich Dein Browser. Die Antwort-Knöpfe stehen erst in der aufgeklappten Karte. Nur eine Karte, auf die Du schon geantwortet hast und die mit einer neuen Nachricht von Claude zurückkommt, steht wie bisher einmal offen.", "Fristen: Karten mit Frist stehen unter „Offen“, „Prüfen“ und „Hinweise & Aufgaben“ oben, die nächste zuerst, mit der Restzeit – „noch 2 Tage“, „morgen“, „heute“, „überfällig“. Eine Frist ohne Uhrzeit gilt bis zum Ende ihres Tages (bisher lief sie schon in der Nacht davor ab). Der Knopf „warten auf Dich“ nennt die Fristen der nächsten drei Tage.", "Projekt: Eine Karte kann ein Projekt tragen; es steht als farbiges Etikett hinter der Nummer. Sobald eine Karte eines trägt, gibt es in der Leiste die Filter „alle Projekte“, je Projekt einen Knopf mit der Zahl seiner Karten unter „Für Dich“ und „ohne Projekt“. Die Wahl bleibt in Deinem Browser gemerkt.", "Das Feld für einen neuen Auftrag steht jetzt auch direkt unter „Für Dich“, in einer Zeile mit „Senden“. Gespräche und frühere Aufträge bleiben unter „Aufträge“; am Handy geht ein Auftrag von dort ohne Live-Kommentar, damit das Buch offen bleibt.", "Text zum Weitergeben: Trägt eine Karte einen solchen Text, steht er in einem eigenen Kasten „Zum Weitergeben“ mit dem Knopf „Kopieren“. Ein Tipp in das Feld markiert den ganzen Text.", "Weniger über der ersten Karte: Ohne laufendes Release gibt es keine Release-Karte und keinen Reiter „Releases“; die Knöpfe „Release:“ und die Zeile „Ziel offen“ entfallen, wenn es nichts zu wählen gibt. Am Handy steht die Erklärung einer Spalte einzeilig hinter einem „?“.", "Die Marken einer Karte (Frist, „wartet auf“, „Token fehlen“) stehen in einer Zeile statt untereinander. Berichtigt: Der Hinweis unter „Prüfen“ nennt den Knopf „Gelesen“, die Meldung beim Ablegen den Knopf „Senden“, und am Handy steht am gelben Feld kein Tastenkürzel mehr. Der Knopf „warten auf Dich“ folgt sofort, wenn ein Release startet.", "Die Daten des Buchs bleiben, wie sie sind: „projekt“ und „kopiertext“ sind freiwillige Felder."]}, {"v": "0.3.0", "datum": "2026-10-29", "uhrzeit": "06:43", "karten": [], "punkte": ["Neues Aussehen: oben eine dunkelblaue Titelleiste über die ganze Breite – links Name, Version und „Einstellungen“, rechts „wartet auf Dich“ als heller Knopf, daneben „live“ und die Zeiten. Auf dem Telefon bleiben Name, Version und „⚙“ in einer Zeile, der Rest steht darunter.", "Die Ansichten sind Reiter: der gewählte ist fett und blau unterstrichen.", "Suche und Filter stehen zusammen in einer weißen Leiste unter den Reitern; „Entschieden von:“ und „Release:“ sind durch eine Linie getrennt, und wird die Leiste zu schmal, rückt eine Gruppe als Ganzes in die nächste Zeile. Ein gedrückter Filter ist hellblau hinterlegt, fett und unten blau unterstrichen.", "Die Release-Karte steht jetzt unter Suche und Filter; mit der Tab-Taste kommst Du erst zu Reitern, Suche und Filtern, dann zu ihr.", "Hauptknöpfe wie „Senden“ sind blau gefüllt, Nebenknöpfe wie „Bearbeiten“, „↑“/„↓“ und „Öffnen“ hellblau mit Rand. Eingabefelder haben eine dunklere Unterkante und zeigen den Fokus als blaue Linie darunter; Knöpfe zeigen ihn als deutlichen Ring.", "Stand, Art, Fristen und Abhängigkeiten stehen als Pillen mit ihrem Wort; Überschriften und Spaltenköpfe sind im Blau der Titelleiste, Tabellen haben einen grauen Kopf, die sortierte Spalte ist blau. Die Seite nutzt die Schrift des Systems.", "Texte und Bedienelemente erfüllen hell und dunkel die Kontraste nach WCAG 2.2 AA. Was die Seite tut und was im Buch steht, bleibt gleich.", "Behoben: Die Zeile mit dem Prüflauf eines laufenden Schritts steht wieder unter seinem Namen statt Buchstabe für Buchstabe in der Nummernspalte. Lange Wörter in Kartenüberschriften brechen um, statt die Seite zu verbreitern; in Fenstern bis 760 px zeigt die Releases-Tabelle die schmalen Spalten des Telefons."]}, {"v": "0.2.1", "datum": "2026-10-28", "uhrzeit": "14:35", "karten": [], "punkte": ["Die Knöpfe hinter „Release:“ filtern jetzt: ein Klick zeigt nur dieses Ziel, alle anderen werden ausgeblendet – auch unter „Bei Claude“, beim Wechsel von „Entschieden von“ und bei neu hinzukommenden Karten. Ein zweiter Klick auf denselben Knopf zeigt wieder alle; der neue Knopf „alle“ ebenso.", "„Hinweise & Aufgaben“ folgt jetzt dem Ziel-Filter und „Entschieden von“ wie die anderen Spalten.", "Die Zahlen an den Reitern und Spaltenköpfen zählen nur, was gerade gezeigt wird.", "Einzelne Spuren klappst Du weiterhin über ihre Kopfzeile auf und zu."]}, {"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
+const BUCH_LOG=[{"v": "0.4.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Antworten mit einem Tipp: Unter dem Text einer Entscheidung steht eine Knopfzeile – „Wie empfohlen“ (wenn es eine Empfehlung gibt), je Option ein Knopf, „Später“ und „Erklär es einfacher“. Ein Hinweis hat dort „Gelesen“, „Jetzt machen“ und „Nein“, eine Aufgabe „Erledigt“. Das gelbe Feld bleibt für freie Antworten („Oder frei antworten“).", "„Später“ legt die Karte mit dem Ziel „später“ zurück in den Vorrat und sagt es Claude; „Erklär es einfacher“ schickt nur die Bitte, die Karte bleibt unter „Offen“. Bei einem Hinweis bringt „Jetzt machen“ die Karte nach „Entschieden“; „Nein“ verwirft sie und sagt es Claude – gebaut wird dann nichts.", "Nach jedem Tipp steht zehn Sekunden lang am unteren Fensterrand, was geschehen ist, mit „Rückgängig“. Zurücknehmen stellt die Karte wieder her, wie sie war, und vermerkt es im Verlauf. Hat Claude die Karte in diesen Sekunden schon übernommen, bleibt sie, wie sie ist; dann geht nur die Nachricht „Rückgängig“ an Claude.", "Am Handy schreiben diese Knöpfe nur ins Buch, ohne Live-Kommentar – so bleibt das Buch offen. Claude liest die Antwort beim nächsten Blick, spätestens nach 15 Minuten. Am Rechner geht sie wie bisher sofort live hinaus.", "Jede Karte ist zunächst zugeklappt: Du siehst Nummer, Projekt, Stand, Überschrift und die Frist. Ein Tipp auf die Kopfzeile klappt sie auf und wieder zu; was Du aufgeklappt hast, merkt sich Dein Browser. Auch Karten, die bisher offen standen, beginnen nach dem Wechsel zugeklappt. Die Antwort-Knöpfe stehen erst in der aufgeklappten Karte. Nur eine Karte, auf die Du schon geantwortet hast und die mit einer neuen Nachricht von Claude zurückkommt, steht wie bisher einmal offen.", "Fristen: Karten mit Frist stehen unter „Offen“, „Prüfen“ und „Hinweise & Aufgaben“ oben, die nächste zuerst, mit der Restzeit – „noch 2 Tage“, „morgen“, „heute“, „überfällig“. Eine Frist ohne Uhrzeit gilt bis zum Ende ihres Tages (bisher lief sie schon in der Nacht davor ab). Gibt es mehrere Spuren (Ziele), stehen die Karten mit Frist gemeinsam oben unter „Mit Frist“. Der Knopf „warten auf Dich“ nennt die Fristen der nächsten drei Tage, am Handy kurz als „· 2 bald fällig“.", "Projekt: Eine Karte kann ein Projekt tragen; es steht als farbiges Etikett hinter der Nummer. Sobald eine Karte eines trägt, gibt es in der Leiste die Filter „alle Projekte“, je Projekt einen Knopf mit der Zahl seiner Karten unter „Für Dich“ und „ohne Projekt“. Die Wahl bleibt in Deinem Browser gemerkt.", "Das Feld für einen neuen Auftrag steht jetzt auch direkt unter „Für Dich“, in einer Zeile mit „Senden“. Am Handy steht dafür neben der Suche der Knopf „+ Auftrag“, der das Feld öffnet; mit einem Entwurf bleibt es offen. Gespräche und frühere Aufträge bleiben unter „Aufträge“; am Handy geht ein Auftrag von dort ohne Live-Kommentar, damit das Buch offen bleibt.", "Text zum Weitergeben: Trägt eine Karte einen solchen Text, steht er in einem eigenen Kasten „Zum Weitergeben“ mit dem Knopf „Kopieren“. Ein Tipp in das Feld markiert den ganzen Text.", "Weniger über der ersten Karte: Ohne laufendes Release gibt es keine Release-Karte und keinen Reiter „Releases“; die Knöpfe „Release:“ und die Zeile „Ziel offen“ entfallen, wenn es nichts zu wählen gibt. Am Handy steht die Erklärung einer Spalte einzeilig hinter einem „?“.", "Die Marken einer Karte (Frist, „wartet auf“, „Token fehlen“) stehen in einer Zeile statt untereinander. Berichtigt: Der Hinweis unter „Prüfen“ nennt den Knopf „Gelesen“, die Meldung beim Ablegen den Knopf „Senden“, und am Handy steht am gelben Feld kein Tastenkürzel mehr. Der Knopf „warten auf Dich“ folgt sofort, wenn ein Release startet.", "Die Daten des Buchs bleiben, wie sie sind: „projekt“ und „kopiertext“ sind freiwillige Felder."]}, {"v": "0.3.0", "datum": "2026-10-29", "uhrzeit": "06:43", "karten": [], "punkte": ["Neues Aussehen: oben eine dunkelblaue Titelleiste über die ganze Breite – links Name, Version und „Einstellungen“, rechts „wartet auf Dich“ als heller Knopf, daneben „live“ und die Zeiten. Auf dem Telefon bleiben Name, Version und „⚙“ in einer Zeile, der Rest steht darunter.", "Die Ansichten sind Reiter: der gewählte ist fett und blau unterstrichen.", "Suche und Filter stehen zusammen in einer weißen Leiste unter den Reitern; „Entschieden von:“ und „Release:“ sind durch eine Linie getrennt, und wird die Leiste zu schmal, rückt eine Gruppe als Ganzes in die nächste Zeile. Ein gedrückter Filter ist hellblau hinterlegt, fett und unten blau unterstrichen.", "Die Release-Karte steht jetzt unter Suche und Filter; mit der Tab-Taste kommst Du erst zu Reitern, Suche und Filtern, dann zu ihr.", "Hauptknöpfe wie „Senden“ sind blau gefüllt, Nebenknöpfe wie „Bearbeiten“, „↑“/„↓“ und „Öffnen“ hellblau mit Rand. Eingabefelder haben eine dunklere Unterkante und zeigen den Fokus als blaue Linie darunter; Knöpfe zeigen ihn als deutlichen Ring.", "Stand, Art, Fristen und Abhängigkeiten stehen als Pillen mit ihrem Wort; Überschriften und Spaltenköpfe sind im Blau der Titelleiste, Tabellen haben einen grauen Kopf, die sortierte Spalte ist blau. Die Seite nutzt die Schrift des Systems.", "Texte und Bedienelemente erfüllen hell und dunkel die Kontraste nach WCAG 2.2 AA. Was die Seite tut und was im Buch steht, bleibt gleich.", "Behoben: Die Zeile mit dem Prüflauf eines laufenden Schritts steht wieder unter seinem Namen statt Buchstabe für Buchstabe in der Nummernspalte. Lange Wörter in Kartenüberschriften brechen um, statt die Seite zu verbreitern; in Fenstern bis 760 px zeigt die Releases-Tabelle die schmalen Spalten des Telefons."]}, {"v": "0.2.1", "datum": "2026-10-28", "uhrzeit": "14:35", "karten": [], "punkte": ["Die Knöpfe hinter „Release:“ filtern jetzt: ein Klick zeigt nur dieses Ziel, alle anderen werden ausgeblendet – auch unter „Bei Claude“, beim Wechsel von „Entschieden von“ und bei neu hinzukommenden Karten. Ein zweiter Klick auf denselben Knopf zeigt wieder alle; der neue Knopf „alle“ ebenso.", "„Hinweise & Aufgaben“ folgt jetzt dem Ziel-Filter und „Entschieden von“ wie die anderen Spalten.", "Die Zahlen an den Reitern und Spaltenköpfen zählen nur, was gerade gezeigt wird.", "Einzelne Spuren klappst Du weiterhin über ihre Kopfzeile auf und zu."]}, {"v": "0.2.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Einstellungen → „Archiv“: abgeschlossene Releases mit einem Knopf „Packen“. Erst wird das Archiv geschrieben und Eintrag für Eintrag zurückgelesen, dann die Summen in „Statistik“, erst danach werden die Originale gelöscht.", "Einstellungen → „Archiv“ führt nur Releases auf, in denen etwas zu packen ist; gepackte und leere stehen dort nicht.", "„Erledigt“ zählt nur noch die erledigten Karten im Buch, „Archiv“ nur die gepackten; die beiden Zahlen sind getrennt.", "Die Statistik ordnet die Releases nach dem Veröffentlichungszeitpunkt und der Versionsnummer, nicht mehr nach einer Reihenfolge-Nummer.", "„Karten und Tokens“ zählt ungepackte Releases live aus den Karten im Buch (kursiv).", "Das Ziel-Feld bietet „Buch“ nur noch an, solange eine Karte dieses Ziel trägt."]}, {"v": "0.1.0", "datum": "", "uhrzeit": "", "karten": [], "punkte": ["Ausgangsstand: die leere Vorlage des Entscheidungsbuchs.", "Versionen zählen ab jetzt x.y.z (Nachbesserungen x.y.z+1). Das Buch führt seinen Datenstand in meta/buch und bringt seine Daten beim Öffnen selbst auf den Stand dieser Seite, sobald jemand mit Schreibrechten es öffnet."]}];
 // the change log and the settings are two dialogs with one frame: an overlay, "Schließen (Esc)", a click beside it
 function dlgOpen(label){if(document.querySelector(".vlog"))return null;const box=el("div",{class:"box",role:"dialog","aria-label":label});
   const close=el("button",{type:"button",text:"Schließen (Esc)"});box.append(el("div",{class:"top"},el("h2",{text:label}),close));return {box,close}}

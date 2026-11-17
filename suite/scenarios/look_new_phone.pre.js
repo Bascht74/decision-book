@@ -1,5 +1,5 @@
 // 0.4.0 -- the new parts at 390 px, light: the project pill, the deadline marks, the answer row, the box "Zum Weitergeben",
-// the "?" of a column's explanation, the order field under "Für Dich" and the undo line read 4.5:1 on their ground, and
+// the "?" of a column's explanation, the order field under "Für Dich" (opened by "+ Auftrag") and the undo line read 4.5:1 on their ground, and
 // nothing runs over the window's edge. A book without a release: the first card stands close under the order field.
 window.WANT='light';document.documentElement.setAttribute('data-theme','light');
 const S=__DB.store;S.set('meta/stand',{aktuell:''});

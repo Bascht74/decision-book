@@ -6,4 +6,4 @@ S.set('gespraech/g2',{start:'2026-09-26T07:00:00.000Z',status:'gelesen',nachrich
 S.set('auftraege/a1',{text:'Neuer Auftrag',zeit:'2026-09-27T08:00:00.000Z',status:'neu',bilder:[]});
 S.set('meta/laeufe',{laeufe:[{name:'Ein Prüflauf mit einem langen Namen auf GitHub',url:'https://example.org/lauf',status:'läuft',gestartet:'2026-09-27T08:00:00Z'}]});
 S.set('meta/stand',{aktuell:'3.0.0b28',wartet_auf_start:true});
-localStorage.setItem('eb-open',JSON.stringify([['E-010:offen',true],['E-011:pruefen',true],['E-008:entschieden',true]]));
+localStorage.setItem('eb-klapp',JSON.stringify([['E-010:offen',true],['E-011:pruefen',true],['E-008:entschieden',true]]));

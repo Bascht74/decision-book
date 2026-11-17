@@ -6,7 +6,9 @@ scenario(async out=>{
   out.waitsBelow=w.top>=n.bottom-1;                                     // the light button starts below them
   out.header=[Math.round(h.left),Math.round(h.width)-innerWidth,getComputedStyle(document.querySelector('.wrap>header')).backgroundColor];
   out.targets=['#ver','#setbtn','#waits button'].map(x=>{const r=R(x);return Math.round(Math.min(r.width,r.height))});
-  out.toolbar=[Math.round(R('#gsuche').width)>=innerWidth-2*16-12,Math.round(R('#filter').top)>=Math.round(R('#gsuche').bottom)];
+  // the search fills its row -- beside it, under "Für Dich", only the button "+ Auftrag" (0.4.0)
+  const ab=document.getElementById('auftrag-auf'),abw=ab&&ab.getClientRects().length?R('#auftrag-auf').width+6:0;
+  out.toolbar=[Math.round(R('#gsuche').width+abw)>=innerWidth-2*16-12,Math.round(R('#filter').top)>=Math.round(R('#gsuche').bottom)];
   // the phone's own values reach the page (the phone block stands behind the rules it narrows): release card padding,
   // filter buttons, the bar under the active view tab
   const tab=document.querySelector('#views [aria-selected="true"]'),af=getComputedStyle(tab,'::after');

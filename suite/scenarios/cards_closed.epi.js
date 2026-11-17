@@ -2,7 +2,7 @@ scenario(async out=>{
   const card=nr=>document.querySelector('#board details[data-nr="'+nr+'"]');
   await until(()=>card('E-641')&&card('E-645'));await sleep(150);
   const state=()=>$$('#board details[data-nr]').map(d=>d.dataset.nr+(d.open?':open':'')).sort().join(',');
-  const kept=()=>{try{return JSON.parse(localStorage.getItem('eb-open')||'[]').filter(x=>x[1]).map(x=>x[0]).sort()}catch(e){return 'no storage'}};
+  const kept=()=>{try{return JSON.parse(localStorage.getItem('eb-klapp')||'[]').filter(x=>x[1]).map(x=>x[0]).sort()}catch(e){return 'no storage'}};
   out.forYou=state();
   const d=card('E-641'),sm=d.querySelector('summary'),tx=s=>(sm.querySelector(s)||{}).textContent||null;
   out.head=[tx('.nr'),tx('.proj'),tx('.chip'),tx('.head'),/^Frist: 15\.01\.2030 \d\d:\d\d – noch \d+ Tage$/.test(tx('.frist')||'')];

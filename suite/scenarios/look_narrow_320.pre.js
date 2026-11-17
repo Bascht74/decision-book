@@ -9,4 +9,4 @@ S.set('entscheidungen/E-800',{ueberschrift:'Mit Verlauf',blatt:'offen',ziel:'3.0
 S.set('meta/schritte',{release:'3.0.0b28',schritte:{"2":{zustand:"erledigt"},"3":{zustand:"erledigt",text:"alle Texte übersetzt"},"4":{zustand:"läuft",text:"zählt gerade",teile:[{name:"Karten",zustand:"erledigt"},{name:"Aufträge",zustand:"läuft"},{name:"Bilder",zustand:"offen"}]}}});
 S.set('meta/laeufe',{laeufe:[{name:'tests.yml auf dem Zweig runde-b28',url:'https://example.org/actions/runs/9',status:'läuft',gestartet:'2026-09-27T08:00:00.000Z'}]});
 S.set('entscheidungen/E-801',{ueberschrift:'Pfad /Volumes/beispiel/Dokumente/Projekt/development/ein_sehr_langer_dateiname.json',blatt:'offen',ziel:'3.0.0b28',wartet:'Dich'});
-localStorage.setItem('eb-view','dich');localStorage.setItem('eb-open',JSON.stringify([['E-800:offen',true]]));
+localStorage.setItem('eb-view','dich');localStorage.setItem('eb-klapp',JSON.stringify([['E-800:offen',true]]));

@@ -7,5 +7,5 @@ const C=(n,blatt,x)=>S.set('entscheidungen/E-'+n,Object.assign({ueberschrift:'Ka
 C('641','offen',{projekt:'Haus',frist:'2030-01-15T17:00:00Z'});C('642','offen');C('643','pruefen',{tokens_prognose:1,tokens_ist:1});
 C('644','offen',{art:'hinweis'});C('645','offen',{art:'aufgabe'});C('646','arbeit',{wartet:''});C('647','entschieden',{wartet:''});
 // remembered from an earlier visit: this viewer had opened one card
-localStorage.setItem('eb-open',JSON.stringify([['E-642:offen',true]]));
+localStorage.setItem('eb-klapp',JSON.stringify([['E-642:offen',true]]));
 localStorage.setItem('eb-view','dich');

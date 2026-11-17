@@ -15,7 +15,7 @@ The document id is the card number (`E-001`, `E-002`, ...).
 | `beschreibung` | what it is about -- context enough to decide alone |
 | `option1`, `option2`, `weitere` | the options |
 | `empfehlung` | recommendation and reason |
-| `entscheidung` | the owner's answer (written by the page) |
+| `entscheidung` | the owner's answer (written by the page); since 0.4.0 also a one-tap text ("Option 1 – wie empfohlen", "Jetzt machen", "Nein" ...) -- how to read them: `SKILL.md`, "One-tap answers" |
 | `blatt` | **Stand**: `vorrat`, `offen`, `entschieden`, `arbeit`, `pruefen`, `erledigt`, `verworfen` |
 | `ziel` | **Ziel**: target release, `später`, or `""` |
 | `ziel_vorher` | the target a card had before it was brought back from the archive |

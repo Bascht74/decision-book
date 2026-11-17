@@ -1,0 +1,5 @@
+{"run":{"width":390,"height":844,"wrap":true},"expect":{
+ "one.first":{"max":440}, "one.nr":"E-901", "one.waitsH":{"max":50}, "one.header":{"max":160}, "one.auftrag":0, "one.field":false, "one.btn":true, "pruefen":"E-931,E-932", "one.wide":false,
+ "two.first":{"max":500}, "two.nr":"E-901", "two.wide":false,
+ "opened":"true|true|true|− Auftrag", "closed":"false|false", "draftKeeps":true, "wide":false
+}}

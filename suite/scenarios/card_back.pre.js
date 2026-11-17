@@ -10,7 +10,7 @@ S.set('entscheidungen/E-803',{ueberschrift:'Schon zurück',blatt:'pruefen',statu
 // already opened once for this message (follow-up: eb-kopen): stays as the owner left it (closed)
 S.set('entscheidungen/E-804',{ueberschrift:'Schon gesehen',blatt:'pruefen',status:'umgesetzt',ziel:'3.0.0b28',von:'Eigner',wartet:'Dich',tokens_prognose:1,tokens_ist:1,
   kommentare:[...old,{von:'Claude',text:'Gesehen',zeit:'2026-09-27T08:00:00.000Z'}]});
-localStorage.setItem('eb-open',JSON.stringify([['E-801:pruefen',false],['E-802:offen',false],['E-803:pruefen',false],['E-804:pruefen',false]]));
+localStorage.setItem('eb-klapp',JSON.stringify([['E-801:pruefen',false],['E-802:offen',false],['E-803:pruefen',false],['E-804:pruefen',false]]));
 localStorage.setItem('eb-draft:kz:E-801','0');localStorage.setItem('eb-draft:kz:E-803','0');
 localStorage.setItem('eb-kopen',JSON.stringify({'E-801':'2026-09-27T07:00:00.000Z','E-802':'2026-09-27T07:00:00.000Z','E-803':'2026-09-27T07:00:00.000Z','E-804':'2026-09-27T08:00:00.000Z'}));
 localStorage.setItem('eb-view','dich');

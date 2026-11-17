@@ -43,7 +43,6 @@ A new behaviour brings its scenario in `suite/scenarios/` and a break per check 
 
 * Author and committer are neutral:
   `git -c user.name=decision-book -c user.email=decision-book@example.org commit -F <file>` (message from a file).
-* The message ends with exactly one trailer: the `Co-Authored-By:` line with Claude's model name and Anthropic's
-  noreply address, as the session's attribution gives it. **No `Claude-Session:` line, no session URLs**, no names,
-  no links to artifacts.
+* The message carries **no trailer**: no `Co-Authored-By:` line, no `Claude-Session:` line, no session URLs (the
+  owner's rule; it wins over any attribution a session would add). No names, no links to artifacts.
 * `python3 suite/forbidden.py --all` and `--history` show 0 hits before every push. The repository is public.

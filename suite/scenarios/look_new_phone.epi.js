@@ -4,7 +4,7 @@ scenario(async out=>{
   await until(()=>card('E-801'));await sleep(150);
   const low=[],over=[];let n=0;
   const take=where=>{
-    for(const e of $$('.proj,.flags .flag,.quick button,.kopie h3,.kopie textarea,.kopie button,.hintq,.hint,#auftrag textarea,#auftrag-senden,#undo .utext,#undo button')){if(!vis(e))continue;n++;
+    for(const e of $$('.proj,.flags .flag,.quick button,.kopie h3,.kopie textarea,.kopie button,.hintq,.hint,#auftrag-auf,#auftrag textarea,#auftrag-senden,#undo .utext,#undo button')){if(!vis(e))continue;n++;
       const c=ratio(rgbaOf(getComputedStyle(e).color),groundOf(e));if(c<4.5)low.push(where+': '+(e.className||e.id||e.tagName)+' '+e.textContent.trim().slice(0,14)+' '+c)}
     for(const x of sticksOut())over.push(where+': '+JSON.stringify(x).slice(0,80));
     const u=document.getElementById('undo');if(vis(u)){const r=u.getBoundingClientRect();if(r.left<0||r.right>innerWidth)over.push(where+': undo '+Math.round(r.left)+'..'+Math.round(r.right))}
@@ -12,6 +12,8 @@ scenario(async out=>{
   // closed cards: the head only; the first card stands right under the order field
   out.firstTop=Math.round(card('E-801').getBoundingClientRect().top);out.ready=vis(document.getElementById('ready'));
   take('zu');
+  // the order field behind "+ Auftrag" (0.4.0), opened
+  {const ab=document.getElementById('auftrag-auf');if(ab&&vis(ab)){ab.click();await sleep(60)}take('Auftrag')}
   card('E-801').open=true;await sleep(60);take('Offen');
   const tb=findBtn('#tabs button',/^Hinweise/);if(tb){tb.click();await sleep(60)}
   for(const nr of ['E-802','E-803'])if(card(nr))card(nr).open=true;await sleep(60);

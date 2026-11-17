@@ -1,0 +1,7 @@
+{"run":{"budget":30000},
+ "expect":{
+ "taken":"arbeit||Option 1|10", "takenMessages":["Eigner: Option 1","Eigner: Rückgängig: „Option 1“ gilt nicht."], "takenSend":1,
+ "takenLine":"E-671: inzwischen übernommen – nur die Nachricht ist gegangen",
+ "gelesen":"pruefen|string", "gelesenLine":"E-673: inzwischen geändert – nicht zurückgenommen",
+ "shape":"{\"entscheidung\":\"\",\"status\":\"beantwortet\",\"wartet\":\"Dich\"}"
+}}

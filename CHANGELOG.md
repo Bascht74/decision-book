@@ -10,29 +10,38 @@ brings an existing book along.
 **Answer with one tap.** Right under the text of a decision under "Offen" stands a row of buttons: "Wie empfohlen"
 (only with a recommendation; it answers "Option N – wie empfohlen" when the recommendation starts with an option), one
 button per option, "Später" (back to the backlog with the target "später") and "Erklär es einfacher" (only a message;
-the card stays). A Hinweis has "Gelesen", "Jetzt machen" and "Nein" there, an Aufgabe "Erledigt". A tap goes the way
+the card stays). A Hinweis has "Gelesen", "Jetzt machen" and "Nein" there, an Aufgabe "Erledigt". "Jetzt machen" moves
+the card to "Entschieden"; "Nein" files it as "Verworfen" (the owner's hand), so Claude's wake-up, which starts every
+card under "Entschieden", never starts a "Nein". Both set `wartet: "Claude"`. A tap goes the way
 of "Senden": live to Claude, into the card's messages and its fields in one write, re-reading the card first. The
 yellow field stays for a free answer ("Oder frei antworten"). The statistics count an answer that starts with "Wie
 empfohlen" as following the recommendation.
 
 **Undo.** After a tap a line at the lower edge of the window says for ten seconds what was done, with "Rückgängig".
 Taking back writes the card's fields as they stood, adds a message of its own (it never rewrites one), tells Claude
-live in the card's thread where the answer had gone live, and the card is back, open.
+live in the card's thread where the answer had gone live, and the card is back, open. The card is read first: when
+its Stand or "wartet" is no longer what the tap left (Claude took it over within the ten seconds), its fields stay as
+they are and only the message goes ("inzwischen übernommen – nur die Nachricht ist gegangen"); a "Gelesen" or
+"Erledigt" on a card that changed meanwhile is not taken back. A field the card did not have before comes back as ""
+(never null); the old field `status` is left as the tap wrote it.
 
 **On a phone, written only.** The one-tap buttons and the order field under "Für Dich" write to the book without a
 live comment on a phone (the Claude app closes the book when one goes out); Claude reads them at the next look. On a
 computer they go live as before.
 
 **Cards start closed.** Every card starts closed, in every column: its head shows number, project, Stand, headline
-and deadline. A tap on the head opens and closes it; what a viewer opened is remembered in the browser ("eb-open", as
-before) and the page works without storage. The answer buttons stand only in the opened card. Only a card the owner
+and deadline. A tap on the head opens and closes it; what a viewer opened is remembered in the browser under a new key,
+"eb-klapp", and the page works without storage. The old key "eb-open" is dropped unread: up to 0.3.0 the page wrote
+every card it opened by itself into it as open, and those cards would have stayed open after the update. The answer buttons stand only in the opened card. Only a card the owner
 has already acted on and that comes back with a new message of Claude's opens once, as before.
 
 **Deadlines.** Under "Offen", "Prüfen" and "Hinweise & Aufgaben" the cards with a deadline stand first, nearest
 first, then the others by their last change. The mark says what is left: "noch 2 Tage", "morgen", "heute",
 "überfällig", red on its day and after. A deadline without a time ("2026-11-19") holds until the end of that day in
-local time (before, it was read as midnight UTC and ran out the night before) and shows no time. "warten auf Dich"
-adds "· n mit Frist bis <day>" for deadlines within three days.
+local time (before, it was read as midnight UTC and ran out the night before) and shows no time. With more than one
+lane (targets) under "Offen" or "Prüfen", the cards with a deadline stand together on top under "Mit Frist", whatever
+their target, and the lanes below hold the rest. "warten auf Dich" adds "· n mit Frist bis <day>" for deadlines within
+three days, on a window up to 640 px wide "· n bald fällig" (one line).
 
 **Projects.** A new optional field `projekt` (a short name): a coloured pill after the card's number and, while a
 card carries one, a filter group "Projekt:" with "alle Projekte", a button per project with the number of its cards
@@ -41,7 +50,8 @@ card carries any more hides nothing.
 
 **Order field under "Für Dich".** The field for a new order also stands under "Für Dich": label "Auftrag an Claude",
 the field and "Senden" in one line; after sending, "gesendet – steht unter Aufträge". Talks, orders and "Frühere" stay
-under "Aufträge".
+under "Aufträge". On a window up to 640 px wide the field waits behind a button "+ Auftrag" beside the search; a tap
+opens it with the caret in it, another closes it, and it stays open while it holds a draft.
 
 **Text to pass on.** A new optional field `kopiertext` (plain text, never read as Markdown): a box "Zum Weitergeben"
 after "Worum es geht", a read-only field that marks all of its text on focus, and "Kopieren". Where the browser
@@ -56,9 +66,13 @@ they are called ("Gelesen", "Senden"), and a phone no longer shows a key shortcu
 
 New scenarios: `quick_decide`, `quick_hint`, `quick_undo`, `quick_phone`, `cards_closed`, `cards_closed_nostore`,
 `deadline_order`, `project`, `project_kept`, `order_here`, `copy_text`, `no_release`, `no_release_open`,
-`look_new_phone` and `look_new_dark` (the new parts at 390 px: 4.5:1 and nothing over the edge); `deadline` covers
+`look_new_phone` and `look_new_dark` (the new parts at 390 px: 4.5:1 and nothing over the edge), `cards_closed_old`
+(a viewer coming from 0.3.0), `deadline_lanes` (deadlines first across lanes), `quick_undo_taken` (undo after a
+takeover, empty fields) and `phone_first_card` (390 × 844: the first card at most 440 px down, 500 px with two lanes;
+0.3.0 had 588 and 624 px on the same data); `deadline` covers
 plain dates and what is left. Scenarios that relied on a card under "Offen" standing open now open it themselves
-(`dark_contrast`, `done_when`, `local_times`, `fields_phone`); `settings_absent` and `settings_present` read the
+(`dark_contrast`, `done_when`, `local_times`, `fields_phone` -- with one more card, so it checks 20 dropdowns again);
+`settings_absent` and `settings_present` read the
 owner's name at the yellow field of a card under "Prüfen" (under "Offen" it reads "Oder frei antworten").
 
 **Also fixed.** "warten auf Dich" follows a release that becomes current while the page is open.

@@ -59,16 +59,34 @@ Every card carries five dropdowns; they are what the owner sees and sorts by.
 
 | Stand | means | moved there by |
 |---|---|---|
-| `vorrat` | backlog not yet presented | Claude |
+| `vorrat` | backlog not yet presented | Claude; the page, when the owner taps "Später" (0.4.0) |
 | `offen` | the owner decides | Claude, when presenting or handing back |
 | `entschieden` | decided, not started; the owner orders it (`rang`) | the page, when the owner answers |
 | `arbeit` | being built | Claude, when starting (rule 6); the page, when token numbers are missing |
 | `pruefen` | built, for the owner to look at | Claude, when finished |
-| `erledigt` / `verworfen` | done and seen / dropped | **only the owner** |
+| `erledigt` / `verworfen` | done and seen / dropped | **only the owner** (his "Nein" on a Hinweis files it as `verworfen`) |
 
 An Aufgabe (something the owner must do) or Hinweis (something he should know) stands on top under
 "Hinweise & Aufgaben" while its Stand is `offen` or `pruefen`; his "Erledigt" / "Gelesen" files it.
 Postponed means Ziel `später` -- there is no separate state for it.
+
+**One-tap answers (page 0.4.0).** Each tap writes the answer as a new comment `{von: "Eigner", text}` (live as
+`[K:<nr>] <text>` on a computer, never live on a phone -- the wake-up finds it) and the fields below in the same write.
+Read them like this:
+
+| the owner's text | fields the page wrote | what Claude does |
+|---|---|---|
+| `Option N – wie empfohlen` / `Wie empfohlen` | `entscheidung` = that text, Stand `entschieden`, `wartet: "Claude"` | the recommended option, decided -- start it (wake-up step 5) |
+| `Option 1`, `Option 2` | the same, with that option | that option, decided |
+| `Später` | Stand `vorrat`, `ziel: "später"`, `wartet: "Claude"` | the owner's postponement: a short comment, `wartet: ""`; present it again only with a new reason (a fact, a deadline) |
+| `Erklär es einfacher` | only `wartet: "Claude"`; the card stays under "Offen" | a new comment that explains it plainer, `wartet: "Dich"` |
+| `Jetzt machen` (Hinweis) | `entscheidung`, Stand `entschieden`, `wartet: "Claude"` | start it like any decided card |
+| `Nein` (Hinweis) | `entscheidung: "Nein"`, Stand `verworfen`, `wartet: "Claude"` | **build nothing**; a comment saying what stays undone, `wartet: ""`; never move it back |
+| `Gelesen` / `Erledigt` (Hinweis / Aufgabe) | Stand `erledigt`, `gelesen` / `erledigt_am` | nothing |
+| `Rückgängig: „X“ gilt nicht.` | the fields as before the tap -- unless Claude had already taken the card over, then none | the answer X does not hold. If work on it started, stop it, put the card back to `offen` with `wartet: "Dich"` and a comment |
+
+A card with a deadline (`frist`) stands first in the owner's columns; `projekt` and `kopiertext` are optional fields
+(`reference.md`).
 
 * **Presenting** (`vorrat` -> `offen`): the card carries its own context (enough to decide without
   reading other cards), the options, a recommendation with its reason, the effort, `wartet: "Dich"`.
@@ -135,7 +153,9 @@ live, not a poll for work that reports itself.
 2. Talks with `wartet == "Claude"` -> answer (in the talk).
 3. Orders `neu`, or `in_bearbeitung` with an expired lease -> take over (card first).
 4. Cards with `wartet == "Claude"` whose newest comment is the owner's -> answer (new entry).
-5. **All** cards in `entschieden` (the whole list) -> start what can run in parallel (rule 6).
+5. **All** cards in `entschieden` (the whole list) -> start what can run in parallel (rule 6). A card whose
+   `entscheidung` is "Nein" is never started (since 0.4.0 the page files it as `verworfen`; an older card may still
+   stand here -- answer it as in the table above).
 6. No card in `vorrat` may target the current release: each goes to `arbeit` (Claude may decide it)
    or to `offen` (the owner must).
 7. Every card in `arbeit` has `tokens_prognose` and a current `fertig_pct`; every card in `pruefen`
