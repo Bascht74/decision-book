@@ -97,7 +97,8 @@ hours x `meta/zeiten.satz`); new rules change the data, never the page. Document
      anwesend_h, geaendert}
 
 Consecutive `pause` slots show as one row. A `geschätzt` slot is drawn differently (italic, dashed). Only numbers and
-short labels, no message texts. Unknown or missing fields give an empty cell, never an error. The button "Als CSV
+short labels, no message texts. Unknown or missing fields give an empty cell, never an error. Write `stunden`/`h` rounded to two places (the page rounds
+each value to two places before adding). "Jetzt sichern" includes the collection (only when it has documents). The button "Als CSV
 sichern" needs the `downloads` capability (one row per day, `;`, decimal comma, UTF-8 with BOM, `zeiten-<von>-<bis>.csv`).
 
 ## `archiv/<art>-<release>[-n]` -- the archive

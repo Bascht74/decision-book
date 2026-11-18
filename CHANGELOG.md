@@ -13,7 +13,10 @@ first) and one column per billing group (a second column of a group stands besid
 hours and the amount; the sums over all days in the footer; below it one fold-out section per day with the half-hour
 table (messages per column, status "belegt", "geschätzt" or "Pause", place, hours; consecutive pauses are one row;
 estimated rows are italic and dashed, not only coloured). With the `downloads` capability a button "Als CSV sichern"
-saves the overview (`;`, decimal comma, UTF-8 with BOM). The page only reads; Claude writes the data.
+saves the overview (`;`, decimal comma, UTF-8 with BOM). The page only reads; Claude writes the data. Every hour
+value is rounded to two places before it is added, so the rows always add up to the footer; on a phone a line says
+that the overview scrolls sideways; a day without its own `spalten` still shows its hours; "Jetzt sichern" takes the
+day sheets along (restoring them stays with Claude's folder backup; the page's "Sicherung einlesen" names `zeiten` as left out).
 
 **Data shape.** A new, optional collection `zeiten` (one document per day) and the document `meta/zeiten` (rate, note).
 A book without them looks as before and the tab is not shown; no migration. See `.claude/skills/book/reference.md`.
