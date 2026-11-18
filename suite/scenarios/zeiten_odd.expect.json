@@ -1,1 +1,1 @@
-{"run": {"width": 1200, "height": 900}, "expect": {"pwn": null, "injected": 0, "hint": "<img src=x onerror=\"window.PWN=1\"> Text", "thead": "Tag|<i>G</i>|b|Summe Stunden|Betrag", "days": 3, "stand": true, "rows": ["Do 12.11.2026", "Sa 14.11.2026", "<img src=x onerror=\"window.PWN=1\">"]}}
+{"run": {"width": 1200, "height": 900}, "expect": {"pwn": null, "injected": 0, "hint": "<img src=x onerror=\"window.PWN=1\"> Text", "thead": "Tag|<i>G</i>|Summe Stunden|Betrag", "days": 3, "stand": true, "rows": ["Do 12.11.2026", "Sa 14.11.2026", "<img src=x onerror=\"window.PWN=1\">"]}}

@@ -1,4 +1,4 @@
-// Zeiten: two days, two billing groups (one of two columns): sums, amount, "davon", header, one subscription.
+// Zeiten: two days, two billing groups (one of two columns): sums, amount, "gesamt" column, header, one subscription.
 localStorage.setItem("eb-view","zeiten");
 // synthetic fixture: two days (Do 12.11. and Fr 13.11.2026), columns "Projekt A", "Projekt B" (same group as A) and "Projekt C"
 const S=__DB.store;

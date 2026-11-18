@@ -89,8 +89,9 @@ The tab "Zeiten" appears once the collection has a document. The page only adds 
 hours x `meta/zeiten.satz`); new rules change the data, never the page. Document id = the date.
 
     {datum, raster_min: 30,
-     spalten: [{key, name, gruppe}],              // columns in display order; same gruppe = one billing sum, the second and
-                                                  // every further one is shown as "davon <name>"
+     spalten: [{key, name, gruppe}],              // columns in display order; same gruppe = one billing sum, a group of one
+                                                  // column shows under the group's name; a group of two or more shows each column,
+                                                  // then "<gruppe> gesamt"; a column with 0 hours on every day is left out
      slots: [{ab: "07:30", n: {<key>: count}, sonst: count, stand: "belegt"|"geschätzt"|"pause",
               ort: "Rechner"|"unterwegs"|"", h: {<key>: hours}}],   // gapless, local time; n = messages per column
      stunden: {<key>: hours},                     // sum of h per column -- what the overview shows

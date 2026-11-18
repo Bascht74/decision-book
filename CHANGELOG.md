@@ -5,6 +5,17 @@ The page shows its own change log in German (`BUCH_LOG`, when the version number
 the repository's. Every section says whether the book's data changes shape -- and if so, which migration
 brings an existing book along.
 
+## 0.5.1
+
+**Time sheet overview as in the owner's table.** In the view "Zeiten" a billing group with exactly one column stays one
+column (the group's name). A group with two or more columns shows each of its columns by name (order of the data),
+then a bold column "<group> gesamt" with the group sum; the word "davon" is gone. The same in the footer and in the
+CSV ("<column> (Std.)" per column, then "<group> gesamt (Std.)"). "Summe Stunden" and "Betrag" are unchanged (sum of the
+group sums, nothing twice). A column whose hours are 0 or empty on every day is left out of the overview, the CSV and
+the day tables; a group left with one visible column is shown under the group's name. Rounding as before.
+
+**Data shape.** Unchanged; no migration.
+
 ## 0.5.0
 
 **Time sheet.** A new view "Zeiten" (tab at the end of the row) shows the hours for invoicing: a header with the period,
