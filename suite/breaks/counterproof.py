@@ -553,7 +553,7 @@ B = [
     ('zeiten_two', 'the "<group> gesamt" column is named like the group', 'text:c.h})));', 'text:c.h.replace(" gesamt","")})));', 'thead'),
  ('zeiten_sum', 'the newest day stands on top', 'a.datum<b.datum?-1:a.datum>b.datum?1:0);', 'a.datum<b.datum?1:a.datum>b.datum?-1:0);', 'body'),
  ('zeiten_sum', 'the view subscribes again every time it is drawn', 'function renderZeiten(board){', 'function renderZeiten(board){if(db)db.collection("zeiten").onSnapshot(()=>{});', 'subs'),
-    ('zeiten_sum', 'the group sum column is not bold', '.ztab th.gs,.ztab td.gs{font-weight:700}', '.ztab th.gs,.ztab td.gs{font-weight:400}', 'gesamtBold'),
+    ('zeiten_sum', 'the group sum column is not bold', 'font-weight:700;background:color-mix(in srgb,var(--accent) 12%,var(--sheet))}', 'font-weight:400;background:color-mix(in srgb,var(--accent) 12%,var(--sheet))}', 'gesamtBold'),
  ('zeiten_sum', 'numbers have no tabular figures', '.stab td.num{font-variant-numeric:tabular-nums;font-size:12.5px}', '.stab td.num{font-variant-numeric:normal;font-size:12.5px}', 'numFig'),
  ('zeiten_sum', 'no day starts open', 'if(!zInit){zInit=true;zOpen.add(m.bis)}', 'if(!zInit){zInit=true}', 'days'),
  ('zeiten_sum', 'the "Stand" of the data is not shown', 'kv("Stand",isFinite(au)?absTime(au):"–")', 'kv("Stand","–")', 'head'),
@@ -591,6 +591,9 @@ B = [
  ('zeiten_empty', 'a column without hours stays in the day tables', 'own=zCols(d).filter(c=>!m.hidden.has(c.key)),', 'own=zCols(d),', 'dayHead'),
  ('zeiten_shrink', 'a group left with one column still gets "gesamt"', 'if(g.vis.length===1)return', 'if(g.cols.length===1)return', 'thead'),
  ('zeiten_shrink', 'a column without hours stays in the CSV', 'filter(j=>rows.some(r=>r.gs[i].part[j]))', 'filter(j=>true)', 'csv'),
+ ('zeiten_two', 'the "gesamt" column has no tint', 'font-weight:700;background:color-mix(in srgb,var(--accent) 12%,var(--sheet))}', 'font-weight:700}', 'gsTint'),
+ ('zeiten_allgone', 'a group with only empty columns still shows a column', 'if(!g.vis.length)return [];', '', 'thead'),
+ ('zeiten_noown', 'a day without its own columns shows no hours', 'cols=own.length||zCols(d).length?own:m.groups.flatMap(g=>g.cols).filter(c=>!m.hidden.has(c.key)),', 'cols=own,', 'dayHead'),
 ]
 def run(page_text, tag, name):
     p = os.path.join(here, tag + '.html'); open(p, 'w', encoding='utf-8').write(page_text)
