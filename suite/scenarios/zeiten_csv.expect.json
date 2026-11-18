@@ -1,0 +1,1 @@
+{"run": {"width": 1200, "height": 900}, "expect": {"button": "Als CSV sichern", "name": "zeiten-2026-11-12-2026-11-13.csv", "bom": "239,187,191", "csv": ["Datum;Wochentag;Projekt A (Std.);davon Projekt B;Projekt C (Std.);Summe Stunden;Betrag (€)", "12.11.2026;Do;2,00;0,50;1,00;3,00;240,00", "13.11.2026;Fr;1,50;0,50;1,25;2,75;220,00", ""], "note": "gesichert"}}

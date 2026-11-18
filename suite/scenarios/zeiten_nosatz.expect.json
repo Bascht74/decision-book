@@ -1,0 +1,1 @@
+{"run": {"width": 1200, "height": 900}, "expect": {"noMeta": "–|–|–", "rate0": {"re": "Stundensatz–"}, "dayLine": {"re": "Betrag –$"}, "noSatz": "–|–|–", "hint": "Nur ein Hinweis.", "withSatz": "300,00 €|275,00 €|575,00 €"}}

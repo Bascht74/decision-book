@@ -79,8 +79,26 @@ Packing adds `archiv: {erledigt, verworfen, auftraege, gespraeche, docs: [...]}`
 | `meta/schritte` | `release`, `schritte: {"2": {zustand, text, teile: [{name, zustand, text}]}, ...}`; `zustand` is `erledigt`, `läuft`, `wartet …`, else not yet. Steps 1 and 8 are computed by the page. |
 | `meta/claude` | `zuletzt`, `auftraege_gelesen`, `karten_bearbeitet` (timestamps) |
 | `meta/laeufe` | `laeufe: [{name, url, status, gestartet}]`; shown while a status is not `fertig` |
+| `meta/zeiten` | optional, written by Claude only: `satz` (price per hour, a number), `einheit` (e.g. `€`), `hinweis` (plain text, a few sentences: how the hours were worked out), `ab` (first day), `aktualisiert` (time). Without `satz` the view shows a dash instead of the amount. |
 | `meta/regeln` | the page's lease for its own rule writes -- never touch |
 | `meta/buch` | the data version: `version` (`x.y.z`, set by the page when every migration up to it ran), `migriert` (the migrations that ran, in order), `aktualisiert` (time); `stempel_alt` only by hand, when migration 0.1.0 asks for the old stamp field. Written by the page only. |
+
+## `zeiten/<JJJJ-MM-TT>` -- one day of the time sheet (optional; written by Claude only, the page reads)
+
+The tab "Zeiten" appears once the collection has a document. The page only adds up (sums over the days, amount =
+hours x `meta/zeiten.satz`); new rules change the data, never the page. Document id = the date.
+
+    {datum, raster_min: 30,
+     spalten: [{key, name, gruppe}],              // columns in display order; same gruppe = one billing sum, the second and
+                                                  // every further one is shown as "davon <name>"
+     slots: [{ab: "07:30", n: {<key>: count}, sonst: count, stand: "belegt"|"geschätzt"|"pause",
+              ort: "Rechner"|"unterwegs"|"", h: {<key>: hours}}],   // gapless, local time; n = messages per column
+     stunden: {<key>: hours},                     // sum of h per column -- what the overview shows
+     anwesend_h, geaendert}
+
+Consecutive `pause` slots show as one row. A `geschätzt` slot is drawn differently (italic, dashed). Only numbers and
+short labels, no message texts. Unknown or missing fields give an empty cell, never an error. The button "Als CSV
+sichern" needs the `downloads` capability (one row per day, `;`, decimal comma, UTF-8 with BOM, `zeiten-<von>-<bis>.csv`).
 
 ## `archiv/<art>-<release>[-n]` -- the archive
 

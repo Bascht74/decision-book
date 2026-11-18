@@ -27,7 +27,7 @@ B = [
  ('ab_counts', '"Tokens (Karten)" counts the cards in the book only', 'function tokensOf(v){let sum=0;for(const r of allCards()){', 'function tokensOf(v){let sum=0;for(const r of rows){', 'tokensB27'),
  ('ab_counts', '"Empfehlung getroffen" counts the cards in the book only', 'function recHit(v){let n=0,m=0;for(const r of allCards()){', 'function recHit(v){let n=0,m=0;for(const r of rows){', 'recB27'),
  ('ab_counts', '"Statistik" does not load the archive', '  loadArchive();if(archLoading)w.append(', '  if(archLoading)w.append(', 'getsStat'),
- ('ab_counts', 'the book count leaves the archive docs out', 'return rows.length+gsp.length+auftraege.length+stat.length+archDocs()+', 'return rows.length+gsp.length+auftraege.length+stat.length+', 'bookBefore'),
+ ('ab_counts', 'the book count leaves the archive docs out', 'return rows.length+gsp.length+auftraege.length+stat.length+zeiten.length+archDocs()+', 'return rows.length+gsp.length+auftraege.length+stat.length+zeiten.length+', 'bookBefore'),
  ('ab_filter', 'the search in "Archiv" finds every card', 'const hits=cards.filter(r=>bpass(r)&&(!t||abHay(r).includes(t)));', 'const hits=cards.filter(r=>bpass(r));', 'searchRows'),
  ('ab_filter', 'the filters in "Archiv" hide nothing', 'const hits=cards.filter(r=>bpass(r)&&(!t||abHay(r).includes(t)));', 'const hits=cards.filter(r=>!t||abHay(r).includes(t));', 'filterRows'),
  ('ab_filter', '"≠" filters like "="', 'return f.op==="="?hit:!hit});\n  const fOn=!!(bFilt', 'return hit});\n  const fOn=!!(bFilt', 'filterNeRows'),
@@ -548,6 +548,34 @@ B = [
  ('quick_phone', 'an order under "Für Dich" goes out live on a phone', 'const kurz=view==="dich",quiet=kurz&&PHONE', 'const kurz=view==="dich",quiet=false', 'sendsAfterOrder'),
  ('quick_phone', 'the yellow field names a key on a phone', '(canWrite&&!PHONE?" · Bilder mit "+K_PASTE:"")', '(canWrite?" · Bilder mit "+K_PASTE:"")', 'pasteHint'),
  ('quick_phone', '"Senden schließt" stands under "Für Dich" on a phone', 'if(x)x.hidden=kurz&&PHONE;', 'if(x)x.hidden=false;', 'externHere'),
+ ('zeiten_sum', 'the amount of a day is off', 'return {d,gs,sum,betrag:satz==null?null:sum*satz}});', 'return {d,gs,sum,betrag:satz==null?null:sum*satz+1}});', 'body'),
+ ('zeiten_sum', 'the total sum leaves a group out', 'const sum=tot.reduce((a,t)=>a+t.sum,0);', 'const sum=tot.slice(1).reduce((a,t)=>a+t.sum,0);', 'foot'),
+ ('zeiten_sum', 'the second column of a group lacks its "davon"', 'text:"davon "+c.name})))});', 'text:c.name})))});', 'thead'),
+ ('zeiten_sum', 'the newest day stands on top', 'a.datum<b.datum?-1:a.datum>b.datum?1:0);', 'a.datum<b.datum?1:a.datum>b.datum?-1:0);', 'body'),
+ ('zeiten_sum', 'the view subscribes again every time it is drawn', 'function renderZeiten(board){', 'function renderZeiten(board){if(db)db.collection("zeiten").onSnapshot(()=>{});', 'subs'),
+ ('zeiten_sum', '"davon" is as large as the main column', '.ztab th.dav,.ztab td.dav{font-size:12px;font-weight:400;color:var(--muted);padding-left:2px}.ztab td.dav{font-size:12px}', '.ztab th.dav,.ztab td.dav{font-size:15px;font-weight:400;color:var(--muted);padding-left:2px}.ztab td.dav{font-size:15px}', 'davonSmaller'),
+ ('zeiten_sum', 'numbers have no tabular figures', '.stab td.num{font-variant-numeric:tabular-nums;font-size:12.5px}', '.stab td.num{font-variant-numeric:normal;font-size:12.5px}', 'numFig'),
+ ('zeiten_sum', 'no day starts open', 'if(!zInit){zInit=true;zOpen.add(m.bis)}', 'if(!zInit){zInit=true}', 'days'),
+ ('zeiten_sum', 'the "Stand" of the data is not shown', 'kv("Stand",isFinite(au)?absTime(au):"–")', 'kv("Stand","–")', 'head'),
+ ('zeiten_none', 'the tab shows without any day', 'if(k==="zeiten"&&view!=="zeiten"&&!zeiten.length)continue;', '', 'before'),
+ ('zeiten_none', 'the tab counts no days', 'k==="zeiten"?zeiten.length:', 'k==="zeiten"?0:', 'count'),
+ ('zeiten_phone', 'the tables are 600 px wide in the page', '.stab.zw{max-width:100%}', '.stab.zw{max-width:none;min-width:600px}', 'docOverflow'),
+ ('zeiten_phone', 'the first column scrolls away', '.ztab th.fc,.ztab td.fc{position:sticky;', '.ztab th.fc,.ztab td.fc{position:static;', 'stickyFirst'),
+ ('zeiten_phone', 'the labels of the header are pale grey (light)', '.zk{font-size:12px;color:var(--muted)}', '.zk{font-size:12px;color:#c4c4c4}', 'lowContrast'),
+ ('zeiten_dark', 'the values of the header are dark grey (dark scheme)', '.zv{font-size:14px;font-weight:600;color:var(--ink)}', '.zv{font-size:14px;font-weight:600;color:#2a2a2a}', 'lowContrast'),
+ ('zeiten_pause', 'consecutive pauses stay separate rows', 'while(j+1<slots.length&&slots[j+1].stand==="pause")j++;', '', 'rows'),
+ ('zeiten_pause', 'an estimated row is not italic', '.ztab tr.est{font-style:italic}', '.ztab tr.est{font-style:normal}', 'estItalic'),
+ ('zeiten_pause', 'the "geschätzt" pill has a solid edge', '.chip.zp.est{border:1px dashed currentColor;', '.chip.zp.est{border:1px solid currentColor;', 'estPill'),
+ ('zeiten_pause', 'a slot ends after an hour', '+(zNum(min)||30)', '+30', 'd13'),
+ ('zeiten_nosatz', 'without a rate the amount reads 0', 'const zEur=(v,grp)=>v==null?"–":', 'const zEur=(v,grp)=>v==null?"0,00 €":', 'noMeta'),
+ ('zeiten_csv', 'the file has no BOM', 'buf.set([0xEF,0xBB,0xBF]);', 'buf.set([0,0,0]);', 'bom'),
+ ('zeiten_csv', 'the CSV has the decimal point', 'zH(r.sum,false),r.betrag==null', 'String(r.sum),r.betrag==null', 'csv'),
+ ('zeiten_csv', 'the file name has no start date', 'const nm="zeiten-"+m.von', 'const nm="zeiten-"+m.bis', 'name'),
+ ('zeiten_csv', 'the separator is a comma', 'lines=[head.map(q).join(";")]', 'lines=[head.map(q).join(",")]', 'csv'),
+ ('zeiten_nodl', 'the CSV button shows without the capability', 'if(zDl){const note=', 'if(true){const note=', 'button'),
+ ('zeiten_odd', 'the note is put in as HTML', 'el("p",{class:"hint zhint",text:String(zm.hinweis)})', '(()=>{const p=el("p",{class:"hint zhint"});p.innerHTML=String(zm.hinweis);return p})()', 'injected'),
+ ('zeiten_odd', 'an unknown stand breaks the day', 'text:ZSTAND[stand]||stand})', 'text:ZSTAND[stand].toString()})', 'page error'),
+ ('zeiten_odd', 'a slot without "n" breaks the day', 'const n=zObj(s.n),h=zObj(s.h),stand', 'const n=s.n,h=zObj(s.h),stand', 'page error'),
 ]
 def run(page_text, tag, name):
     p = os.path.join(here, tag + '.html'); open(p, 'w', encoding='utf-8').write(page_text)
@@ -557,6 +585,8 @@ def run(page_text, tag, name):
 names = sorted(x[:-12] for x in os.listdir(os.path.join(suite, 'scenarios')) if x.endswith('.expect.json'))
 missing = set(names) - {b[0] for b in B}
 if missing: sys.exit('no break for: %s' % ', '.join(sorted(missing)))
+only = os.environ.get('ONLY')
+if only: names = [n for n in names if re.search(only, n)]
 B = [b for b in B if b[0] in names]
 def one(i):
     name, what, old, new, field = B[i]

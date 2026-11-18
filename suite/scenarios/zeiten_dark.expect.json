@@ -1,0 +1,1 @@
+{"run": {"width": 390, "height": 844, "wrap": true, "flags": ["--force-dark-mode"]}, "expect": {"dark": "rgb(17, 20, 26)", "overflowing": [], "checked": {"min": 80}, "lowContrast": []}}

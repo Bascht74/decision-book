@@ -5,6 +5,19 @@ The page shows its own change log in German (`BUCH_LOG`, when the version number
 the repository's. Every section says whether the book's data changes shape -- and if so, which migration
 brings an existing book along.
 
+## 0.5.0
+
+**Time sheet.** A new view "Zeiten" (tab at the end of the row) shows the hours for invoicing: a header with the period,
+the hourly rate, the date of the data and a note on how it was worked out; an overview with one row per day (oldest
+first) and one column per billing group (a second column of a group stands beside it as "davon ..."), the sum of
+hours and the amount; the sums over all days in the footer; below it one fold-out section per day with the half-hour
+table (messages per column, status "belegt", "geschätzt" or "Pause", place, hours; consecutive pauses are one row;
+estimated rows are italic and dashed, not only coloured). With the `downloads` capability a button "Als CSV sichern"
+saves the overview (`;`, decimal comma, UTF-8 with BOM). The page only reads; Claude writes the data.
+
+**Data shape.** A new, optional collection `zeiten` (one document per day) and the document `meta/zeiten` (rate, note).
+A book without them looks as before and the tab is not shown; no migration. See `.claude/skills/book/reference.md`.
+
 ## 0.4.0
 
 **Answer with one tap.** Right under the text of a decision under "Offen" stands a row of buttons: "Wie empfohlen"
